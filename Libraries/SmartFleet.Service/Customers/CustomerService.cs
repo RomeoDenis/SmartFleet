@@ -16,12 +16,12 @@ namespace SmartFleet.Service.Customers
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IRepository<Customer> _customeRepository;
+        private readonly IRepository<Customer> _customerRepository;
         private readonly SmartFleetObjectContext _objectContext;
         private readonly UserManager<User> _userManager;
-        public CustomerService(IRepository<Customer> customeRepository,SmartFleetObjectContext objectContext)
+        public CustomerService(IRepository<Customer> customerRepository,SmartFleetObjectContext objectContext)
         {
-            _customeRepository = customeRepository;
+            _customerRepository = customerRepository;
             _objectContext = objectContext;
            _userManager = new UserManager<User>(new UserStore<User>(_objectContext));
 
@@ -31,7 +31,7 @@ namespace SmartFleet.Service.Customers
             try
             {
                 customer.Id = Guid.NewGuid();
-                _customeRepository.Insert(customer);
+                _customerRepository.Insert(customer);
                 if (!users.Any()) return true;
                 var passwordHash = new PasswordHasher();
                 foreach (var user in users)
@@ -60,13 +60,13 @@ namespace SmartFleet.Service.Customers
             return user?.Customer;
         }
 
-        public async Task<Customer> GetCustomerWithZonesAndVehicles(string name)
+        public async Task<Customer> GetCustomerWithZonesAndVehiclesAsync(string name)
         {
             var user = await _userManager.Users
                 .Include(x => x.Customer)
                 .Include(x => x.Customer.Areas)
                 .Include(x => x.Customer.Vehicles)
-                .FirstOrDefaultAsync(x => x.UserName == name);
+                .FirstOrDefaultAsync(x => x.UserName == name).ConfigureAwait(false);
 
             return user?.Customer;
         }
@@ -85,14 +85,14 @@ namespace SmartFleet.Service.Customers
             return _objectContext.Customers;
         }
 
-        public async Task<Boolean> GetUserbyName(string id)
+        public Task<Boolean> GetUserbyName(string id)
         {
-            return  await _userManager.Users.AnyAsync(u => u.UserName == id);
+            return _userManager.Users.AnyAsync(u => u.UserName == id);
         }
 
         public async Task<List<InterestArea>> GetAllAreas(string userName, int page , int size)
         {
-            var customer =await _userManager.Users.Include(x=>x.Customer).Select(x=> new { x.CustomerId , x.UserName}).FirstOrDefaultAsync(x => x.UserName == userName);
+            var customer =await _userManager.Users.Include(x=>x.Customer).Select(x=> new { x.CustomerId , x.UserName}).FirstOrDefaultAsync(x => x.UserName == userName).ConfigureAwait(false);
             if (customer != null)
                 return await _objectContext.InterestAreas
                     .OrderBy(x=>x.Name)
@@ -104,11 +104,11 @@ namespace SmartFleet.Service.Customers
 
         public async Task<List<InterestArea>> GetAllAreas(string userName)
         {
-            var customer = await _userManager.Users.Include(x => x.Customer).Select(x => new { x.CustomerId, x.UserName }).FirstOrDefaultAsync(x => x.UserName == userName);
+            var customer = await _userManager.Users.Include(x => x.Customer).Select(x => new { x.CustomerId, x.UserName }).FirstOrDefaultAsync(x => x.UserName == userName).ConfigureAwait(false);
             if (customer != null)
                 return await _objectContext.InterestAreas
                     .OrderBy(x => x.Name)
-                    .ToListAsync();
+                    .ToListAsync().ConfigureAwait(false);
             return new List<InterestArea>();
         }
 
@@ -126,7 +126,7 @@ namespace SmartFleet.Service.Customers
             }
         }
 
-        public async Task<List<Vehicle>> GetAllVehiclesOfUser(string userName,int page, int rows )
+        public async Task<List<Vehicle>> GetAllVehiclesOfUserAsync(string userName,int page, int rows )
         {
             var vehicles = await _userManager.Users.Where(x => x.UserName == userName)
                 .Include(x => x.Customer)
@@ -136,7 +136,7 @@ namespace SmartFleet.Service.Customers
                 .Skip(page-1)
                 .Take(page*rows)
                
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
             return vehicles;
         }
     }

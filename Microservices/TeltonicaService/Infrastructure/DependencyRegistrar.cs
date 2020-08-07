@@ -10,7 +10,7 @@ using SmartFleet.Data;
 using SmartFleet.Data.Dbcontextccope.Implementations;
 using TeltonicaService.Handlers;
 
-namespace TeltonicaService.Infrastucture
+namespace TeltonicaService.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
@@ -27,7 +27,7 @@ namespace TeltonicaService.Infrastucture
 
             builder.RegisterGeneric(typeof(EfScopeRepository<>)).As(typeof(IScopeRepository<>))
                 .InstancePerLifetimeScope();
-            builder.Register(context => RabbitMqConfig.InitAzureRecievingBus<TeltonikaHandler>("TeltonikaHandler.endpoint"))
+            builder.Register(context => RabbitMqConfig.InitReceiverBus<TeltonikaHandler>("TeltonikaHandler.endpoint"))
                 .SingleInstance()
                 .As<IBusControl>()
                 .As<IBus>();

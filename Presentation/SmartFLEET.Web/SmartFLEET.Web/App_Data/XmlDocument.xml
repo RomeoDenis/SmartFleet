@@ -603,6 +603,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:SmartFLEET.Web.Controllers.PositionController">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:SmartFLEET.Web.Controllers.PositionController.GetCurrentDayPosition(System.String)">
             <summary>
             

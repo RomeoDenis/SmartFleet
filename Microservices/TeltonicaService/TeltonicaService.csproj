@@ -94,8 +94,8 @@
   <ItemGroup>
     <Compile Include="BootstrapService.cs" />
     <Compile Include="Handlers\TeltonikaHandler.cs" />
-    <Compile Include="Infrastucture\DependencyRegistrar.cs" />
-    <Compile Include="Infrastucture\TeltonikaMapping.cs" />
+    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
+    <Compile Include="Infrastructure\TeltonikaMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

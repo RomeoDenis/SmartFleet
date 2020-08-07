@@ -15,6 +15,7 @@ using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Core.Geofence;
 using SmartFleet.Core.ReverseGeoCoding;
 using SmartFleet.Data;
+using TeltonicaService.Infrastructure;
 using TeltonicaService.Infrastucture;
 
 namespace TeltonicaService.Handlers
@@ -24,7 +25,7 @@ namespace TeltonicaService.Handlers
     {
         private SmartFleetObjectContext _db;
         private IMapper _mappe;
-        private ReverseGeoCodingService _reverseGeoCodingService;
+        private readonly ReverseGeoCodingService _reverseGeoCodingService;
         public IDbContextScopeFactory DbContextScopeFactory { get; }
         private static SemaphoreSlim _semaphore;
 

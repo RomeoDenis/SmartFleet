@@ -56,7 +56,7 @@ namespace SmartFLEET.Web.Controllers
                 return RedirectToAction("Index", "Home", new {area = ""});
             if (!ModelState.IsValid) return View(model);
             var userExists =
-                await _authenticationService.Authentication(model.UserName, model.Password, model.RememberMe);
+                await _authenticationService.AuthenticationAsync(model.UserName, model.Password, model.RememberMe).ConfigureAwait(false);
             if (userExists == null) return View();
             return _authenticationService.GetRoleByUserId(userExists.Id).Any(identityUserRole => identityUserRole.Equals("customer") || identityUserRole.Equals("user")) ?
                 RedirectToAction("Index", "Home") :

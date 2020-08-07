@@ -15,7 +15,7 @@ namespace DenormalizerService.Infrastructure
         public void Register(ContainerBuilder builder)
         {
 
-            builder.Register(context => RabbitMqConfig.InitAzureRecievingBus<DenormalizerHandler>("Denormalizer.endpoint"))
+            builder.Register(context => RabbitMqConfig.InitReceiverBus<DenormalizerHandler>("Denormalizer.endpoint"))
                 .SingleInstance()
                 .As<IBusControl>()
                 .As<IBus>();

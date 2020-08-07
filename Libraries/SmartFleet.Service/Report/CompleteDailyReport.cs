@@ -20,10 +20,10 @@ namespace SmartFleet.Service.Report
         {
             AvgSpeed = Math.Round(positions.Average(x => x.Speed),2);
             MaxSpeed = Math.Round(positions.Max(x => x.Speed),2);
-            ReportDate = positions.FirstOrDefault().Timestamp.Date.ToShortDateString();
+            ReportDate = positions.FirstOrDefault()?.Timestamp.Date.ToShortDateString();
             VehicleName = vehicle.VehicleName;
             Positions = new List<TargetViewModel>();
-            var positionReport = new ActivitiesRerport();
+            var positionReport = new ActivitiesReport();
             positionReport.UpdateProgress += val => UpdateProgress?.Invoke(val);
             Positions.AddRange( positionReport.BuildDailyReport(positions, positions.FirstOrDefault().Timestamp.Date, vehicle.VehicleName));
             Distance = Enumerable.Where(Positions, x=>x.MotionStatus == MotionStatus.Moving.ToString()).Sum(x => x.Distance);
@@ -35,10 +35,10 @@ namespace SmartFleet.Service.Report
         {
             AvgSpeed = Math.Round(positions.Average(x => x.Speed), 2);
             MaxSpeed = Math.Round(positions.Max(x => x.Speed), 2);
-            ReportDate = positions.FirstOrDefault().Timestamp.Date.ToShortDateString();
+            ReportDate = positions.FirstOrDefault()?.Timestamp.Date.ToShortDateString();
             VehicleName = vehicle.VehicleName;
             Positions = new List<TargetViewModel>();
-            var positionReport = new ActivitiesRerport();
+            var positionReport = new ActivitiesReport();
             positionReport.UpdateProgress += val => UpdateProgress?.Invoke(val);
             Positions.AddRange(positionReport.BuildDailyReport(positions, positions.FirstOrDefault().Timestamp.Date, vehicle.VehicleName));
             Distance = Enumerable.Where(Positions, x => x.MotionStatus == MotionStatus.Moving.ToString()).Sum(x => x.Distance);

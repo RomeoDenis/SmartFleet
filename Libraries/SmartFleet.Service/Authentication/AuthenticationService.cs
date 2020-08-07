@@ -35,9 +35,9 @@ namespace SmartFleet.Service.Authentication
         /// <param name="password"></param>
         /// <param name="remember"></param>
         /// <returns></returns>
-        public async Task<IdentityUser>  Authentication(string userName, string password, bool remember)
+        public async Task<IdentityUser>  AuthenticationAsync(string userName, string password, bool remember)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(userName).ConfigureAwait(false);
             if (user == null) return null;
             if (_userManager.PasswordHasher.VerifyHashedPassword(user.PasswordHash, password) !=
                 PasswordVerificationResult.Success) return null;

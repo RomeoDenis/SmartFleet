@@ -5,7 +5,7 @@ using SmartFleet.Service.Models;
 
 namespace SmartFleet.Service.Report
 {
-    public interface IActivitiesRerport
+    public interface IActivitiesReport
     {
         /// <summary>
         /// 

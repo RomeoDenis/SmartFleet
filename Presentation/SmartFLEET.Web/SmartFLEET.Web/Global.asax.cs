@@ -436,32 +436,6 @@ namespace SmartFLEET.Web
            // GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver((IContainer)container);
         }
 
-        private static IBusControl BusControl()
-        {
-            var bus = Bus.Factory.CreateUsingAzureServiceBus(sbc =>
-            {
-                var serviceUri = ServiceBusEnvironment.CreateServiceUri("sb",
-                    ConfigurationManager.AppSettings["AzureSbNamespace"],
-                    ConfigurationManager.AppSettings["AzureSbPath"]);
-
-                var host = ServiceBusBusFactoryConfiguratorExtensions.Host(sbc, serviceUri,
-                    h =>
-                    {
-                        h.TokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(
-                            ConfigurationManager.AppSettings["AzureSbKeyName"],
-                            ConfigurationManager.AppSettings["AzureSbSharedAccessKey"], TimeSpan.FromDays(1),
-                            TokenScope.Namespace);
-                    });
-
-                sbc.ReceiveEndpoint(host, "web.dev.endpoint", e =>
-                {
-                    // Configure your consumer(s)
-                    ConsumerExtensions.Consumer<SignalRHandler>(e);
-                    e.DefaultMessageTimeToLive = TimeSpan.FromMinutes(1);
-                    e.EnableDeadLetteringOnMessageExpiration = false;
-                });
-            });
-            return bus;
-        }
+      
     }
 }

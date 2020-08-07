@@ -79,7 +79,7 @@ namespace SmartFLEET.Web.Controllers
         /// <returns></returns>
         public async Task<JsonResult> AllVehiclesWithLastPosition()
         {
-            var report = new ActivitiesRerport();
+            var report = new ActivitiesReport();
             var user = User.Identity;
             var positions = report.PositionViewModels(await _positionService.GetLastVehiclPosition(user.Name));
             return Json(positions, JsonRequestBehavior.AllowGet);
@@ -169,8 +169,8 @@ namespace SmartFLEET.Web.Controllers
 
 
             var endPeriod = start.AddHours(24).AddTicks(-1);
-            var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
-            var positions = await _positionService.GetVehiclePositionsByPeriod(id, start, endPeriod);
+            var vehicle = await _vehicleService.GetVehicleByIdAsync(id).ConfigureAwait(false);
+            var positions = await _positionService.GetVehiclePositionsByPeriod(id, start, endPeriod).ConfigureAwait(false);
             MemoryStream stream = new MemoryStream();
             if (positions.Any())
             {
@@ -187,7 +187,7 @@ namespace SmartFLEET.Web.Controllers
         public async Task<JsonResult> GetListOfVehicls()
         {
             var parm = RequestHelper.GetDataGridParams(Request);
-            var vehicles = Mapper.Map<List<VehicleViewModel>>(await _customerService.GetAllVehiclesOfUser(User.Identity.Name, parm.page, parm.rows));
+            var vehicles = Mapper.Map<List<VehicleViewModel>>(await _customerService.GetAllVehiclesOfUserAsync(User.Identity.Name, parm.page, parm.rows));
             return Json(vehicles, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]

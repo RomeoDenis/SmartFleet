@@ -28,7 +28,7 @@ namespace SmartFleet.Service.Customers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        Task<Customer> GetCustomerWithZonesAndVehicles(string name);
+        Task<Customer> GetCustomerWithZonesAndVehiclesAsync(string name);
         /// <summary>
         /// get cuustomer by id
         /// </summary>
@@ -73,7 +73,7 @@ namespace SmartFleet.Service.Customers
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        Task<List<Vehicle>> GetAllVehiclesOfUser(string userName, int page, int rows);
+        Task<List<Vehicle>> GetAllVehiclesOfUserAsync(string userName, int page, int rows);
 
     }
 }

@@ -4,6 +4,7 @@ using MassTransit;
 using SmartFleet.Core;
 using SmartFleet.Core.Infrastructure.MassTransit;
 using TeltonicaService.Handlers;
+using TeltonicaService.Infrastructure;
 using TeltonicaService.Infrastucture;
 
 namespace TeltonicaService

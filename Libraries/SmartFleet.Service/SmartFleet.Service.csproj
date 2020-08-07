@@ -81,8 +81,8 @@
     <Compile Include="Models\TargetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report\CompleteDailyReport.cs" />
-    <Compile Include="Report\IActivitiesRerport.cs" />
-    <Compile Include="Report\ActivitiesRerport.cs" />
+    <Compile Include="Report\IActivitiesReport.cs" />
+    <Compile Include="Report\ActivitiesReport.cs" />
     <Compile Include="Tracking\IPositionService.cs" />
     <Compile Include="Tracking\PositionService.cs" />
     <Compile Include="Vehicles\IVehicleService.cs" />

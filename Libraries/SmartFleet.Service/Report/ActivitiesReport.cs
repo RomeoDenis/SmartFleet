@@ -15,7 +15,7 @@ namespace SmartFleet.Service.Report
 
     public delegate void UpdateProgress(int val);
 
-    public class ActivitiesRerport : IActivitiesRerport
+    public class ActivitiesReport : IActivitiesReport
     {
         /// <summary>
         /// 
@@ -150,12 +150,12 @@ namespace SmartFleet.Service.Report
                 //get  last period
                 var lastPosition = GetLastPosition(positions, position);
                 // set the begnings of the period
-                SetBegningsTrip(firstPosition, trgt);
+                SetBeginningsTrip(firstPosition, trgt);
                 // set the ends of the period
                 SetEndsTrip(lastPosition, trgt);
                 // calculate distance , speeds , and duration
                 GetDistanceAndDuration(positions, trgt, position.Start, position.End);
-                var index = GetPreviousPositionIndexx(positions, lastPosition);
+                var index = GetPreviousPositionIndex(positions, lastPosition);
                 if (index == -1)
                     index = 0;
                 trgt.Speed = positions.ElementAt(index).Speed;
@@ -188,7 +188,7 @@ namespace SmartFleet.Service.Report
             return true;
         }
 
-        private static int GetPreviousPositionIndexx(List<Position> positions, Position lastPosition)
+        private static int GetPreviousPositionIndex(List<Position> positions, Position lastPosition)
         {
             int index = positions.ToList().FindIndex(x => x == lastPosition);
             return index -1;
@@ -251,7 +251,7 @@ namespace SmartFleet.Service.Report
             }
         }
 
-        private static void SetBegningsTrip(Position firstPosition, TargetViewModel trgt)
+        private static void SetBeginningsTrip(Position firstPosition, TargetViewModel trgt)
         {
             if (firstPosition == null) return;
             trgt.MotionStatus = firstPosition.MotionStatus.ToString();

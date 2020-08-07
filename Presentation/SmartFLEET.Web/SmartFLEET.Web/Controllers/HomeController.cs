@@ -59,7 +59,7 @@ namespace SmartFLEET.Web.Controllers
         public async Task<JsonResult> LoadNodes()
         {
             var user = User.Identity;
-            var cst = await _customerService.GetCustomerWithZonesAndVehicles(user.Name);
+            var cst = await _customerService.GetCustomerWithZonesAndVehiclesAsync(user.Name);
             // add root nodes
             var nodes = AddRootNodes();
             if (cst == null)
