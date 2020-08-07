@@ -1,6 +1,6 @@
 ﻿namespace SmartFleet.Core.Domain.Vehicles
 {
-    public enum VehicleStatus
+    public enum VehicleStatus: int
     {
         Pending,
         Destroyed,

@@ -7,8 +7,8 @@ function customerDetailController($scope, customerService, $stateParams, $rootSc
     $scope.customer = {};
     customerService.getCustomer($stateParams.customerId).then(function (resp) {
         $scope.customer = resp.data;
-        $rootScope.customerId = null;
-        //vehicleService.sendCustomerId($stateParams.customerId);
+         // $rootScope.customerId = null;
+      //vehicleService.sendCustomerId($stateParams.customerId);
         // initVehicleList($stateParams.customerId);
     });
 }

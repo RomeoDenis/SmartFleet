@@ -27,7 +27,7 @@ namespace TeltonicaService.Infrastucture
 
             builder.RegisterGeneric(typeof(EfScopeRepository<>)).As(typeof(IScopeRepository<>))
                 .InstancePerLifetimeScope();
-            builder.Register(context => RabbitMqConfig.InitReceiverBus<TeltonikaHandler>("TeltonikaHandler.endpoint"))
+            builder.Register(context => RabbitMqConfig.InitAzureRecievingBus<TeltonikaHandler>("TeltonikaHandler.endpoint"))
                 .SingleInstance()
                 .As<IBusControl>()
                 .As<IBus>();

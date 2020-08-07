@@ -19,6 +19,7 @@ function vehicleController($scope, vehicleService, $state, $rootScope) {
             initVehicleList();
         } else {
             initVehicleListofCusomer($rootScope.customerId);
+            $rootScope.customerId = null;
         }
     }, 500);
     

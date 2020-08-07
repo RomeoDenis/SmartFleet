@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
 using SmartFleet.Data;

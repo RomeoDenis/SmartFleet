@@ -95,11 +95,19 @@ namespace TeltonicaService.Handlers
                             var positionQuery = await GetLastPostion(box.Id);
                             if (positionQuery != null)
                             {
-                                var distance = CalculateDistance(positionQuery.Lat, positionQuery.Long, gpsDataEvent.Lat,
-                                    gpsDataEvent.Long);
+                                var distance = GetGpsDistance(gpsDataEvents);
                                 Trace.TraceInformation($"time :{gpsDataEvent.DateTimeUtc} Ditance: " + distance);
                                 canInfo.Milestone =distance;
                                 canInfo.MileStoneCalculated =true;
+                                if (distance > 0 && box.VehicleId!=null)
+                                {
+                                    await context.Publish(new TLMilestoneVehicleEvent
+                                    {
+                                        Milestone = distance,
+                                        VehicleId = box.VehicleId.Value,
+                                        EventUtc = teltonikaGps.Timestamp
+                                    });
+                                }
                             } 
                         }
                         // await context.Publish(canInfo);
@@ -138,7 +146,7 @@ namespace TeltonicaService.Handlers
                     {
                         Id = Guid.NewGuid(),
                         Events = tlFuelMilstoneEvents,
-                 TlGpsDataEvents = gpsDataEvents
+                        //TlGpsDataEvents = gpsDataEvents
                     };
                     await context.Publish(events);
 
@@ -153,6 +161,20 @@ namespace TeltonicaService.Handlers
             }
 
         }
+
+        private static double GetGpsDistance(List<TLGpsDataEvent> gpsDataEvents)
+        {
+            var distance = 0.0;
+            var firstPos = gpsDataEvents.First();
+            foreach (var p in gpsDataEvents.Skip(1))
+            {
+                distance += Math.Round(GeofenceHelper.CalculateDistance(firstPos.Lat, firstPos.Long, p.Lat, p.Long), 2);
+                firstPos = p;
+            }
+
+            return distance;
+        }
+
         private async Task GeoReverseCodeGpsData(List<TLGpsDataEvent> gpsRessult)
         {
             foreach (var gpSdata in gpsRessult)
@@ -200,7 +222,7 @@ namespace TeltonicaService.Handlers
             if (data.AllIoElements != null && data.AllIoElements.ContainsKey(TNIoProperty.Fuel_level_1_X))
                 fuelLevel = Convert.ToUInt32(data.AllIoElements[TNIoProperty.Fuel_level_1_X]);
             // ReSharper disable once ComplexConditionExpression
-            if (fuelLevel != default(UInt32) && fuelLevel>0)
+            if (fuelLevel != default(UInt32) && fuelLevel>0 && fuelUsed>0)
                 return new TLFuelMilstoneEvent
                 {
                     FuelConsumption = Convert.ToInt32(fuelUsed),

@@ -7,7 +7,7 @@ namespace SmartFleet.Core.Infrastructure.MassTransit
 {
     public class MassTransitConfig
     {
-       static string url = "amqp://zcckffbw:QKVVIKHQgsx_QQ8qbxeb1Dl-E9jsKlSJ@eagle.rmq.cloudamqp.com/zcckffbw";
+       static string url = "amqp://vnxetefp:a3QEf_C9qBdLbYphS65Iki6JkI6qxzZ7@woodpecker.rmq.cloudamqp.com/vnxetefp";
 
         /// <summary>
         /// Configures the receive bus.
@@ -23,8 +23,8 @@ namespace SmartFleet.Core.Infrastructure.MassTransit
                     new Uri(url.Replace("amqp://", "rabbitmq://")),
                     hst =>
                     {
-                        hst.Username("zcckffbw");
-                        hst.Password("QKVVIKHQgsx_QQ8qbxeb1Dl-E9jsKlSJ");
+                        hst.Username("vnxetefp");
+                        hst.Password("a3QEf_C9qBdLbYphS65Iki6JkI6qxzZ7");
                     });
 
                 //configure.ReceiveEndpoint(host, null, e =>
@@ -53,8 +53,8 @@ namespace SmartFleet.Core.Infrastructure.MassTransit
                     new Uri(url.Replace("amqp://", "rabbitmq://")),
                     hst =>
                     {
-                        hst.Username("zcckffbw");
-                        hst.Password("QKVVIKHQgsx_QQ8qbxeb1Dl-E9jsKlSJ");
+                        hst.Username("vnxetefp");
+                        hst.Password("a3QEf_C9qBdLbYphS65Iki6JkI6qxzZ7");
                     });
 
 

@@ -45,15 +45,15 @@ namespace EdgeService.Handler
 
 
 
-        public Task Consume(ConsumeContext<CreateBoxCommand> context)
+        public async Task Consume(ConsumeContext<CreateBoxCommand> context)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                  _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
 
-                var item = _db.Boxes.FirstOrDefaultAsync(b => b.Imei == context.Message.Imei).Result;
+                var item = await _db.Boxes.FirstOrDefaultAsync(b => b.Imei == context.Message.Imei).ConfigureAwait(false);
                 if (item != null)
-                    return Task.FromResult(false);
+                    return ;
                 var box = new Box();
                 box.Id = Guid.NewGuid();
                 box.BoxStatus = BoxStatus.WaitPreparation;
@@ -75,8 +75,6 @@ namespace EdgeService.Handler
                     Trace.WriteLine(e);
                     throw;
                 }
-
-                return Task.FromResult(false);
             }
         }
 
@@ -85,15 +83,15 @@ namespace EdgeService.Handler
 
             try
             {
-                var item = Item(context.Message);
-                if (item.Result != null)
+                var item = await Item(context.Message).ConfigureAwait(false);
+                if (item != null)
                 {
                     using (var contextFScope = _dbContextScopeFactory.Create())
                     {
                         _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
 
                         var position = new Position();
-                        position.Box_Id = item.Result?.Id;
+                        position.Box_Id = item?.Id;
                         position.Altitude = context.Message.Altitude;
                         position.Direction = context.Message.Direction;
                         position.Lat = context.Message.Lat;

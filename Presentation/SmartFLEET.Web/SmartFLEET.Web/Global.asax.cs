@@ -368,23 +368,7 @@ namespace SmartFLEET.Web
         }
         protected void Application_Start()
         {
-            #region add masstransit consumer
-
-            try
-            {
-                
-                RabbitMqConfig
-                    .InitReceiverBus<SignalRHandler>("Smartfleet.Web.endpoint")
-                    .StartAsync()
-                    .GetAwaiter();
-            }
-            catch (Exception e)
-            {
-                Trace.WriteLine(e);
-                //throw;
-            }
-            #endregion
-
+            
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -434,6 +418,14 @@ namespace SmartFLEET.Web
             var queryBuilder = new DataTablesLinqQueryBulider();
             builder.RegisterInstance(queryBuilder).As<DataTablesLinqQueryBulider>();
             #endregion
+            #region add masstransit consumer
+            builder.Register(context => RabbitMqConfig.InitReceiverBus<SignalRHandler>("Smartfleet.Web.endpoint"))
+                .SingleInstance()
+                .As<IBusControl>()
+                .As<IBus>();
+            #endregion
+
+
 
             var container = builder.Build();
             var path =  Server.MapPath("/") + @"bin\microservices";

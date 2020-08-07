@@ -32,7 +32,7 @@ namespace SmartFleet.Core.Domain.Vehicles
         [ForeignKey("Model_Id")]
         public Model Model { get; set; }
         public int? MaxSpeed { get; set; }
-        public int Milestone { get; set; }
+        public double Milestone { get; set; }
         public bool SpeedAlertEnabled { get; set; }
         public bool CANEnabled { get; set; }
         [NotMapped]
@@ -41,5 +41,6 @@ namespace SmartFleet.Core.Domain.Vehicles
         public InterestArea InterestArea { get; set; }
         public ICollection<Driver> Drivers { get; set; }
         public ICollection<VehicleAlarrm> Alarrms { get; set; }
+        public DateTime MileStoneUpdateUtc { get; set; }
     }
 }

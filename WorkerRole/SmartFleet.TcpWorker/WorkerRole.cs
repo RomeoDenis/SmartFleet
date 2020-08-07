@@ -20,7 +20,7 @@ namespace SmartFleet.TcpWorker
         {
             InitLog();
             // init teltonika server 
-            var listner = DependaciyRegistrar.ResolveTeltonicaListner();
+            var listner = DependencyRegistrar.ResolveDependencies();
             listner.Start();
         }
        

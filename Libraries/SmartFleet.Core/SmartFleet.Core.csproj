@@ -151,6 +151,7 @@
     <Compile Include="Contracts\Commands\TLFuelMilstoneEvent.cs" />
     <Compile Include="Contracts\Commands\TLGpsDataEvent.cs" />
     <Compile Include="Contracts\Commands\TLGpsDataEvents.cs" />
+    <Compile Include="Contracts\Commands\TLMilestoneVehicleEvent.cs" />
     <Compile Include="Contracts\Commands\TNIoProperty.cs" />
     <Compile Include="Data\Enums\DbContextScopeOption.cs" />
     <Compile Include="Data\IAmbientDbContextLocator.cs" />

@@ -22,22 +22,22 @@ namespace GT02AServer
     //      
             TcpListener listener = new TcpListener(IPAddress.Any, 8080);
             listener.Start();
-            _bus= Bus.Factory.CreateUsingAzureServiceBus(sbc =>
-            {
-                var serviceUri = ServiceBusEnvironment.CreateServiceUri("sb",
-                    ConfigurationManager.AppSettings["AzureSbNamespace"],
-                    ConfigurationManager.AppSettings["AzureSbPath"]);
+            //_bus= Bus.Factory.CreateUsingAzureServiceBus(sbc =>
+            //{
+            //    var serviceUri = ServiceBusEnvironment.CreateServiceUri("sb",
+            //        ConfigurationManager.AppSettings["AzureSbNamespace"],
+            //        ConfigurationManager.AppSettings["AzureSbPath"]);
 
-                var host = sbc.Host(serviceUri,
-                    h =>
-                    {
-                        h.TokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(
-                            ConfigurationManager.AppSettings["AzureSbKeyName"],
-                            ConfigurationManager.AppSettings["AzureSbSharedAccessKey"], TimeSpan.FromDays(1),
-                            TokenScope.Namespace);
-                    });
-            });
-            _bus.Start();
+            //    var host = sbc.Host(serviceUri,
+            //        h =>
+            //        {
+            //            h.TokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(
+            //                ConfigurationManager.AppSettings["AzureSbKeyName"],
+            //                ConfigurationManager.AppSettings["AzureSbSharedAccessKey"], TimeSpan.FromDays(1),
+            //                TokenScope.Namespace);
+            //        });
+            //});
+            //_bus.Start();
 
             while (true) // Add your exit flag here
             {
@@ -77,10 +77,10 @@ namespace GT02AServer
                     foreach (var r in result)
                     {
                         Task.Run(async () => { await SendCommand(stream, r.Value, client); });
-                        foreach (var createTk103Gpse in r.Key)
-                        {
-                            _bus.Publish<CreateTk103Gps>(createTk103Gpse);
-                        }
+                        //foreach (var createTk103Gpse in r.Key)
+                        //{
+                        //    _bus.Publish<CreateTk103Gps>(createTk103Gpse);
+                        //}
                     }
                 }
             }

@@ -53,5 +53,7 @@ namespace SmartFleet.Service.Report
         public string ReportDate { get; set; }
         public double FuelConsumption { get; set; }
         public List<TargetViewModel> Positions { get; set; }
+        public List<FuelConsumption> FuelConsumptions { get; set; }
+
     }
 }

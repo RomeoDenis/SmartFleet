@@ -28,11 +28,7 @@ function reportController($scope, reportService, $compile, $http) {
         '36': { color: 'orange' },
         '80': { color: 'red' }
     }
-    //$scope.vehicles = [];
-    //reportService.getVehicles().then(function(resp) {
-    // //   console.log(resp.data);
-    //    $scope.vehicles = resp.data;
-    //});
+   
     $scope.ExportToPdf =function() {
         var url = '../VehicleReport/ExportReportPdf/?vehicleId=' + $scope.vehicleId + "&startPeriod=" + $scope.startPeriod;
         window.open(url);
@@ -44,62 +40,57 @@ function reportController($scope, reportService, $compile, $http) {
             alert("il faut choisir une date de début et un véhicule");
             return;
         }
-       $http.get('../VehicleReport/GetDailyVehicleReport/?vehicleId=' + $scope.vehicleId + "&startPeriod=" + $scope.startPeriod)
-            .then(function (resp) {
+        $http.get('../VehicleReport/GetDailyVehicleReport/?vehicleId=' +
+                $scope.vehicleId +
+                "&startPeriod=" +
+                $scope.startPeriod)
+            .then(function(resp) {
                 console.log(resp);
                 $scope.optionsAvg = setOptions(resp.data.AvgSpeed != null ? resp.data.AvgSpeed : 0, 'KM/H');
-                    $scope.options = setOptions(resp.data.MaxSpeed != null ? resp.data.MaxSpeed : 0, 'KM/H');
-                    $scope.optionsFuel = fuelOptions(resp.data.FuelConsumption != null ? resp.data.FuelConsumption : 0, 'L/100KM');
+                $scope.options = setOptions(resp.data.MaxSpeed != null ? resp.data.MaxSpeed : 0, 'KM/H');
+                $scope.optionsFuel = fuelOptions(resp.data.FuelConsumption != null ? resp.data.FuelConsumption : 0, 'L/100KM');
+                $scope.VehicleName = resp.data.VehicleName;
+                $scope.ReportDate = $scope.startPeriod;
+                $scope.Distance = resp.data.Distance;
+                if (resp.data.Positions != null && resp.data.Positions.length > 0) {
+                    $scope.BeginService = resp.data.Positions[0].BeginService !== ""
+                        ? resp.data.Positions[0].BeginService
+                        : "inconnu";
+                    $scope.EndService = resp.data.Positions[resp.data.Positions.length - 1].EndService;
 
-               $scope.VehicleName = resp.data.VehicleName;
-                    $scope.ReportDate = $scope.startPeriod;
-                    $scope.Distance = resp.data.Distance;
+                } else {
+                    $scope.BeginService = "inconnu";
+                    $scope.EndService = "inconnu";
 
-                    if (resp.data.Positions != null && resp.data.Positions.length > 0) {
-                        $scope.BeginService = resp.data.Positions[0].BeginService !== ""
-                            ? resp.data.Positions[0].BeginService
-                            : "inconnu";
-                        $scope.EndService = resp.data.Positions[resp.data.Positions.length - 1].EndService;
+                }
+                $("#gps-activity-2").html("");
+                // 
+                $scope.activities = resp.data.Positions;
+                initGpsData(resp.data.Positions, [], "gps-activity-2");
 
-                    } else {
-                        $scope.BeginService = "inconnu";
-                        $scope.EndService = "inconnu";
+                $scope.targetList = [];
 
-                    }
-                    $("#gps-activity-2").html("");
-                    // 
-                    $scope.activities = resp.data.Positions;
-                    initGpsData(resp.data.Positions, [], "gps-activity-2");
-              
-                    $scope.targetList = [];
+                for (var i = 0; i < resp.data.Positions.length; i++) {
+                    var item = resp.data.Positions[i];
+                    item.Duration = secondsToHms(item.Duration);
+                    if (item.MotionStatus === "Stopped")
+                        item.MotionStatus = "Arrêt";
+                    else item.MotionStatus = "Conduite";
+                    $scope.targetList.push(item);
+                }
+                setFuelChart(resp.data.FuelConsumptions);
+                $("#daily-report").show();
+                $("#report-content").html("");
+                var com = $compile(template)($scope);
+                $("#report-content").append(com);
 
-                    for (var i = 0; i < resp.data.Positions.length; i++) {
-                        var item = resp.data.Positions[i];
-                        item.Duration = secondsToHms(item.Duration);
-                        if (item.MotionStatus === "Stopped")
-                            item.MotionStatus = "Arrêt";
-                        else item.MotionStatus = "Conduite";
-                        $scope.targetList.push(item);
-                    }
-                    $("#daily-report").show();
-                    $("#report-content").html("");
-                    var com = $compile(template)($scope);
-                    $("#report-content").append(com);
-                   
-                    $("#report-win").append($("#report-content"));
-                    $("#prg-wwin").window('close');
+                $("#report-win").append($("#report-content"));
+                $("#prg-wwin").window('close');
             });
-               
-        
+
+
     }
-    //$scope.$watch('startPeriod', function () {
-    //    // ReSharper disable once RedundantUnits
-    //    $("#prg .progress-bar").css("width", "0%").removeClass("progress-bar-striped").html("0%");
-    //});
-    //$scope.$watch('vehicleId', function () {
-    //    // ReSharper disable once RedundantUnits
-    //    $("#prg .progress-bar").css("width", "0%").removeClass("progress-bar-striped").html("0%");
-    //});
+
     $scope.downloadFullReport = function() {
         console.log("here !!");
     }
@@ -132,5 +123,30 @@ function fuelOptions(value, measure) {
         max: 80,
         foregroundColor: 'rgba(0, 150, 136, 1)',
         backgroundColor: 'rgba(0, 0, 0, 0.1)'
+    };
+}
+function setFuelChart(fuelConsuptions) {
+    var ctx = $("#fuel-chart");
+    var lineChart = new Chart(ctx, {
+        type: 'line',
+        data: fuelData,
+        options: chartOptions
+    });
+    var chartOptions = {
+        legend: {
+            display: true,
+            position: 'top',
+            labels: {
+                boxWidth: 80,
+                fontColor: 'black'
+            }
+        }
+    };
+    var fuelData = {
+        labels: ["0H", "1H", "2H", "3H", "4H", "5H", "6H"],
+        datasets: [{
+            label: "Car Speed",
+            data: [0, 59, 75, 20, 20, 55, 40],
+        }]
     };
 }

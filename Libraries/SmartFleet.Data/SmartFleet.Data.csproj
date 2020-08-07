@@ -127,6 +127,10 @@
     <Compile Include="Migrations\201906162032112_convertMileStoretoDouble.Designer.cs">
       <DependentUpon>201906162032112_convertMileStoretoDouble.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906211846138_changeMilestoneTypetoDouble.cs" />
+    <Compile Include="Migrations\201906211846138_changeMilestoneTypetoDouble.Designer.cs">
+      <DependentUpon>201906211846138_changeMilestoneTypetoDouble.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmartFleetObjectContext.cs" />
@@ -189,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906162032112_convertMileStoretoDouble.resx">
       <DependentUpon>201906162032112_convertMileStoretoDouble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906211846138_changeMilestoneTypetoDouble.resx">
+      <DependentUpon>201906211846138_changeMilestoneTypetoDouble.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

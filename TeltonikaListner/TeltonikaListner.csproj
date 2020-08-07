@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TeltonikaServer.cs" />
+    <Compile Include="TeltonikaTcpServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Libraries\SmartFleet.Core\SmartFleet.Core.csproj">

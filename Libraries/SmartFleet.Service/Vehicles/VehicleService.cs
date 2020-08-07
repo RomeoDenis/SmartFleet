@@ -199,5 +199,14 @@ namespace SmartFleet.Service.Vehicles
                                      p.DateTimeUtc >= end);
             return nextRecord;
         }
+
+        public IEnumerable<FuelConsumption> GetFuelConsuptionList(DateTime start, DateTime end, Guid vehicleId)
+        {
+            using (var contextFScope = _dbContextScopeFactory.Create())
+            {
+                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                return FuelConsumptions(start, end, vehicleId);
+            }
+        }
     }
 }
