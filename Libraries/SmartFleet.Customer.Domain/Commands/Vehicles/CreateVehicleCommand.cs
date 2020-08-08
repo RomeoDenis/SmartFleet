@@ -1,11 +1,12 @@
 ﻿using System;
 using FluentValidation;
+using MediatR;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Domain.Vehicles;
 
 namespace SmartFleet.Customer.Domain.Commands.Vehicles
 {
-    public class CreateVehicleCommand : SmartFleetCommand
+    public class CreateVehicleCommand : SmartFleetCommand, IRequest<Unit>
     {
         public string VehicleName { get; set; }
         public string LicensePlate { get; set; }

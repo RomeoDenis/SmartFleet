@@ -20,12 +20,12 @@ namespace EdgeService
             builder.RegisterType<DbContextScopeFactory>().As<IDbContextScopeFactory>();
             builder.RegisterType<AmbientDbContextLocator>().As<IAmbientDbContextLocator>();
             builder.RegisterGeneric(typeof(EfScopeRepository<>)).As(typeof(IScopeRepository<>)).InstancePerLifetimeScope();
-            var bus = RabbitMqConfig.ConfigureSenderBus();
+            var bus = RabbitMqConfig.InitReceiverBus<TeltonikaedgeHandler>("teltonika");
             builder.RegisterInstance(bus).As<IBusControl>();
             Container = builder.Build();
          
             Container.Resolve<IAmbientDbContextLocator>();
-           
+            bus.StartAsync();
 
         }
 

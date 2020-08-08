@@ -67,7 +67,7 @@ namespace EdgeService.Handler
                 try
                 {
                     _db.Boxes.Add(box);
-                    contextFScope.SaveChangesAsync().ConfigureAwait(false);
+                    await contextFScope.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (Exception e)
 
