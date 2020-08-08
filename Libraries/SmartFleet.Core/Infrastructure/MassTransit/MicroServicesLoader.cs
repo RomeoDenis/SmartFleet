@@ -26,19 +26,18 @@ namespace SmartFleet.Core.Infrastructure.MassTransit
                 //  Gets the all modules from each assembly to be registered.
                 //  Make sure that each module **MUST** have a parameterless constructor.
                 var modules = assembly.GetTypes()
-                    .Where(p => typeof(IMicorService).IsAssignableFrom(p)
+                    .Where(p => typeof(IMicroService).IsAssignableFrom(p)
                                 && !p.IsAbstract)
-                    .Select(p => (IMicorService)Activator.CreateInstance(p));
+                    .Select(p => (IMicroService)Activator.CreateInstance(p));
 
                 //  Regsiters each module.
-                //var bus = new BusConsumerStarter();
-
+                
                 foreach (var module in modules)
                 {
-                    MethodInfo startCosmuerMethod = module.GetType().GetMethod("StartService");
+                    MethodInfo method = module.GetType().GetMethod("StartService");
                     // Debug.WriteLine(module.GetType());
-                    if (startCosmuerMethod != null)
-                        startCosmuerMethod.Invoke(module,null);
+                    if (method != null)
+                        method.Invoke(module,null);
                 }
             }
         }

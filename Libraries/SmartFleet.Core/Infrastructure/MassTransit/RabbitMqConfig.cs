@@ -16,7 +16,7 @@ namespace SmartFleet.Core.Infrastructure.MassTransit
             return Bus.Factory.CreateUsingRabbitMq(sbc =>
             {
                 IRabbitMqHost host = sbc.Host(
-                    new Uri(url/*.Replace("amqp://", "rabbitmq://")*/),
+                    new Uri(url),
                     hst =>
                     {
                         hst.Username(ConfigurationManager.AppSettings["RabbitUsername"]);
@@ -36,7 +36,7 @@ namespace SmartFleet.Core.Infrastructure.MassTransit
             return Bus.Factory.CreateUsingRabbitMq(configure =>
             {
 
-                IRabbitMqHost host = configure.Host(
+                 configure.Host(
                     new Uri(url.Replace("amqp://", "rabbitmq://")),
                     hst =>
                     {
@@ -82,7 +82,7 @@ namespace SmartFleet.Core.Infrastructure.MassTransit
                     ConfigurationManager.AppSettings["AzureSbNamespace"],
                     ConfigurationManager.AppSettings["AzureSbPath"]);
 
-                var host = ServiceBusBusFactoryConfiguratorExtensions.Host(sbc, serviceUri,
+                ServiceBusBusFactoryConfiguratorExtensions.Host(sbc, serviceUri,
                     h =>
                     {
                         h.TokenProvider = TokenProvider.CreateSharedAccessSignatureTokenProvider(

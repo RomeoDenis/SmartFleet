@@ -102,7 +102,7 @@ namespace EdgeService.Handler
                         position.Satellite = context.Message.Satellite;
                         position.Timestamp = context.Message.Timestamp;
                         Semaphore.WaitOne();
-                        var address = await _geoCodingService.ExecuteQuery(context.Message.Lat, context.Message.Long).ConfigureAwait(false);
+                        var address = await _geoCodingService.ExecuteQueryAsync(context.Message.Lat, context.Message.Long).ConfigureAwait(false);
                         position.Address = address.display_name;
                         Semaphore.Release();
                         position.MotionStatus =  !context.Message.IsStop  ? MotionStatus.Moving : MotionStatus.Stopped;

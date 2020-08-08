@@ -67,7 +67,7 @@ namespace SmartFleet.Service.Tracking
                             .FirstOrDefaultAsync(p => p.Box_Id == geDevice);
                         if (position == null) continue;
                         position.Vehicle = vehicle;
-                        await _geoCodingService.ReverseGeoCoding(position);
+                        await _geoCodingService.ReverseGeoCodingAsync(position);
                         positions.Add(position);
                     }
 

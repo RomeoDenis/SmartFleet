@@ -63,7 +63,7 @@ namespace EdgeService.Handler
                 if (box.BoxStatus == BoxStatus.WaitInstallation)
                     box.BoxStatus = BoxStatus.Prepared;
                 box.LastGpsInfoTime = context.Message.TimeStampUtc;
-                var address = await _geoCodingService.ExecuteQuery(context.Message.Latitude, context.Message.Longitude);
+                var address = await _geoCodingService.ExecuteQueryAsync(context.Message.Latitude, context.Message.Longitude);
                 Position position = new Position
                 {
                     Box_Id = box.Id,

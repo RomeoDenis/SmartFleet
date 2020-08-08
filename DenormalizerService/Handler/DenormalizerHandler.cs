@@ -72,7 +72,7 @@ namespace DenormalizerService.Handler
                 if (box.BoxStatus == BoxStatus.WaitInstallation)
                     box.BoxStatus = BoxStatus.Prepared;
                 box.LastGpsInfoTime = context.Message.TimeStampUtc;
-                var address = await _geoCodingService.ExecuteQuery(context.Message.Latitude, context.Message.Longitude);
+                var address = await _geoCodingService.ExecuteQueryAsync(context.Message.Latitude, context.Message.Longitude).ConfigureAwait(false);
                 Position position = new Position
                 {
                     Box_Id = box.Id,
@@ -126,7 +126,7 @@ namespace DenormalizerService.Handler
                 if (box.BoxStatus == BoxStatus.WaitInstallation)
                     box.BoxStatus = BoxStatus.Prepared;
                 box.LastGpsInfoTime = context.Message.TimeStampUtc;
-                var address = await _geoCodingService.ExecuteQuery(context.Message.Latitude, context.Message.Longitude).ConfigureAwait(false);
+                var address = await _geoCodingService.ExecuteQueryAsync(context.Message.Latitude, context.Message.Longitude).ConfigureAwait(false);
                 Position position = new Position
                 {
                     Box_Id = box.Id,
@@ -146,16 +146,16 @@ namespace DenormalizerService.Handler
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
             }
         }
-        private async Task<Box> Item(TLGpsDataEvent context)
+        private async Task<Box> GetModemDeviceAsync(TLGpsDataEvent context)
         {
             await _semaphore.WaitAsync().ConfigureAwait(false);
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                return await _db.Boxes.SingleOrDefaultAsync(b => b.Imei == context.Imei);
-
+                var box = await _db.Boxes.SingleOrDefaultAsync(b => b.Imei == context.Imei).ConfigureAwait(false);
+                _semaphore.Release();
+                return box;
             }
-            _semaphore.Release();
 
         }
         public async Task Consume(ConsumeContext<TLGpsDataEvent> context)
@@ -163,7 +163,7 @@ namespace DenormalizerService.Handler
             await _semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
-                var box = await Item(context.Message).ConfigureAwait(false);
+                var box = await GetModemDeviceAsync(context.Message).ConfigureAwait(false);
                 if (box != null)
                 {
                     using (var contextFScope = _dbContextScopeFactory.Create())

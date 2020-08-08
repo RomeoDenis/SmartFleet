@@ -34,7 +34,7 @@ namespace SmartFLEET.Web.Hubs
             if (SignalRHubManager.Clients == null)
                 return;
             var reverseGeoCodingService = new ReverseGeoCodingService();
-            await reverseGeoCodingService.ReverseGeoCoding(context.Message).ConfigureAwait(false);
+            await reverseGeoCodingService.ReverseGeoCodingAsync(context.Message).ConfigureAwait(false);
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
                 // get current gps device 

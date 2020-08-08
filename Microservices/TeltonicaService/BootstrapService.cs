@@ -6,7 +6,7 @@ using TeltonicaService.Infrastructure;
 
 namespace TeltonicaService
 {
-    public class BootstrapService :IMicorService
+    public class BootstrapService :IMicroService
     {
         
 

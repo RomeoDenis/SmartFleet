@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System;
+using System.Linq;
+using Autofac;
 using SmartFleet.Core.Data;
 
 namespace SmartFleet.Core.Infrastructure.Registration
@@ -9,5 +11,6 @@ namespace SmartFleet.Core.Infrastructure.Registration
         {
             return container.Resolve<IRepository<T>>();
         }
+        
     }
 }

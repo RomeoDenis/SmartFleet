@@ -54,6 +54,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="GreenPipes, Version=2.1.2.111, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\GreenPipes.2.1.2\lib\net452\GreenPipes.dll</HintPath>
     </Reference>
@@ -77,6 +80,9 @@
     </Reference>
     <Reference Include="MassTransit.Transports.MSMQ, Version=2.10.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MassTransit.MSMQ.2.10.2\lib\net40\MassTransit.Transports.MSMQ.dll</HintPath>
+    </Reference>
+    <Reference Include="MediatR, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MediatR.5.1.0\lib\net45\MediatR.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -145,6 +151,7 @@
     <Compile Include="Contracts\Commands\CreateTeltonikaGps.cs" />
     <Compile Include="Contracts\Commands\CreateNewBoxGps.cs" />
     <Compile Include="Contracts\Commands\CreateTk103Gps.cs" />
+    <Compile Include="Contracts\Commands\SmartFleetCommand.cs" />
     <Compile Include="Contracts\Commands\TLEcoDriverAlertEvent.cs" />
     <Compile Include="Contracts\Commands\TLExcessSpeedEvent.cs" />
     <Compile Include="Contracts\Commands\TlFuelEevents.cs" />
@@ -185,8 +192,7 @@
     <Compile Include="Helpers\Commonhelper.cs" />
     <Compile Include="Helpers\StringExtension.cs" />
     <Compile Include="ICommonServer.cs" />
-    <Compile Include="IMicorService.cs" />
-    <Compile Include="Infrastructure\Automapper\AutomapperConfig.cs" />
+    <Compile Include="IMicroService.cs" />
     <Compile Include="Infrastructure\MassTransit\MicroServicesLoader.cs" />
     <Compile Include="Infrastructure\MassTransit\RabbitMqConfig.cs" />
     <Compile Include="Infrastructure\Registration\IDependencyRegistrar.cs" />
@@ -195,11 +201,9 @@
     <Compile Include="ITK1003Parser.cs" />
     <Compile Include="Protocols\NewBox\NewBoxParser.cs" />
     <Compile Include="Protocols\Teltonika\FmXXXXParser.cs" />
-    <Compile Include="Protocols\Teltonika\FMXXXXParserV2.cs" />
     <Compile Include="Protocols\Teltonika\Gh3000Parser.cs" />
     <Compile Include="Protocols\DevicesParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protocols\Teltonika\ITeltonikaReciever.cs" />
     <Compile Include="Protocols\Tk1003\Tk1003Parser.cs" />
     <Compile Include="ReverseGeoCoding\Dtos\Address.cs" />
     <Compile Include="ReverseGeoCoding\Dtos\LocationiqResponse.cs" />

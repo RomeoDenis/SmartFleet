@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Http;
@@ -15,8 +16,10 @@ namespace SmartFleet.Core.ReverseGeoCoding
     public class ReverseGeoCodingService
     {
         private const string KEY = "pk.cc7d7c232c3b43aa3a87127b93b22339";
+        private  string _locationiqUrl = ConfigurationManager.AppSettings["locationiqUrl"];
+        private string _nominatimUrl = ConfigurationManager.AppSettings["nominatimUrl"];
         private int count = 0;
-        private string[] user_agents = { "Mozilla/4.0 (Mozilla/4.0; MSIE 7.0; Windows NT 5.1; FDM; SV1)"
+        private readonly string[] _userAgents = { "Mozilla/4.0 (Mozilla/4.0; MSIE 7.0; Windows NT 5.1; FDM; SV1)"
             , "Mozilla/4.0 (Mozilla/4.0; MSIE 7.0; Windows NT 5.1; FDM; SV1; .NET CLR 3.0.04506.30)",
             "Mozilla/4.0 (Windows; MSIE 7.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)",
             "Mozilla/4.0 (Windows; U; Windows NT 5.0; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.33 Safari/532.0",
@@ -29,16 +32,16 @@ namespace SmartFleet.Core.ReverseGeoCoding
             "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; es-la) Opera 9.27",
             "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; YPC 3.2.0; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.0.04506)"
         };
-        public async Task ReverseGeoCoding(CreateTk103Gps gpsStatement)
+        public async Task ReverseGeoCodingAsync(CreateTk103Gps gpsStatement)
         {
-            var lat = gpsStatement.Latitude.ToString().Replace(",", ".");
-            var lon = gpsStatement.Longitude.ToString().Replace(",", ".");
+            var lat = gpsStatement.Latitude.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
+            var lon = gpsStatement.Longitude.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var client = new HttpClient();
-            var url = $"https://us1.locationiq.com/v1/reverse.php?key={KEY}&lat={lat}&lon={lon}&format=json";
-            HttpResponseMessage response = await client.GetAsync(url);
+            var url = $"{_locationiqUrl}{KEY}&lat={lat}&lon={lon}&format=json";
+            HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
-                var r = await response.Content.ReadAsStringAsync();
+                var r = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 var result = JsonConvert.DeserializeObject<LocationiqResponse>(r);
                 gpsStatement.Address = result.display_name;
                 gpsStatement.Region = result.address.region;
@@ -46,16 +49,16 @@ namespace SmartFleet.Core.ReverseGeoCoding
             }
 
         }
-        public async Task ReverseGeoCoding(Position gpsStatement)
+        public async Task ReverseGeoCodingAsync(Position gpsStatement)
         {
-            var lat = gpsStatement.Lat.ToString().Replace(",", ".");
-            var lon = gpsStatement.Long.ToString().Replace(",", ".");
+            var lat = gpsStatement.Lat.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
+            var lon = gpsStatement.Long.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var client = new HttpClient();
-            var url = $"https://us1.locationiq.com/v1/reverse.php?key={KEY}&lat={lat}&lon={lon}&format=json";
-            HttpResponseMessage response = await client.GetAsync(url);
+            var url = $"{_locationiqUrl}{KEY}&lat={lat}&lon={lon}&format=json";
+            HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
-                var r = await response.Content.ReadAsStringAsync();
+                var r = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 var result = JsonConvert.DeserializeObject<LocationiqResponse>(r);
                 gpsStatement.Address = result.display_name;
                 gpsStatement.Region = result.address.region;
@@ -63,48 +66,49 @@ namespace SmartFleet.Core.ReverseGeoCoding
             }
 
         }
-        public async Task<string> ReverseGeoCoding(double Lat, double Long)
+
+        public async Task<string> ReverseGeoCodingAsync(double Lat, double Long)
         {
-             var lat = Lat.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
+            var lat = Lat.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var lon = Long.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var client = new HttpClient();
-            var url = $"https://us1.locationiq.com/v1/reverse.php?key={KEY}&lat={lat}&lon={lon}&format=json";
-            var rd = new Random();
-     
-            HttpResponseMessage response = await client.GetAsync(url);
+            var url = $"{_locationiqUrl}{KEY}&lat={lat}&lon={lon}&format=json";
+
+            HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
-                var r = await response.Content.ReadAsStringAsync();
-                var ressult= JsonConvert.DeserializeObject<LocationiqResponse>(r);
-                return ressult.display_name;
+                var r = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var locationiqResponse = JsonConvert.DeserializeObject<LocationiqResponse>(r);
+                return locationiqResponse.display_name;
             }
 
             return null;
-
         }
-        public  async Task<NominatimResult> ExecuteQuery(double lat, double lng)
+
+        public  async Task<NominatimResult> ExecuteQueryAsync(double lat, double lng)
         {
             var client = new RestClient();
             var _lat =lat. ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var _lon = lng.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             count++;
             Debug.WriteLine(count);
-            var url = $"https://nominatim.openstreetmap.org/reverse.php?format=json&lat={_lat}&lon={_lon}";
+            var url = $"{_nominatimUrl}&lat={_lat}&lon={_lon}";
             var request = new RestRequest(Method.GET);
             //request.Resource = "wsRest/wsServerArticle/getArticle";
             client.BaseUrl = new System.Uri(url);
             var rd = new Random();
-            client.UserAgent = user_agents[rd.Next(0, user_agents.Length)]; 
+            client.UserAgent = _userAgents[rd.Next(0, _userAgents.Length)]; 
             try
             {
                 
-                var response = await client.ExecutePostTaskAsync<NominatimResult>(request);
+                var response = await client.ExecutePostTaskAsync<NominatimResult>(request).ConfigureAwait(false);
                 if (response.ErrorException != null)
                 {
                     const string message = "Error retrieving response.  Check inner details for more info.";
                     throw new ApplicationException(message, response.ErrorException);
                 }
-                else return (NominatimResult)response.Data;
+
+                return response.Data;
             }
             catch (Exception e)
             {
@@ -113,13 +117,13 @@ namespace SmartFleet.Core.ReverseGeoCoding
             }
 
         }
-        public  async Task<string> ReverseGoecode(double lat, double log)
+        public  async Task<string> ReverseGoecodeAsync(double lat, double log)
         {
-            var r = await ExecuteQuery(lat, log);
+            var r = await ExecuteQueryAsync(lat, log).ConfigureAwait(false);
             Thread.Sleep(1000);
             if (r.display_name != null)
                 return r.display_name;
-            var ad = await ReverseGeoCoding(lat, log)
+            var ad = await ReverseGeoCodingAsync(lat, log)
                 .ConfigureAwait(false);
             if (ad == null) return string.Empty;
             Thread.Sleep(1000);

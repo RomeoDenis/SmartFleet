@@ -2,11 +2,10 @@
 using DenormalizerService.Infrastructure;
 using MassTransit;
 using SmartFleet.Core;
-using SmartFleet.Core.Infrastructure.MassTransit;
 
 namespace DenormalizerService
 {
-    public class BoootStraperService :IMicorService
+    public class BootStrapperService :IMicroService
     {
        // private IBusControl _bus;
 
@@ -17,7 +16,7 @@ namespace DenormalizerService
             ContainerBuilder builder = new ContainerBuilder();
             var dependencyRegistrar = new DependencyRegistrar();
             dependencyRegistrar.Register(builder);
-            DependencyRegistrar.ResolveServiceBus().Start();
+            DependencyRegistrar.ResolveServiceBus().StartAsync().GetAwaiter().GetResult();
             
         }
     }

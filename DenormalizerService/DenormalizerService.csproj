@@ -95,7 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoootStraperService.cs" />
+    <Compile Include="BootStrapperService.cs" />
     <Compile Include="Handler\DenormalizerHandler.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

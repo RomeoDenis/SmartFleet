@@ -143,7 +143,14 @@ namespace TeltonicaService.Handlers
                    await context.Publish(speedEvents.OrderBy(x => x.EventUtc).LastOrDefault()).ConfigureAwait(false);
                 if (gpsDataEvents.Any())
                 {
-                    await GeoReverseCodeGpsData(gpsDataEvents).ConfigureAwait(false);
+                    try
+                    {
+                        await GeoReverseCodeGpsData(gpsDataEvents).ConfigureAwait(false);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                     foreach (var @event in gpsDataEvents)
                         await context.Publish(@event).ConfigureAwait(false);
                 }
@@ -165,7 +172,7 @@ namespace TeltonicaService.Handlers
             catch (Exception e)
             {
                 Trace.TraceWarning(e.Message + " details:" + e.StackTrace);
-                //throw;
+                throw;
             }
 
         }
@@ -186,7 +193,7 @@ namespace TeltonicaService.Handlers
         private async Task GeoReverseCodeGpsData(List<TLGpsDataEvent> gpsRessult)
         {
             foreach (var gpSdata in gpsRessult)
-                gpSdata.Address = await _reverseGeoCodingService.ReverseGoecode(gpSdata.Lat, gpSdata.Long).ConfigureAwait(false);
+                gpSdata.Address = await _reverseGeoCodingService.ReverseGoecodeAsync(gpSdata.Lat, gpSdata.Long).ConfigureAwait(false);
 
         }
         double CalculateDistance(double lat1, double log,double lat2 ,double  log2) 
