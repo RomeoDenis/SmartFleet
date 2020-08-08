@@ -372,15 +372,6 @@
     <Content Include="App_Data\XmlDocument.xml" />
     <Content Include="App_Readme\Transformer.NET\LICENSE.txt" />
     <Content Include="App_Readme\Transformer.NET\README.txt" />
-    <Content Include="ClientApp\app.js" />
-    <Content Include="ClientApp\boot-app.js" />
-    <Content Include="ClientApp\boot-server.js" />
-    <Content Include="ClientApp\css\site.css" />
-    <Content Include="ClientApp\icons.js" />
-    <Content Include="ClientApp\router\index.js" />
-    <Content Include="ClientApp\router\routes.js" />
-    <Content Include="ClientApp\store\api.js" />
-    <Content Include="ClientApp\store\index.js" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="assets\182495_4950800_844322_image.png" />
     <Content Include="assets\carte_45x45.png" />
@@ -1663,12 +1654,6 @@
     <Content Include="Areas\Administrator\Views\User\_Users.cshtml" />
     <Content Include="Areas\Administrator\Views\User\_NewUser.cshtml" />
     <Content Include="Areas\Admin\Views\web.config" />
-    <Content Include="ClientApp\components\about.vue" />
-    <Content Include="ClientApp\components\app-root.vue" />
-    <Content Include="ClientApp\components\counter-example.vue" />
-    <Content Include="ClientApp\components\fetch-data.vue" />
-    <Content Include="ClientApp\components\home-page.vue" />
-    <Content Include="ClientApp\components\nav-menu.vue" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\AdminHome\Index.cshtml" />
     <Content Include="Scripts\easyui\easyloader.js" />
@@ -2213,8 +2198,6 @@
     <Content Include="Content\fonts\icofont.woff" />
     <Content Include="Content\fonts\icofont.woff2" />
     <Content Include="package.json" />
-    <Content Include="webpack.config.js" />
-    <Content Include="webpack.config.vendor.js" />
     <None Include="packages.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
