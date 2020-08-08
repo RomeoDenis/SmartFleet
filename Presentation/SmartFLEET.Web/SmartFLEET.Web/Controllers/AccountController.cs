@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using SmartFleet.Service.Authentication;
 using SmartFLEET.Web.Models.Account;
@@ -20,7 +21,14 @@ namespace SmartFLEET.Web.Controllers
         public AccountController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
+           
         }
+
+        private void NewMethod()
+        {
+            _authenticationService.AuthenticationManager = _authenticationService.AuthenticationManager?? HttpContext.GetOwinContext().Authentication;
+        }
+
         // GET: Account
         /// <summary>
         /// 
@@ -55,6 +63,7 @@ namespace SmartFLEET.Web.Controllers
             if (User.Identity.IsAuthenticated)
                 return RedirectToAction("Index", "Home", new {area = ""});
             if (!ModelState.IsValid) return View(model);
+            NewMethod();
             var userExists =
                 await _authenticationService.AuthenticationAsync(model.UserName, model.Password, model.RememberMe).ConfigureAwait(false);
             if (userExists == null) return View();
@@ -70,6 +79,8 @@ namespace SmartFLEET.Web.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
+            NewMethod();
+
             _authenticationService.Logout();
             return RedirectToAction("Login", "Account", new { area = "" });
         }

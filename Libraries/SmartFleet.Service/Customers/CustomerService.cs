@@ -52,12 +52,12 @@ namespace SmartFleet.Service.Customers
             }
 
         }
-        public Customer GetCustomerbyName(string name)
+        public Task<Customer> GetCustomerByNameAsync(string name)
         {
             var user = _userManager.Users.Include(x=>x.Customer)
                 .FirstOrDefault(x => x.UserName == name);
-           
-            return user?.Customer;
+
+            return _objectContext.Customers.FindAsync(user?.CustomerId);
         }
 
         public async Task<Customer> GetCustomerWithZonesAndVehiclesAsync(string name)
@@ -71,13 +71,11 @@ namespace SmartFleet.Service.Customers
             return user?.Customer;
         }
 
-        public async Task<Customer> GetCustomerbyName(Guid id)
+        public Task<Customer> GetCustomerByIdAsync(Guid id)
         {
             var cst = _objectContext.Customers
-                //.Include(x => x.Vehicles)
-                //.Include(x=>x.Users)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            return await cst;
+               .FirstOrDefaultAsync(x => x.Id == id);
+            return cst;
         }
 
         public IQueryable<Customer> GetCustomers( )
@@ -85,12 +83,12 @@ namespace SmartFleet.Service.Customers
             return _objectContext.Customers;
         }
 
-        public Task<Boolean> GetUserbyName(string id)
+        public Task<Boolean> GetUserByNameAsync(string id)
         {
             return _userManager.Users.AnyAsync(u => u.UserName == id);
         }
 
-        public async Task<List<InterestArea>> GetAllAreas(string userName, int page , int size)
+        public async Task<List<InterestArea>> GetAllAreasAsync(string userName, int page , int size)
         {
             var customer =await _userManager.Users.Include(x=>x.Customer).Select(x=> new { x.CustomerId , x.UserName}).FirstOrDefaultAsync(x => x.UserName == userName).ConfigureAwait(false);
             if (customer != null)
@@ -98,11 +96,11 @@ namespace SmartFleet.Service.Customers
                     .OrderBy(x=>x.Name)
                     .Skip(page-1)
                     .Take(size*page)
-                    .ToListAsync();
+                    .ToListAsync().ConfigureAwait(false);
             return new List<InterestArea>();
         }
 
-        public async Task<List<InterestArea>> GetAllAreas(string userName)
+        public async Task<List<InterestArea>> GetAllAreasAsync(string userName)
         {
             var customer = await _userManager.Users.Include(x => x.Customer).Select(x => new { x.CustomerId, x.UserName }).FirstOrDefaultAsync(x => x.UserName == userName).ConfigureAwait(false);
             if (customer != null)

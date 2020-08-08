@@ -10,10 +10,7 @@ namespace DenormalizerService
     {
        // private IBusControl _bus;
 
-        public void StartConsumers(BusConsumerStarter busConsumer)
-        {
-            
-        }
+        
 
         public void StartService()
         {

@@ -15,19 +15,17 @@ namespace EdgeService
 
         static void Main(string[] args)
         {
-            var busConfig = new BusConsumerStarter();
+            
             var builder = new ContainerBuilder();
             builder.RegisterType<DbContextScopeFactory>().As<IDbContextScopeFactory>();
             builder.RegisterType<AmbientDbContextLocator>().As<IAmbientDbContextLocator>();
             builder.RegisterGeneric(typeof(EfScopeRepository<>)).As(typeof(IScopeRepository<>)).InstancePerLifetimeScope();
+            var bus = RabbitMqConfig.ConfigureSenderBus();
+            builder.RegisterInstance(bus).As<IBusControl>();
             Container = builder.Build();
          
             Container.Resolve<IAmbientDbContextLocator>();
-            MassTransitConfig.ConfigureReceiveBus((cfg, hst) =>
-                cfg.ReceiveEndpoint(hst, "Teltonika.endpoint", e =>
-                    e.Consumer<TeltonikaedgeHandler>())
-
-            ).Start();   //busConfig.StartConsumerBus<Tk103Handler>("Tk1003.endpoint");
+           
 
         }
 

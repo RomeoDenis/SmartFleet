@@ -5,6 +5,7 @@ using Microsoft.AspNet.SignalR;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
+using SmartFleet.Core.Domain.Movement;
 using SmartFleet.Core.Geofence;
 using SmartFleet.Core.ReverseGeoCoding;
 using SmartFleet.Data;
@@ -19,7 +20,7 @@ namespace SmartFLEET.Web.Hubs
     public class SignalRHandler : Hub,
         IConsumer<CreateTk103Gps>,
         IConsumer<CreateNewBoxGps>, 
-        IConsumer<TLGpsDataEvent>,
+        IConsumer<TLGpsDataEvents>,
         IConsumer<TLExcessSpeedEvent>,
         IConsumer<TLEcoDriverAlertEvent>
     {
@@ -33,11 +34,11 @@ namespace SmartFLEET.Web.Hubs
             if (SignalRHubManager.Clients == null)
                 return;
             var reverseGeoCodingService = new ReverseGeoCodingService();
-            await reverseGeoCodingService.ReverseGeoCoding(context.Message);
+            await reverseGeoCodingService.ReverseGeoCoding(context.Message).ConfigureAwait(false);
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
                 // get current gps device 
-                var box = await GetSenderBox(context.Message, dbContextScopeFactory);
+                var box = await GetSenderBox(context.Message, dbContextScopeFactory).ConfigureAwait(false);
                 if (box != null)
                 {
                     // set position 
@@ -52,16 +53,16 @@ namespace SmartFLEET.Web.Hubs
         {
             var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
             var box = await dbContext.Boxes.Include(x => x.Vehicle).Include(x => x.Vehicle.Customer).FirstOrDefaultAsync(b =>
-                b.SerialNumber == message.SerialNumber);
+                b.SerialNumber == message.SerialNumber).ConfigureAwait(false);
             return box;
         }
 
         
-        private static async Task<Box> GetSenderBox(string imei, IDbContextScope dbContextScopeFactory)
+        private static async Task<Box> GetSenderBoxAsync(string imei, IDbContextScope dbContextScopeFactory)
         {
             var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
             var box = await dbContext.Boxes.Include(x => x.Vehicle).Include(x => x.Vehicle.Customer).FirstOrDefaultAsync(b =>
-                b.Imei == imei);
+                b.Imei == imei).ConfigureAwait(false);
             return box;
         }
 
@@ -103,7 +104,7 @@ namespace SmartFLEET.Web.Hubs
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
                 // get current gps device 
-                var box = await GetSenderBox(context.Message.IMEI, dbContextScopeFactory);
+                var box = await GetSenderBoxAsync(context.Message.IMEI, dbContextScopeFactory).ConfigureAwait(false);
                 if (box != null)
                 {
                     // set position 
@@ -113,32 +114,35 @@ namespace SmartFLEET.Web.Hubs
             }
         }
 
-        public async Task Consume(ConsumeContext<TLGpsDataEvent> context)
+        public async Task Consume(ConsumeContext<TLGpsDataEvents> context)
         {
             if (SignalRHubManager.Clients == null)
                 return;
          
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
-                // get current gps device 
-                var box = await GetSenderBox(context.Message.Imei, dbContextScopeFactory);
-                if (box != null)
+                foreach (var @event in context.Message.Events)
                 {
-                    // set position 
-                    if (!SignalRHubManager.LastPosition.ContainsKey(box.Imei))
-                        SignalRHubManager.LastPosition.Add(box.Imei, new GeofenceHelper.Position
-                            {
-                                Latitude = context.Message.Lat,
-                                Longitude = context.Message.Long
-                            });
-                    var position = new PositionViewModel(context.Message, box.Vehicle, SignalRHubManager.LastPosition[box.Imei]);
-                    await SignalRHubManager.Clients.Group(position.CustomerName).receiveGpsStatements(position);
-                    SignalRHubManager.LastPosition[box.Imei] = new GeofenceHelper.Position
+                    // get current gps device 
+                    var box = await GetSenderBoxAsync(@event.Imei, dbContextScopeFactory).ConfigureAwait(false);
+                    if (box != null)
                     {
-                        Latitude = context.Message.Lat,
-                        Longitude = context.Message.Long
-                    };
+                        // set position 
+                        if (!SignalRHubManager.LastPosition.ContainsKey(box.Imei))
+                            SignalRHubManager.LastPosition.Add(box.Imei, new GeofenceHelper.Position
+                            {
+                                Latitude = @event.Lat,
+                                Longitude = @event.Long
+                            });
+                        var position = new PositionViewModel(@event, box.Vehicle, SignalRHubManager.LastPosition[box.Imei]);
+                        await SignalRHubManager.Clients.Group(position.CustomerName).receiveGpsStatements(position);
+                        SignalRHubManager.LastPosition[box.Imei] = new GeofenceHelper.Position
+                        {
+                            Latitude = @event.Lat,
+                            Longitude = @event.Long
+                        };
 
+                    }
                 }
             }
         }

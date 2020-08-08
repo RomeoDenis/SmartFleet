@@ -133,6 +133,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SeedInitData.cs" />
     <Compile Include="SmartFleetObjectContext.cs" />
   </ItemGroup>
   <ItemGroup>

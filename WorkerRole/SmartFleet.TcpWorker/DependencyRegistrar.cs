@@ -1,5 +1,7 @@
-﻿using Autofac;
+﻿using System.IO;
+using Autofac;
 using MassTransit;
+using SmartFleet.Core;
 using SmartFleet.Core.Infrastructure.MassTransit;
 using SmartFleet.Core.ReverseGeoCoding;
 using TeltonikaListner;
@@ -16,16 +18,17 @@ namespace SmartFleet.TcpWorker
             var bus = RabbitMqConfig.ConfigureSenderBus();
             builder.RegisterInstance(bus).As<IBusControl>();
             builder.RegisterType<TeltonikaTcpServer>();
-            return builder.Build();
+           return builder.Build();
         }
 
-        public static TeltonikaTcpServer ResolveDependencies()
+        public static void ResolveDependencies()
         {
             Container = BuildContainer();
             Container.Resolve<ReverseGeoCodingService>();
             Container.Resolve<IBusControl>();
-            var listner = Container.Resolve<TeltonikaTcpServer>();
-            return listner;
+            var listener = Container.Resolve<TeltonikaTcpServer>();
+             listener.Start();
+            
         }
 
     }

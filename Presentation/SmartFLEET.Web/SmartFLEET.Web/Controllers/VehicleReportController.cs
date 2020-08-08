@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.SignalR;
+using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Data;
 using SmartFleet.Service.Common;
 using SmartFleet.Service.Customers;
@@ -68,8 +69,10 @@ namespace SmartFLEET.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> GetVehicles()
         {
-            var cst = _customerService.GetCustomerbyName(User.Identity.Name);
-            var vehicles = await ObjectContext.Vehicles.Where(x => x.CustomerId == cst.Id).Select(x=>new {x.VehicleName, x.Id}).ToArrayAsync();
+            var cst = await _customerService.GetCustomerByNameAsync(User.Identity.Name).ConfigureAwait(false);
+            if (cst == null)
+                return Json(new List<Vehicle>(), JsonRequestBehavior.AllowGet);
+            var vehicles = await ObjectContext.Vehicles.Where(x => x.CustomerId == cst.Id).Select(x=>new {x.VehicleName, x.Id}).ToArrayAsync().ConfigureAwait(false);
             return Json(vehicles, JsonRequestBehavior.AllowGet);
         }
 

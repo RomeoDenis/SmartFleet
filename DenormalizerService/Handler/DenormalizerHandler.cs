@@ -28,7 +28,7 @@ namespace DenormalizerService.Handler
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly ReverseGeoCodingService _geoCodingService;
-
+        private static SemaphoreSlim _semaphore;
         private SmartFleetObjectContext _db;
 
         public DenormalizerHandler()
@@ -36,6 +36,7 @@ namespace DenormalizerService.Handler
             new SemaphoreSlim(1, 1);
             _geoCodingService = new ReverseGeoCodingService();
             _dbContextScopeFactory = DependencyRegistrar.ResolveDbContextScopeFactory();
+            _semaphore = new SemaphoreSlim(1);
         }
 
         public async Task Consume(ConsumeContext<CreateTk103Gps> context)
@@ -147,16 +148,19 @@ namespace DenormalizerService.Handler
         }
         private async Task<Box> Item(TLGpsDataEvent context)
         {
+            await _semaphore.WaitAsync().ConfigureAwait(false);
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 return await _db.Boxes.SingleOrDefaultAsync(b => b.Imei == context.Imei);
 
             }
+            _semaphore.Release();
 
         }
         public async Task Consume(ConsumeContext<TLGpsDataEvent> context)
         {
+            await _semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
                 var box = await Item(context.Message).ConfigureAwait(false);
@@ -188,12 +192,15 @@ namespace DenormalizerService.Handler
             catch (Exception e)
             {
                 Trace.WriteLine(e);
+                _semaphore.Release();
                 throw;
             }
+            _semaphore.Release();
         }
 
         public async Task Consume(ConsumeContext<CreateBoxCommand> context)
         {
+            await _semaphore.WaitAsync().ConfigureAwait(false);
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -218,14 +225,17 @@ namespace DenormalizerService.Handler
                 catch (Exception e)
                 {
                     Trace.WriteLine(e);
+                    _semaphore.Release();
                     throw;
                 }
             }
+
+            _semaphore.Release();
         }
 
         public async Task Consume(ConsumeContext<TlFuelEevents> context)
         {
-            //await _semaphore.WaitAsync();
+            await _semaphore.WaitAsync().ConfigureAwait(false);
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -234,7 +244,7 @@ namespace DenormalizerService.Handler
                 var lastRecord = await _db.FuelConsumptions.OrderByDescending(x => x.DateTimeUtc)
                     // ReSharper disable once TooManyChainedReferences
                     .FirstOrDefaultAsync(x => x.VehicleId == fuelRecordMsg.VehicleId).ConfigureAwait(false);
-                var fuelConsumption = SetFuelConsumptionobject(fuelRecordMsg);
+                var fuelConsumption = SetFuelConsumptionObject(fuelRecordMsg);
                 // ReSharper disable once ComplexConditionExpression
                 if (lastRecord != null && fuelRecordMsg.MileStoneCalculated || lastRecord==null )
                 {
@@ -246,11 +256,11 @@ namespace DenormalizerService.Handler
 
                 _db.FuelConsumptions.Add(fuelConsumption);
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
-                //  _semaphore.Release();
+                  _semaphore.Release();
             }
         }
 
-        private static FuelConsumption SetFuelConsumptionobject(TLFuelMilstoneEvent context)
+        private static FuelConsumption SetFuelConsumptionObject(TLFuelMilstoneEvent context)
         {
             var entity = new FuelConsumption();
 
@@ -265,7 +275,8 @@ namespace DenormalizerService.Handler
 
         public async Task Consume(ConsumeContext<TLExcessSpeedEvent> context)
         {
-            //throw new NotImplementedException();
+            await _semaphore.WaitAsync().ConfigureAwait(false);
+            
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -281,10 +292,13 @@ namespace DenormalizerService.Handler
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
 
             }
+            _semaphore.Release();
         }
 
         public async Task Consume(ConsumeContext<TLEcoDriverAlertEvent> context)
         {
+            await _semaphore.WaitAsync().ConfigureAwait(false);
+
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -299,11 +313,13 @@ namespace DenormalizerService.Handler
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
 
             }
-            //throw new NotImplementedException();
+            _semaphore.Release();
         }
 
         public async Task Consume(ConsumeContext<TLMilestoneVehicleEvent> context)
         {
+            await _semaphore.WaitAsync().ConfigureAwait(false);
+
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -316,6 +332,7 @@ namespace DenormalizerService.Handler
 
                 }
             }
+            _semaphore.Release();
         }
     }
 }

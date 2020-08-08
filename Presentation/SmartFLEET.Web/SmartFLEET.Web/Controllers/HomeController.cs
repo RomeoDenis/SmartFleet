@@ -45,7 +45,7 @@ namespace SmartFLEET.Web.Controllers
         public ActionResult Index()
         {
             var user = User.Identity;
-            var cst = _customerService.GetCustomerbyName(user.Name);
+            var cst = _customerService.GetCustomerByNameAsync(user.Name);
             CurrentGroup = cst?.Id.ToString();
             ViewBag.GroupName = CurrentGroup;
             return View();

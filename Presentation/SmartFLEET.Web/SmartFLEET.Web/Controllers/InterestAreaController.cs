@@ -36,16 +36,16 @@ namespace SmartFLEET.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public JsonResult AddNewZone(InterestAreaVm model)
+        public async Task<JsonResult> AddNewZone(InterestAreaVm model)
         {
             if (ModelState.IsValid)
             {
-                var custome = _customerService.GetCustomerbyName(User.Identity.Name);
-                if (custome != null)
+                var customer = await _customerService.GetCustomerByNameAsync(User.Identity.Name).ConfigureAwait(false);
+                if (customer != null)
                 {
                     var area = Mapper.Map<InterestArea>(model);
                     area.Id = Guid.NewGuid();
-                    area.CustomerId = custome.Id;
+                    area.CustomerId = customer.Id;
                     var r = _customerService.AddArea(area);
                     return Json(r, JsonRequestBehavior.AllowGet);
                 }
@@ -63,11 +63,11 @@ namespace SmartFLEET.Web.Controllers
             // ReSharper disable once TooManyChainedReferences
             var q = RequestHelper.GetDataGridParams(Request);
 
-            return Json(await _customerService.GetAllAreas(User.Identity.Name, q.page, q.rows), JsonRequestBehavior.AllowGet);
+            return Json(await _customerService.GetAllAreasAsync(User.Identity.Name, q.page, q.rows).ConfigureAwait(false), JsonRequestBehavior.AllowGet);
         }
         public async Task<ActionResult> GetAllZones()
         {
-            return Json(await _customerService.GetAllAreas(User.Identity.Name), JsonRequestBehavior.AllowGet);
+            return Json(await _customerService.GetAllAreasAsync(User.Identity.Name).ConfigureAwait(false), JsonRequestBehavior.AllowGet);
         }
 
     }

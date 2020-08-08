@@ -19,7 +19,7 @@ namespace SmartFleet.Service.Authentication
         {
             _userManager = userManager;
         }
-        private IAuthenticationManager AuthenticationManager => HttpContext.Current.GetOwinContext().Authentication;
+       
         /// <summary>
         /// 
         /// </summary>
@@ -28,7 +28,11 @@ namespace SmartFleet.Service.Authentication
         public IEnumerable<string> GetRoleByUserId(string userId)
         {
             return  _userManager.GetRoles(userId);
-        }/// <summary>
+        }
+
+        public IAuthenticationManager AuthenticationManager { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="userName"></param>

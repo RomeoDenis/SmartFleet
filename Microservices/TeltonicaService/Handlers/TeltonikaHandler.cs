@@ -10,7 +10,6 @@ using MassTransit;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
-using SmartFleet.Core.Domain.Movement;
 using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Core.Geofence;
 using SmartFleet.Core.ReverseGeoCoding;
@@ -26,6 +25,9 @@ namespace TeltonicaService.Handlers
         private SmartFleetObjectContext _db;
         private IMapper _mappe;
         private readonly ReverseGeoCodingService _reverseGeoCodingService;
+        /// <summary>
+        /// 
+        /// </summary>
         public IDbContextScopeFactory DbContextScopeFactory { get; }
         private static SemaphoreSlim _semaphore;
 
@@ -43,21 +45,26 @@ namespace TeltonicaService.Handlers
             _mappe = mapperConfiguration.CreateMapper();
         }
 
-        private async Task<Box> Getbox(CreateTeltonikaGps context)
+        private async Task<Box> GetBoxAsync(CreateTeltonikaGps context)
         {
+            await _semaphore.WaitAsync().ConfigureAwait(false);
             using (var contextFScope = DbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                return await _db.Boxes.Include(x => x.Vehicle).SingleOrDefaultAsync(b => b.Imei == context.Imei);
+                var  box = await _db.Boxes.Include(x => x.Vehicle).SingleOrDefaultAsync(b => b.Imei == context.Imei).ConfigureAwait(false);
+                _semaphore.Release();
+                return box;
             }
+
+            
         }
 
-        private async Task<PositionQuery> GetLastPostion(Guid boxId)
+        private async Task<PositionQuery> GetLastPositionAsync(Guid boxId)
         {
             using (var contextFScope = DbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                return await _db.Positions.OrderByDescending(x => x.Timestamp).Where(x => x.Box_Id == boxId).Select(p=>new PositionQuery(){VehicleId= p.Box.VehicleId, Lat = p.Lat, Long= p.Long}).FirstOrDefaultAsync();
+                return await _db.Positions.OrderByDescending(x => x.Timestamp).Where(x => x.Box_Id == boxId).Select(p=>new PositionQuery(){VehicleId= p.Box.VehicleId, Lat = p.Lat, Long= p.Long}).FirstOrDefaultAsync().ConfigureAwait(false);
             }
         }
 
@@ -66,25 +73,25 @@ namespace TeltonicaService.Handlers
 
             try
             {
-                await _semaphore.WaitAsync();
-                var box = await Getbox(context.Message.Events.LastOrDefault());
+                await _semaphore.WaitAsync().ConfigureAwait(false);
+                var box = await GetBoxAsync(context.Message.Events.LastOrDefault()).ConfigureAwait(false);
                 List<TLEcoDriverAlertEvent> ecoDriveEvents = new List<TLEcoDriverAlertEvent>();
                 List<TLGpsDataEvent> gpsDataEvents = new List<TLGpsDataEvent>();
-                List<TLFuelMilstoneEvent> tlFuelMilstoneEvents = new List<TLFuelMilstoneEvent>();
+                List<TLFuelMilstoneEvent> tlFuelMilestoneEvents = new List<TLFuelMilstoneEvent>();
                 List<TLExcessSpeedEvent> speedEvents = new List<TLExcessSpeedEvent>();
-                foreach (var teltonikaGps in context.Message.Events)
+                foreach (var createTeltonikaGps in context.Message.Events)
                 {
                     if (box == null) continue;
                     // envoi des données GPs
-                    var gpsDataEvent = _mappe.Map<TLGpsDataEvent>(teltonikaGps);
+                    var gpsDataEvent = _mappe.Map<TLGpsDataEvent>(createTeltonikaGps);
                     gpsDataEvent.BoxId = box.Id;
                     Trace.WriteLine(gpsDataEvent.DateTimeUtc + " lat:" + gpsDataEvent.Lat + " long:" + gpsDataEvent.Long);
                     // await context.Publish(gpsDataEvent);
                     gpsDataEvents.Add(gpsDataEvent);
 
                     if (box.Vehicle == null) continue;
-                    InitAllIoElements(teltonikaGps);
-                    var canInfo = ProceedTNCANFilters(teltonikaGps);
+                    InitAllIoElements(createTeltonikaGps);
+                    var canInfo = ProceedTNCANFilters(createTeltonikaGps);
                     if (canInfo != default(TLFuelMilstoneEvent))
                     {
                         canInfo.VehicleId = box.Vehicle.Id;
@@ -93,7 +100,7 @@ namespace TeltonicaService.Handlers
                         // calcul de la distance par rapport au dernier point GPS
                         if (canInfo.Milestone <= 0)
                         {
-                            var positionQuery = await GetLastPostion(box.Id);
+                            var positionQuery = await GetLastPositionAsync(box.Id).ConfigureAwait(false);
                             if (positionQuery != null)
                             {
                                 var distance = GetGpsDistance(gpsDataEvents);
@@ -106,50 +113,50 @@ namespace TeltonicaService.Handlers
                                     {
                                         Milestone = distance,
                                         VehicleId = box.VehicleId.Value,
-                                        EventUtc = teltonikaGps.Timestamp
-                                    });
+                                        EventUtc = createTeltonikaGps.Timestamp
+                                    }).ConfigureAwait(false);
                                 }
                             } 
                         }
                         // await context.Publish(canInfo);
-                        tlFuelMilstoneEvents.Add(canInfo);
+                        tlFuelMilestoneEvents.Add(canInfo);
                     }
 
                     // ReSharper disable once ComplexConditionExpression
-                    if (box.Vehicle.SpeedAlertEnabled && box.Vehicle.MaxSpeed <= teltonikaGps.Speed
-                        || teltonikaGps.Speed > 85)
+                    if (box.Vehicle.SpeedAlertEnabled && box.Vehicle.MaxSpeed <= createTeltonikaGps.Speed
+                        || createTeltonikaGps.Speed > 85)
                     {
-                        var alertExeedSpeed = ProceedTLSpeedingAlert(teltonikaGps, box.Vehicle.Id,
+                        var alertExceedSpeed = ProceedTLSpeedingAlert(createTeltonikaGps, box.Vehicle.Id,
                             box.Vehicle.CustomerId);
                         // await context.Publish(alertExeedSpeed);
-                        speedEvents.Add(alertExeedSpeed);
+                        speedEvents.Add(alertExceedSpeed);
                     }
 
-                    var ecoDriveEvent = ProceedEcoDriverEvents(teltonikaGps, box.Vehicle.Id,
+                    var ecoDriveEvent = ProceedEcoDriverEvents(createTeltonikaGps, box.Vehicle.Id,
                         box.Vehicle.CustomerId);
                     if (ecoDriveEvent != default(TLEcoDriverAlertEvent))
                         //ecoDriveEvents.Add(ecoDriveEvent);
-                        await context.Publish(ecoDriveEvent);
+                        await context.Publish(ecoDriveEvent).ConfigureAwait(false);
                 }
 
                 if (speedEvents.Any())
-                   await context.Publish(speedEvents.OrderBy(x => x.EventUtc).LastOrDefault());
+                   await context.Publish(speedEvents.OrderBy(x => x.EventUtc).LastOrDefault()).ConfigureAwait(false);
                 if (gpsDataEvents.Any())
                 {
-                    await GeoReverseCodeGpsData(gpsDataEvents);
-                    foreach (var finalgpsDataEvent in gpsDataEvents)
-                        await context.Publish(finalgpsDataEvent);
+                    await GeoReverseCodeGpsData(gpsDataEvents).ConfigureAwait(false);
+                    foreach (var @event in gpsDataEvents)
+                        await context.Publish(@event).ConfigureAwait(false);
                 }
 
-                if (tlFuelMilstoneEvents.Any())
+                if (tlFuelMilestoneEvents.Any())
                 {
                     var events = new TlFuelEevents
                     {
                         Id = Guid.NewGuid(),
-                        Events = tlFuelMilstoneEvents,
+                        Events = tlFuelMilestoneEvents,
                         //TlGpsDataEvents = gpsDataEvents
                     };
-                    await context.Publish(events);
+                    await context.Publish(events).ConfigureAwait(false);
 
                 }
                 _semaphore.Release();
@@ -179,7 +186,7 @@ namespace TeltonicaService.Handlers
         private async Task GeoReverseCodeGpsData(List<TLGpsDataEvent> gpsRessult)
         {
             foreach (var gpSdata in gpsRessult)
-                gpSdata.Address = await _reverseGeoCodingService.ReverseGoecode(gpSdata.Lat, gpSdata.Long);
+                gpSdata.Address = await _reverseGeoCodingService.ReverseGoecode(gpSdata.Lat, gpSdata.Long).ConfigureAwait(false);
 
         }
         double CalculateDistance(double lat1, double log,double lat2 ,double  log2) 

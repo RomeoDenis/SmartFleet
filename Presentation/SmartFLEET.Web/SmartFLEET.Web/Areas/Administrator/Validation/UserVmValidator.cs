@@ -19,7 +19,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Validation
 
         private bool UniqueName(string arg)
         {
-            return _customerService.GetUserbyName(arg).Result ;
+            return _customerService.GetUserByNameAsync(arg).Result ;
         }
     }
 }

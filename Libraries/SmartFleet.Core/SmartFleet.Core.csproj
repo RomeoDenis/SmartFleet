@@ -187,9 +187,6 @@
     <Compile Include="ICommonServer.cs" />
     <Compile Include="IMicorService.cs" />
     <Compile Include="Infrastructure\Automapper\AutomapperConfig.cs" />
-    <Compile Include="Infrastructure\MassTransit\AzureBusConfig.cs" />
-    <Compile Include="Infrastructure\MassTransit\BusConsumerStarter.cs" />
-    <Compile Include="Infrastructure\MassTransit\MassTransitConfig.cs" />
     <Compile Include="Infrastructure\MassTransit\MicroServicesLoader.cs" />
     <Compile Include="Infrastructure\MassTransit\RabbitMqConfig.cs" />
     <Compile Include="Infrastructure\Registration\IDependencyRegistrar.cs" />

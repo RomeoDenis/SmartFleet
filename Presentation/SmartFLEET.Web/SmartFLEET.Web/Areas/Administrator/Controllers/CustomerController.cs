@@ -80,7 +80,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
        // [HttpPost]
         public async Task<JsonResult> GetCustomer(Guid id)
         {
-            var customer = await _customerService.GetCustomerbyName(id);
+            var customer = await _customerService.GetCustomerByIdAsync(id);
             return Json(Mapper.Map <CustomerVm>(customer), JsonRequestBehavior.AllowGet);
         }
       

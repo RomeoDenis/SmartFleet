@@ -17,24 +17,26 @@ namespace SmartFleet.Service.Customers
         /// <param name="users"></param>
         /// <returns></returns>
         bool AddCustomer(Customer customer, List<User> users );
+
         /// <summary>
         /// gets customer by current user's name
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        Customer GetCustomerbyName(string name);
-        /// <summary>
-        /// get  customer along with vehicles and zones by current user's name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        Task<Customer> GetCustomerWithZonesAndVehiclesAsync(string name);
+        Task<Customer> GetCustomerByNameAsync(string name);
+        
+            /// <summary>
+            /// get  customer along with vehicles and zones by current user's name
+            /// </summary>
+            /// <param name="name"></param>
+            /// <returns></returns>
+            Task<Customer> GetCustomerWithZonesAndVehiclesAsync(string name);
         /// <summary>
         /// get cuustomer by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Customer> GetCustomerbyName(Guid id);
+        Task<Customer> GetCustomerByIdAsync(Guid id);
         /// <summary>
         /// get all customers
         /// </summary>
@@ -45,7 +47,7 @@ namespace SmartFleet.Service.Customers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        Task<bool> GetUserbyName(string name);
+        Task<bool> GetUserByNameAsync(string name);
         /// <summary>
         /// get all aareas of customer by current user name
         /// </summary>
@@ -53,14 +55,14 @@ namespace SmartFleet.Service.Customers
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        Task<List<InterestArea>> GetAllAreas(string userName, int page, int size );
+        Task<List<InterestArea>> GetAllAreasAsync(string userName, int page, int size );
         /// <summary>
        /// get all aareas of customer by current user name
 
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        Task<List<InterestArea>> GetAllAreas(string userName);
+        Task<List<InterestArea>> GetAllAreasAsync(string userName);
 
         /// <summary>
         /// add new zone

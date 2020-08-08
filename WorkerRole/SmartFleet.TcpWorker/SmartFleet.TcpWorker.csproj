@@ -129,6 +129,10 @@
     <None Include="_EventRegisterUsersGuide.docx" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DenormalizerService\DenormalizerService.csproj">
+      <Project>{db226b09-319b-478b-8db2-a6d65337e22e}</Project>
+      <Name>DenormalizerService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\SmartFleet.Core\SmartFleet.Core.csproj">
       <Project>{4938638F-7B72-4632-AE2B-DE790DF79F83}</Project>
       <Name>SmartFleet.Core</Name>
