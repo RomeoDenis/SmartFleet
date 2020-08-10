@@ -9,5 +9,10 @@
             
             </summary>
         </member>
+        <member name="T:TeltonicaService.Infrastructure.DependencyRegistrar">
+            <summary>
+            
+            </summary>
+        </member>
     </members>
 </doc>

@@ -29,11 +29,11 @@ namespace TeltonicaService.Handlers
         /// 
         /// </summary>
         public IDbContextScopeFactory DbContextScopeFactory { get; }
-        private static SemaphoreSlim _semaphore;
+       
 
         public TeltonikaHandler()
         {
-            _semaphore = new SemaphoreSlim(1, 4);
+          
             DbContextScopeFactory = DependencyRegistrar.ResolveDbContextScopeFactory();
             _reverseGeoCodingService = DependencyRegistrar.ResolveGeoCodeService();
             InitMapper();
@@ -47,12 +47,11 @@ namespace TeltonicaService.Handlers
 
         private async Task<Box> GetBoxAsync(CreateTeltonikaGps context)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
+            
             using (var contextFScope = DbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 var  box = await _db.Boxes.Include(x => x.Vehicle).SingleOrDefaultAsync(b => b.Imei == context.Imei).ConfigureAwait(false);
-                _semaphore.Release();
                 return box;
             }
 
@@ -73,7 +72,7 @@ namespace TeltonicaService.Handlers
 
             try
             {
-                await _semaphore.WaitAsync().ConfigureAwait(false);
+               // await _semaphore.WaitAsync().ConfigureAwait(false);
                 var box = await GetBoxAsync(context.Message.Events.LastOrDefault()).ConfigureAwait(false);
                 List<TLEcoDriverAlertEvent> ecoDriveEvents = new List<TLEcoDriverAlertEvent>();
                 List<TLGpsDataEvent> gpsDataEvents = new List<TLGpsDataEvent>();
@@ -81,7 +80,7 @@ namespace TeltonicaService.Handlers
                 List<TLExcessSpeedEvent> speedEvents = new List<TLExcessSpeedEvent>();
                 foreach (var createTeltonikaGps in context.Message.Events)
                 {
-                    if (box == null) continue;
+                    if (box == null){ continue;}
                     // envoi des données GPs
                     var gpsDataEvent = _mappe.Map<TLGpsDataEvent>(createTeltonikaGps);
                     gpsDataEvent.BoxId = box.Id;
@@ -166,12 +165,13 @@ namespace TeltonicaService.Handlers
                     await context.Publish(events).ConfigureAwait(false);
 
                 }
-                _semaphore.Release();
+               // _semaphore.Release();
 
             }
             catch (Exception e)
             {
                 Trace.TraceWarning(e.Message + " details:" + e.StackTrace);
+                //_semaphore.Release();
                 throw;
             }
 

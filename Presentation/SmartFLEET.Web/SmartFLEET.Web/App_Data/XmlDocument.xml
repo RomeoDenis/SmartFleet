@@ -553,12 +553,6 @@
             </summary>
             <param name="authenticationService"></param>
         </member>
-        <member name="M:SmartFLEET.Web.Controllers.AccountController.Index">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:SmartFLEET.Web.Controllers.AccountController.Login">
             <summary>
             

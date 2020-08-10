@@ -29,15 +29,7 @@ namespace SmartFLEET.Web.Controllers
             _authenticationService.AuthenticationManager = _authenticationService.AuthenticationManager?? HttpContext.GetOwinContext().Authentication;
         }
 
-        // GET: Account
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Index()
-        {
-            return View();
-        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -46,9 +38,7 @@ namespace SmartFLEET.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home", new { area = "" });
-            return View(new LoginModel());
+               return View(new LoginModel());
         }
 
         /// <summary>
@@ -59,9 +49,7 @@ namespace SmartFLEET.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> Login(LoginModel model)
-        {
-            if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home", new {area = ""});
+        { 
             if (!ModelState.IsValid) return View(model);
             NewMethod();
             var userExists =

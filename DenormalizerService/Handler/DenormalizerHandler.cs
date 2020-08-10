@@ -148,19 +148,18 @@ namespace DenormalizerService.Handler
         }
         private async Task<Box> GetModemDeviceAsync(TLGpsDataEvent context)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
+           
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 var box = await _db.Boxes.SingleOrDefaultAsync(b => b.Imei == context.Imei).ConfigureAwait(false);
-                _semaphore.Release();
-                return box;
+               return box;
             }
 
         }
         public async Task Consume(ConsumeContext<TLGpsDataEvent> context)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
+           
             try
             {
                 var box = await GetModemDeviceAsync(context.Message).ConfigureAwait(false);
@@ -186,16 +185,17 @@ namespace DenormalizerService.Handler
                         box.LastGpsInfoTime = context.Message.DateTimeUtc;
                         _db.Positions.Add(position);
                        await contextFScope.SaveChangesAsync().ConfigureAwait(false);
+                       _semaphore.Release();
                     }
                 }
             }
             catch (Exception e)
             {
                 Trace.WriteLine(e);
-                _semaphore.Release();
+                //_semaphore.Release();
                 throw;
             }
-            _semaphore.Release();
+            //_semaphore.Release();
         }
 
         public async Task Consume(ConsumeContext<CreateBoxCommand> context)
@@ -235,7 +235,7 @@ namespace DenormalizerService.Handler
 
         public async Task Consume(ConsumeContext<TlFuelEevents> context)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
+           
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -256,7 +256,7 @@ namespace DenormalizerService.Handler
 
                 _db.FuelConsumptions.Add(fuelConsumption);
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
-                  _semaphore.Release();
+                
             }
         }
 
@@ -275,7 +275,6 @@ namespace DenormalizerService.Handler
 
         public async Task Consume(ConsumeContext<TLExcessSpeedEvent> context)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
             
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
@@ -292,13 +291,12 @@ namespace DenormalizerService.Handler
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
 
             }
-            _semaphore.Release();
+           
         }
 
         public async Task Consume(ConsumeContext<TLEcoDriverAlertEvent> context)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
-
+           
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -313,13 +311,12 @@ namespace DenormalizerService.Handler
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
 
             }
-            _semaphore.Release();
+           
         }
 
         public async Task Consume(ConsumeContext<TLMilestoneVehicleEvent> context)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
-
+          
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -332,7 +329,7 @@ namespace DenormalizerService.Handler
 
                 }
             }
-            _semaphore.Release();
+            
         }
     }
 }

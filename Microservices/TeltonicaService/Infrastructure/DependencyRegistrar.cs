@@ -12,6 +12,9 @@ using TeltonicaService.Handlers;
 
 namespace TeltonicaService.Infrastructure
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DependencyRegistrar : IDependencyRegistrar
     {
         private static IContainer Container { get; set; }
