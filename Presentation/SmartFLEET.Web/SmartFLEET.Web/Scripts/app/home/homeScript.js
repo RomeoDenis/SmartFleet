@@ -266,8 +266,9 @@ function onRecieveData(gpsStatement) {
     }
 }
 function joinSignalRGroup() {
-    var groupeName = $("#client-group").val();
-    hub.server.join(groupeName);
+    var groupName = $("#client-group").val();
+    console.log(groupName);
+    hub.server.join(groupName);
    // loadData(1);
 
 }

@@ -35,7 +35,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
         //[HttpGet]
         public async Task<JsonResult> GetAllVehicles()
         {
-            var data = await Mediator.Send(new GetVehiclesListQuery()
+            var data = await Mediator.Send(new GetVehiclesListQuery
             {
                 Request = Request
             }).ConfigureAwait(false);
