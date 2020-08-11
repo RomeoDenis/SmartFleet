@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNet.SignalR;
@@ -128,23 +130,36 @@ namespace SmartFLEET.Web.Hubs
                     if (box != null)
                     {
                         // set position 
-                        if (!SignalRHubManager.LastPosition.ContainsKey(box.Imei))
-                            SignalRHubManager.LastPosition.Add(box.Imei, new GeofenceHelper.Position
-                            {
-                                Latitude = @event.Lat,
-                                Longitude = @event.Long
-                            });
-                        var position = new PositionViewModel(@event, box.Vehicle, SignalRHubManager.LastPosition[box.Imei]);
+                        var lasPosition =await GetLastPositionAsync(box.Id , dbContextScopeFactory).ConfigureAwait(false);
+                        var position = new PositionViewModel(@event, box.Vehicle, lasPosition);
+                        if(string.IsNullOrEmpty(position.CustomerName))
+                            return;
+                        var reverseGeoCodingService = new ReverseGeoCodingService();
+                        position.Address =await reverseGeoCodingService.ReverseGeoCodingAsync(position.Latitude, position.Longitude).ConfigureAwait(false);
                         await SignalRHubManager.Clients.Group(position.CustomerName).receiveGpsStatements(position);
-                        SignalRHubManager.LastPosition[box.Imei] = new GeofenceHelper.Position
-                        {
-                            Latitude = @event.Lat,
-                            Longitude = @event.Long
-                        };
 
                     }
                 }
             }
+        }
+
+        private async Task<GeofenceHelper.Position> GetLastPositionAsync(Guid boxId, IDbContextScope dbContextScopeFactory)
+        {
+            var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
+            var lastPosition = await 
+                dbContext.Positions
+                    .Where(x => x.Box_Id == boxId)
+                    .OrderByDescending(p => p.Timestamp)
+                    .FirstOrDefaultAsync().ConfigureAwait(false);
+            if (lastPosition!=null)
+                return new GeofenceHelper.Position
+                {
+                    Latitude = lastPosition.Lat,
+                    Longitude = lastPosition.Long
+
+                };
+            return default(GeofenceHelper.Position);
+
         }
 
         public async Task Consume(ConsumeContext<TLExcessSpeedEvent> context)

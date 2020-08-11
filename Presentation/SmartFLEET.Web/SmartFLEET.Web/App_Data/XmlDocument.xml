@@ -37,6 +37,16 @@
             </summary>
             <param name="config"></param>
         </member>
+        <member name="P:SmartFLEET.Web.Areas.Administrator.Models.AddVehicleViewModel.Brands">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartFLEET.Web.Areas.Administrator.Models.AddVehicleViewModel.Customers">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:SmartFLEET.Web.Areas.Api.v1.Controllers.VehicleController.GetAllVehicles">
             <summary>
             Get collection of vehicles.

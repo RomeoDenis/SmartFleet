@@ -21,7 +21,10 @@ using SmartFleet.Service.Vehicles;
 using SmartFLEET.Web.Automapper;
 using SmartFLEET.Web.Hubs;
 using System.Web;
+using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
+using SmartFleet.Customer.Domain;
+using SmartFleet.Customer.Domain.Common.DomainMapping;
 using SmartFleet.Web.Framework.DataTables;
 
 namespace SmartFLEET.Web
@@ -90,10 +93,23 @@ namespace SmartFLEET.Web
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new SmartFleetAdminMappings());
+                cfg.AddProfile(new CustomerDomainMapping());
             });
             var mapper = mapperConfiguration.CreateMapper();
             builder.RegisterInstance(mapper).As<IMapper>();
             SignalRHubManager.Mapper = mapper;
+            builder
+                .RegisterType<Mediator>()
+                .As<IMediator>()
+                .InstancePerLifetimeScope();
+
+            builder.Register<ServiceFactory>(context =>
+            {
+                var c = context.Resolve<IComponentContext>();
+                return t => c.Resolve(t);
+            });
+            CustomerDomainDependencyRegistrar customerDomain= new CustomerDomainDependencyRegistrar();
+            customerDomain.Register(builder);
             var queryBuilder = new DataTablesLinqQueryBulider();
             builder.RegisterInstance(queryBuilder).As<DataTablesLinqQueryBulider>();
             #endregion

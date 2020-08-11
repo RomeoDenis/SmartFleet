@@ -97,6 +97,9 @@
     <Reference Include="MassTransit.RabbitMqTransport, Version=5.0.0.1475, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\MassTransit.RabbitMQ.5.0.0\lib\net452\MassTransit.RabbitMqTransport.dll</HintPath>
     </Reference>
+    <Reference Include="MediatR, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MediatR.5.1.0\lib\net45\MediatR.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
     </Reference>
@@ -3081,6 +3084,10 @@
     <ProjectReference Include="..\..\..\Libraries\SmartFleet.Core\SmartFleet.Core.csproj">
       <Project>{4938638f-7b72-4632-ae2b-de790df79f83}</Project>
       <Name>SmartFleet.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\SmartFleet.Customer.Domain\SmartFleet.Customer.Domain.csproj">
+      <Project>{0676812E-63FD-4B77-9A4D-CA05CA9EF3D9}</Project>
+      <Name>SmartFleet.Customer.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Libraries\SmartFleet.Data\SmartFleet.Data.csproj">
       <Project>{47423b0c-d3f9-4b7a-ac4e-bcc78b4a1970}</Project>

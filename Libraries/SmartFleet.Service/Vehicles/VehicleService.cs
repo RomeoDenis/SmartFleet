@@ -17,7 +17,6 @@ namespace SmartFleet.Service.Vehicles
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private SmartFleetObjectContext _db;
-        private readonly UserManager<User> _userManager;
 
         public VehicleService(IDbContextScopeFactory dbContextScopeFactory)
         {
