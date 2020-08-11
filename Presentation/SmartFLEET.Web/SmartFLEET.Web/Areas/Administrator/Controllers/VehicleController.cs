@@ -34,21 +34,29 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
         //[HttpGet]
         public async Task<JsonResult> GetAllVehicles()
         {
-            var query = _queryBuilder.BuildQuery(Request, _vehicleService.GetAllvehicles());
-            var jsResult = new
+            var query = _queryBuilder.BuildQuery(Request, _vehicleService.GetAllVehicles());
+            try
             {
-                recordsTotal = query.recordsTotal,
-                draw = query.draw,
-                recordsFiltered = query.recordsFiltered,
-                data = Mapper.Map<List<VehicleViewModel>>(query.data),
-                lenght = query.length
-            };
-            return Json(jsResult, JsonRequestBehavior.AllowGet);
+                var jsResult = new
+                {
+                    recordsTotal = query.recordsTotal,
+                    draw = query.draw,
+                    recordsFiltered = query.recordsFiltered,
+                    data = Mapper.Map<List<VehicleViewModel>>(query.data),
+                    lenght = query.length
+                };
+                return Json(jsResult, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         //[HttpGet]
         public async Task<JsonResult> GetAllVehiclesForCustomer  (string customerId)
         {
-            var query = _queryBuilder.BuildQuery(Request , _vehicleService.GetvehiclesOfCustomer(Guid.Parse(customerId)));
+            var query = _queryBuilder.BuildQuery(Request , _vehicleService.GetVehiclesOfCustomer(Guid.Parse(customerId)));
             var jsResult = new
             {
                 recordsTotal = query.recordsTotal,
@@ -98,9 +106,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
             {
                 var vehicle = Mapper.Map<Vehicle>(model);
                 vehicle.VehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), model.VehicleType);
-                if (vehicle.Box_Id != null)
-                    vehicle.VehicleStatus = VehicleStatus.Active;
-                _vehicleService.AddNewVehicle(vehicle);
+                _vehicleService.AddNewVehicleAsync(vehicle);
                 validationModel = new ValidationViewModel(new List<string>(), "Ok");
                 return Json(validationModel, JsonRequestBehavior.AllowGet);
             }

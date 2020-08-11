@@ -39,14 +39,13 @@ namespace SmartFLEET.Web.Automapper
             CreateMap<User, UserVm>().ReverseMap();
             CreateMap<InterestArea, InterestAreaVm>().ReverseMap();
             CreateMap<TLVehicleEventVM, TLExcessSpeedEvent>().ReverseMap();
-            CreateMap<TLVehicleEventVM, TLExcessSpeedEvent>().ReverseMap();
             CreateMap<PositionViewModel, CreateTk103Gps>();
             CreateMap<Vehicle, VehicleViewModel>()
                 .ForMember(x=>x.Customer, o=>o.MapFrom(v=>v.Customer.Name))
                 .ForMember(x => x.Brand, o => o.MapFrom(v => v.Brand.Name))
                 .ForMember(x => x.Model, o => o.MapFrom(v => v.Model.Name))
-                .ForMember(x => x.CreationDate, o => o.MapFrom(v => v.CreationDate.Value.ToShortDateString()))
-                .ForMember(x => x.InitServiceDate, o => o.MapFrom(v => v.InitServiceDate.ToString()))
+                .ForMember(x => x.CreationDate, o => o.MapFrom(v => v.CreationDate.HasValue? v.CreationDate.Value.ToShortDateString() : ""))
+                .ForMember(x => x.InitServiceDate, o => o.MapFrom(v =>v.InitServiceDate.HasValue? v.InitServiceDate.Value.ToShortDateString() :""))
                 .ForMember(x => x.Imei, y => y.MapFrom(s => s.Boxes.Any() ? s.Boxes.FirstOrDefault().Imei:""))
                       .ForMember(x => x.VehicleStatus, o => o.MapFrom(x => x.VehicleStatus.ToString())
         );

@@ -144,8 +144,8 @@ namespace SmartFLEET.Web.Controllers
                     .sendprogressVal(val);
             };
             report.Build(positions.OrderBy(p => p.Timestamp).ToList(), vehicle);
-            report.FuelConsumption = _vehicleService.GetFuelConsuptionByPeriod(start, endPeriod, id, report.Distance);
-            report.FuelConsumptions = _vehicleService.GetFuelConsuptionList(start, endPeriod, id).ToList();
+            report.FuelConsumption = _vehicleService.GetFuelConsumptionByPeriod(start, endPeriod, id, report.Distance);
+            report.FuelConsumptions = _vehicleService.GetFuelConsumptionList(start, endPeriod, id).ToList();
             return Json(report, JsonRequestBehavior.AllowGet);
 
         }

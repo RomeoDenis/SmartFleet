@@ -7,9 +7,9 @@ namespace SmartFleet.Data.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.Vehicles", "InteerestAreaId", c => c.Guid());
+            AddColumn("dbo.Vehicles", "InterestAreaId", c => c.Guid());
             AddColumn("dbo.Vehicles", "InterestArea_Id", c => c.Guid());
-            AddColumn("dbo.Drivers", "InteerestAreaId", c => c.Guid());
+            AddColumn("dbo.Drivers", "InterestAreaId", c => c.Guid());
             AddColumn("dbo.Drivers", "InterestArea_Id", c => c.Guid());
             CreateIndex("dbo.Vehicles", "InterestArea_Id");
             CreateIndex("dbo.Drivers", "InterestArea_Id");
@@ -24,9 +24,9 @@ namespace SmartFleet.Data.Migrations
             DropIndex("dbo.Drivers", new[] { "InterestArea_Id" });
             DropIndex("dbo.Vehicles", new[] { "InterestArea_Id" });
             DropColumn("dbo.Drivers", "InterestArea_Id");
-            DropColumn("dbo.Drivers", "InteerestAreaId");
+            DropColumn("dbo.Drivers", "InterestAreaId");
             DropColumn("dbo.Vehicles", "InterestArea_Id");
-            DropColumn("dbo.Vehicles", "InteerestAreaId");
+            DropColumn("dbo.Vehicles", "InterestAreaId");
         }
     }
 }

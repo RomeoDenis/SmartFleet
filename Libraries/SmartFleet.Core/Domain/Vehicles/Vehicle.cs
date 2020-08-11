@@ -37,10 +37,10 @@ namespace SmartFleet.Core.Domain.Vehicles
         public bool CANEnabled { get; set; }
         [NotMapped]
         public Guid? Box_Id { get; set; }
-        public Guid? InteerestAreaId { get; set; }
+        public Guid? InterestAreaId { get; set; }
         public InterestArea InterestArea { get; set; }
         public ICollection<Driver> Drivers { get; set; }
         public ICollection<VehicleAlarrm> Alarrms { get; set; }
-        public DateTime MileStoneUpdateUtc { get; set; }
+        public DateTime? MileStoneUpdateUtc { get; set; }
     }
 }

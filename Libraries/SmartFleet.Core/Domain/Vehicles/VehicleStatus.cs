@@ -5,7 +5,6 @@
         Pending,
         Destroyed,
         OutOfService,
-  
         Active
     }
 }

@@ -25,26 +25,30 @@ namespace SmartFleet.Service.Vehicles
 
         }
 
-        public async Task<bool> AddNewVehicle(Vehicle vehicle)
+        public async Task<bool> AddNewVehicleAsync(Vehicle vehicle)
         {
             try
             {
                 using (var contextFScope = _dbContextScopeFactory.Create())
                 {
                     _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+
+                    vehicle.MileStoneUpdateUtc = DateTime.Now;
+                   if(vehicle.Box_Id.HasValue)
+                       vehicle.VehicleStatus = VehicleStatus.Active;
                     var boxId = vehicle.Box_Id;
                     var box = await _db.Boxes.FirstOrDefaultAsync(b => b.Id == boxId).ConfigureAwait(false);
 
-                    //  vehicle.Id = Guid.NewGuid();
                     if (box != null)
                     {
                         box.VehicleId = vehicle.Id;
                         box.BoxStatus = BoxStatus.Valid;
                         _db.Entry(box).State = EntityState.Modified; 
-                      //  _db.Boxes.AddOrUpdate(box);
-                        _db.Vehicles.Add(vehicle);
-                        await contextFScope.SaveChangesAsync().ConfigureAwait(false);
+
                     }
+                    _db.Vehicles.Add(vehicle);
+                    await contextFScope.SaveChangesAsync().ConfigureAwait(false);
+
                     return true;
                 }
 
@@ -57,7 +61,7 @@ namespace SmartFleet.Service.Vehicles
             }
         }
 
-        public async Task<Vehicle[]> GetVehiclesFromCustomer(Guid customerId)
+        public async Task<Vehicle[]> GetVehiclesFromCustomerAsync(Guid customerId)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
@@ -82,7 +86,7 @@ namespace SmartFleet.Service.Vehicles
                     .Include(x => x.Boxes).FirstOrDefaultAsync(v => v.Id == id);
             }
         }
-        public async Task<List<Vehicle>> GetAllvehiclesQuery()
+        public async Task<List<Vehicle>> GetAllVehiclesQueryAsync()
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
@@ -95,7 +99,7 @@ namespace SmartFleet.Service.Vehicles
             }
         }
 
-        public async Task<List<Vehicle>> GetAllvehiclesOfCustomer(Guid customerId)
+        public async Task<List<Vehicle>> GetAllVehiclesOfCustomerAsync(Guid customerId)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
@@ -106,7 +110,7 @@ namespace SmartFleet.Service.Vehicles
             }
         }
 
-        public IQueryable<Vehicle> GetvehiclesOfCustomer(Guid customerId)
+        public IQueryable<Vehicle> GetVehiclesOfCustomer(Guid customerId)
         {
             var contextFScope = _dbContextScopeFactory.Create();
             
@@ -115,7 +119,7 @@ namespace SmartFleet.Service.Vehicles
                     .Include("Brand")
                     .Include("Model");
         }
-        public IQueryable<Vehicle> GetAllvehicles()
+        public IQueryable<Vehicle> GetAllVehicles()
         {
             var contextFScope = _dbContextScopeFactory.Create();
 
@@ -125,7 +129,7 @@ namespace SmartFleet.Service.Vehicles
                 .Include("Model");
         }
 
-        public double GetFuelConsuptionByPeriod(DateTime start, DateTime end,  Guid vehicleId, double totalDistance)
+        public double GetFuelConsumptionByPeriod(DateTime start, DateTime end,  Guid vehicleId, double totalDistance)
         {
             var contextFScope = _dbContextScopeFactory.Create();
             _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -200,7 +204,7 @@ namespace SmartFleet.Service.Vehicles
             return nextRecord;
         }
 
-        public IEnumerable<FuelConsumption> GetFuelConsuptionList(DateTime start, DateTime end, Guid vehicleId)
+        public IEnumerable<FuelConsumption> GetFuelConsumptionList(DateTime start, DateTime end, Guid vehicleId)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {

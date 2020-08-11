@@ -14,13 +14,13 @@ namespace SmartFleet.Service.Vehicles
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        Task<bool> AddNewVehicle(Vehicle vehicle);
+        Task<bool> AddNewVehicleAsync(Vehicle vehicle);
         /// <summary>
         /// gets vehicule for specific customer
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        Task<Vehicle[]> GetVehiclesFromCustomer(Guid customerId);
+        Task<Vehicle[]> GetVehiclesFromCustomerAsync(Guid customerId);
         /// <summary>
         /// gets single vehicle by id
         /// </summary>
@@ -37,24 +37,24 @@ namespace SmartFleet.Service.Vehicles
         /// 
         /// </summary>
         /// <returns></returns>
-        Task<List<Vehicle>> GetAllvehiclesQuery();
+        Task<List<Vehicle>> GetAllVehiclesQueryAsync();
         /// <summary>
         /// 
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        Task<List<Vehicle>> GetAllvehiclesOfCustomer(Guid  customerId);
+        Task<List<Vehicle>> GetAllVehiclesOfCustomerAsync(Guid  customerId);
         /// <summary>
         /// get all vehicles for a specific  customer
         /// </summary>
         /// <param name="customerId"></param>
         /// <returns></returns>
-        IQueryable<Vehicle> GetvehiclesOfCustomer(Guid customerId);
+        IQueryable<Vehicle> GetVehiclesOfCustomer(Guid customerId);
         /// <summary>
         /// gets all vehicles
         /// </summary>
         /// <returns></returns>
-        IQueryable<Vehicle> GetAllvehicles();
+        IQueryable<Vehicle> GetAllVehicles();
         /// <summary>
         /// 
         /// </summary>
@@ -63,7 +63,7 @@ namespace SmartFleet.Service.Vehicles
         /// <param name="vehicleId"></param>
         /// <param name="totalDistance"></param>
         /// <returns></returns>
-        double GetFuelConsuptionByPeriod(DateTime start, DateTime end, Guid vehicleId, double totalDistance);
+        double GetFuelConsumptionByPeriod(DateTime start, DateTime end, Guid vehicleId, double totalDistance);
         /// <summary>
         /// 
         /// </summary>
@@ -72,6 +72,6 @@ namespace SmartFleet.Service.Vehicles
         /// <param name="vehicleId"></param>
         /// <param name="totalDistance"></param>
         /// <returns></returns>
-        IEnumerable<FuelConsumption> GetFuelConsuptionList(DateTime start, DateTime end, Guid vehicleId);
+        IEnumerable<FuelConsumption> GetFuelConsumptionList(DateTime start, DateTime end, Guid vehicleId);
     }
 }
