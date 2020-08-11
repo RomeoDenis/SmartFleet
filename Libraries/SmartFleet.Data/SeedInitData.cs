@@ -18,7 +18,7 @@ namespace SmartFleet.Data
 
             string[] roles = { "admin", "customer", "user" };
             SmartFleetObjectContext context = new SmartFleetObjectContext();
-            context.Database.CreateIfNotExists();
+            
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             for (int i = 0; i < roles.Length; i++)
             {

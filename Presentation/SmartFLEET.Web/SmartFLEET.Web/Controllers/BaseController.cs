@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
+using MediatR;
 using SmartFleet.Data;
 using SmartFLEET.Web.Areas.Administrator.Models;
 
@@ -9,6 +10,7 @@ namespace SmartFLEET.Web.Controllers
     public class BaseController : Controller
     {
         protected readonly SmartFleetObjectContext ObjectContext;
+        protected readonly IMediator Mediator;
         protected readonly IMapper Mapper;
 
         public BaseController(SmartFleetObjectContext objectContext)
@@ -18,6 +20,11 @@ namespace SmartFLEET.Web.Controllers
         public BaseController(SmartFleetObjectContext objectContext, IMapper mapper)
         {
             ObjectContext = objectContext;
+            Mapper = mapper;
+        }
+        public BaseController(IMediator mediator, IMapper mapper)
+        {
+            Mediator = mediator;
             Mapper = mapper;
         }
         public BaseController( IMapper mapper)

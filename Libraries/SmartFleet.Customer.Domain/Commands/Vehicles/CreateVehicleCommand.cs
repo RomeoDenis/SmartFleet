@@ -1,13 +1,19 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using FluentValidation;
 using MediatR;
-using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Domain.Vehicles;
 
 namespace SmartFleet.Customer.Domain.Commands.Vehicles
 {
-    public class CreateVehicleCommand : SmartFleetCommand, IRequest<Unit>
+    public class CreateVehicleCommand :  IRequest<ValidationResult>
     {
+        
+
+        public CreateVehicleCommand()
+        {
+            CreationDate = DateTime.Now;
+        }
         public string VehicleName { get; set; }
         public string LicensePlate { get; set; }
         public string Vin { get; set; }
@@ -17,6 +23,9 @@ namespace SmartFleet.Customer.Domain.Commands.Vehicles
         public VehicleStatus VehicleStatus { get; set; }
         public short VehicleType { get; set; }
         public Guid? BoxId { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime MileStoneUpdateUtc { get; set; }
+        public Guid CmdId { get; set; }
     }
 
     public class CreateVehicleCommandValidator : AbstractValidator<CreateVehicleCommand>

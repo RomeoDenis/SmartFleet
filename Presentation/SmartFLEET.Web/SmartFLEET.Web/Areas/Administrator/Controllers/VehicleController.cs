@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
+using MediatR;
 using SmartFleet.Core.Domain.Vehicles;
-using SmartFleet.Data;
+using SmartFleet.Customer.Domain.Queries.Vehicles;
 using SmartFleet.Service.Vehicles;
 using SmartFleet.Web.Framework.DataTables;
 using SmartFLEET.Web.Areas.Administrator.Models;
@@ -17,7 +18,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
     {
         private readonly IVehicleService _vehicleService;
         private readonly DataTablesLinqQueryBulider _queryBuilder;
-        public VehicleController(SmartFleetObjectContext objectContext, IMapper mapper, IVehicleService vehicleService, DataTablesLinqQueryBulider queryBuilder) : base(objectContext, mapper)
+        public VehicleController(IMediator mediator, IMapper mapper, IVehicleService vehicleService, DataTablesLinqQueryBulider queryBuilder) : base(mediator, mapper)
         {
             _vehicleService = vehicleService;
             _queryBuilder = queryBuilder;
@@ -34,18 +35,13 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
         //[HttpGet]
         public async Task<JsonResult> GetAllVehicles()
         {
-            var query = _queryBuilder.BuildQuery(Request, _vehicleService.GetAllVehicles());
+            var data = await Mediator.Send(new GetVehiclesListQuery()
+            {
+                Request = Request
+            }).ConfigureAwait(false);
             try
             {
-                var jsResult = new
-                {
-                    recordsTotal = query.recordsTotal,
-                    draw = query.draw,
-                    recordsFiltered = query.recordsFiltered,
-                    data = Mapper.Map<List<VehicleViewModel>>(query.data),
-                    lenght = query.length
-                };
-                return Json(jsResult, JsonRequestBehavior.AllowGet);
+                return Json(data, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
@@ -94,7 +90,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
         [HttpGet]
         public ActionResult GetNewVehicle()
         {
-            return Json(new AddVehicleViewModel(ObjectContext), JsonRequestBehavior.AllowGet);
+            return Json(new AddVehicleViewModel(Mediator), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

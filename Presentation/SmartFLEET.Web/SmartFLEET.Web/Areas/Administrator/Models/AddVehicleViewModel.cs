@@ -2,22 +2,24 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using SmartFleet.Core.Domain.Gpsdevices;
+using MediatR;
 using SmartFleet.Core.Domain.Vehicles;
-using SmartFleet.Data;
+using SmartFleet.Customer.Domain.Queries.Brands;
+using SmartFleet.Customer.Domain.Queries.Customers;
+using SmartFleet.Customer.Domain.Queries.Models;
 
 namespace SmartFLEET.Web.Areas.Administrator.Models
 {
     //[Validator(typeof(AddVehicleValidator))]
     public  class AddVehicleViewModel
     {
-        private readonly SmartFleetObjectContext _context;
+        private readonly IMediator _mediator;
 
-        public AddVehicleViewModel(SmartFleetObjectContext context)
+
+        public AddVehicleViewModel(IMediator mediator)
         {
-            _context = context;
-            _context.Configuration.ProxyCreationEnabled = false;
-            //  Brand_Id = null;
+            _mediator = mediator;
+
             VehicleTypes = new List<KeyValuePair<int, string>>();
             foreach (var vehicleType in Enum.GetValues(typeof(VehicleType)) .Cast<VehicleType>())
             {
@@ -46,10 +48,26 @@ namespace SmartFLEET.Web.Areas.Administrator.Models
         public string VehicleType { get; set; }
         [Required]
         public Guid? Box_Id { get; set; }
-        public List<Brand> Brands =>_context?.Brands.ToList();
-        public List<Model> Models =>_context?.Models?.ToList();
-        public  List<CustomerItemViewModel> Customers => _context?.Customers?.Select(c=>new CustomerItemViewModel(){Id = c.Id, Name = c.Name}).ToList();
-        public List<BoxItemModelView> Boxes => _context?.Boxes?.Where(b=>b.BoxStatus!= BoxStatus.Valid).Select(b=>new BoxItemModelView() {Id =b.Id, Imei = b.Imei}).ToList();
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Brand> Brands => _mediator
+            .Send(new GetBrandsListQuery())
+            .GetAwaiter()
+            .GetResult();
+        public List<Model> Models => _mediator
+            .Send(new GetModelsListQuery())
+            .GetAwaiter()
+            .GetResult();
+        /// <summary>
+        /// 
+        /// </summary>
+        public  List<CustomerItemViewModel> Customers => _mediator
+            .Send(new GetCustomersListQuery())
+            .GetAwaiter()
+            .GetResult()
+            .Select(c=>new CustomerItemViewModel(){Id = c.Id, Name = c.Name}).ToList();
+       // public List<BoxItemModelView> Boxes => _context?.Boxes?.Where(b=>b.BoxStatus!= BoxStatus.Valid).Select(b=>new BoxItemModelView() {Id =b.Id, Imei = b.Imei}).ToList();
         public List<KeyValuePair<int, string>> VehicleTypes { get; set; }
     }
 }
