@@ -25,6 +25,8 @@ using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
 using SmartFleet.Customer.Domain;
 using SmartFleet.Customer.Domain.Common.DomainMapping;
+using SmartFleet.MobileUnit.Domain;
+using SmartFleet.MobileUnit.Domain.Common;
 using SmartFleet.Web.Framework.DataTables;
 
 namespace SmartFLEET.Web
@@ -94,6 +96,7 @@ namespace SmartFLEET.Web
             {
                 cfg.AddProfile(new SmartFleetAdminMappings());
                 cfg.AddProfile(new CustomerDomainMapping());
+                cfg.AddProfile(new MobileUnitDomainMapping());
             });
             var mapper = mapperConfiguration.CreateMapper();
             builder.RegisterInstance(mapper).As<IMapper>();
@@ -108,8 +111,8 @@ namespace SmartFLEET.Web
                 var c = context.Resolve<IComponentContext>();
                 return t => c.Resolve(t);
             });
-            CustomerDomainDependencyRegistrar customerDomain= new CustomerDomainDependencyRegistrar();
-            customerDomain.Register(builder);
+            RegisterDomains(builder);
+
             var queryBuilder = new DataTablesLinqQueryBulider();
             builder.RegisterInstance(queryBuilder).As<DataTablesLinqQueryBulider>();
             #endregion
@@ -132,6 +135,12 @@ namespace SmartFLEET.Web
            // GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver((IContainer)container);
         }
 
-      
+        private static void RegisterDomains(ContainerBuilder builder)
+        {
+            var customerDomain = new CustomerDomainDependencyRegistrar();
+            var mobileUnitDependencyRegistrar = new MobileUnitDependencyRegistrar();
+            customerDomain.Register(builder);
+            mobileUnitDependencyRegistrar.Register(builder);
+        }
     }
 }
