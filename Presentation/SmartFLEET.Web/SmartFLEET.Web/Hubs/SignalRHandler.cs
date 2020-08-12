@@ -7,7 +7,6 @@ using Microsoft.AspNet.SignalR;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
-using SmartFleet.Core.Domain.Movement;
 using SmartFleet.Core.Geofence;
 using SmartFleet.Core.ReverseGeoCoding;
 using SmartFleet.Data;
@@ -40,7 +39,7 @@ namespace SmartFLEET.Web.Hubs
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
                 // get current gps device 
-                var box = await GetSenderBox(context.Message, dbContextScopeFactory).ConfigureAwait(false);
+                var box = await GetSenderBoxAsync(context.Message, dbContextScopeFactory).ConfigureAwait(false);
                 if (box != null)
                 {
                     // set position 
@@ -51,7 +50,7 @@ namespace SmartFLEET.Web.Hubs
 
         }
 
-        private static async Task<Box> GetSenderBox(CreateTk103Gps message, IDbContextScope dbContextScopeFactory)
+        private static async Task<Box> GetSenderBoxAsync(CreateTk103Gps message, IDbContextScope dbContextScopeFactory)
         {
             var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
             var box = await dbContext.Boxes.Include(x => x.Vehicle).Include(x => x.Vehicle.Customer).FirstOrDefaultAsync(b =>
@@ -171,7 +170,6 @@ namespace SmartFLEET.Web.Hubs
                 await SignalRHubManager.Clients.Group(context.Message.CustomerId.ToString()).receiveVehicleEvent(evt);
 
             }
-
 
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -208,7 +209,7 @@ namespace TeltonikaEmulator.Parsers
                 var startIndex = input.IndexOf(properTyName, StringComparison.Ordinal) + 1 + properTyName.Length;
                 var lengthOfValue = GetValueIndex(input.Substring(startIndex));
                 var value = input.Substring(startIndex, lengthOfValue);
-                p.SetValue(gpsElement, Convert.ChangeType(value, p.PropertyType), null);
+                p.SetValue(gpsElement, Convert.ChangeType(value, p.PropertyType, CultureInfo.InvariantCulture), null);
 
             }
             

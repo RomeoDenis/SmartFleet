@@ -3093,6 +3093,10 @@
       <Project>{47423b0c-d3f9-4b7a-ac4e-bcc78b4a1970}</Project>
       <Name>SmartFleet.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\SmartFleet.MobileUnit.Domain\SmartFleet.MobileUnit.Domain.csproj">
+      <Project>{4b4e4009-53a6-4e8b-a765-d5bfc77e48a3}</Project>
+      <Name>SmartFleet.MobileUnit.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Libraries\SmartFleet.Service\SmartFleet.Service.csproj">
       <Project>{770f75a9-b482-4e94-8356-761106ede207}</Project>
       <Name>SmartFleet.Service</Name>

@@ -7,6 +7,7 @@ using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Customer.Domain.Queries.Brands;
 using SmartFleet.Customer.Domain.Queries.Customers;
 using SmartFleet.Customer.Domain.Queries.Models;
+using SmartFleet.MobileUnit.Domain.MobileUnit.Queries;
 
 namespace SmartFLEET.Web.Areas.Administrator.Models
 {
@@ -67,7 +68,10 @@ namespace SmartFLEET.Web.Areas.Administrator.Models
             .GetAwaiter()
             .GetResult()
             .Select(c=>new CustomerItemViewModel(){Id = c.Id, Name = c.Name}).ToList();
-       // public List<BoxItemModelView> Boxes => _context?.Boxes?.Where(b=>b.BoxStatus!= BoxStatus.Valid).Select(b=>new BoxItemModelView() {Id =b.Id, Imei = b.Imei}).ToList();
+        public List<BoxItemModelView> Boxes => _mediator.Send(new GetMobileUnitsWithoutVehicleIdQuery())
+            .GetAwaiter()
+            .GetResult()
+            .Select(b=>new BoxItemModelView() {Id =b.Id, Imei = b.Imei}).ToList();
         public List<KeyValuePair<int, string>> VehicleTypes { get; set; }
     }
 }
