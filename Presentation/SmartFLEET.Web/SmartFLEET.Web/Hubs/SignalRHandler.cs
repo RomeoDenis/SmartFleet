@@ -60,12 +60,24 @@ namespace SmartFLEET.Web.Hubs
         }
 
 
-        private static async Task<Box> GetSenderBoxAsync(string imei, IDbContextScope dbContextScopeFactory)
+        private static async Task<VehicleDto> GetSenderBoxAsync(string imei, IDbContextScope dbContextScopeFactory)
         {
-            var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
-            var box = await dbContext.Boxes.Include(x => x.Vehicle).Include(x => x.Vehicle.Customer).FirstOrDefaultAsync(b =>
-                b.Imei == imei).ConfigureAwait(false);
-            return box;
+            var db = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
+            var query = await (from v in db.Vehicles
+                    join dbBox in db.Boxes on v.Id equals dbBox.VehicleId into boxes
+                    from box in boxes
+                    where box.Imei == imei
+                    select new
+                    {
+                        v.Id,
+                        v.VehicleName,
+                        v.CustomerId,
+                        v.VehicleType,
+                        BoxeID = box.Id
+                    }).FirstOrDefaultAsync()
+                .ConfigureAwait(false);
+            return query != null ? new VehicleDto(query.VehicleName, query.Id, query.CustomerId.ToString(), query.VehicleType) { MobileUnitId = query.BoxeID } : null;
+
         }
 
         /// <summary>
@@ -106,11 +118,11 @@ namespace SmartFLEET.Web.Hubs
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
                 // get current gps device 
-                var box = await GetSenderBoxAsync(context.Message.IMEI, dbContextScopeFactory).ConfigureAwait(false);
-                if (box != null)
+                var vehicleDto = await GetSenderBoxAsync(context.Message.IMEI, dbContextScopeFactory).ConfigureAwait(false);
+                if (vehicleDto != null)
                 {
                     // set position 
-                    var position = new PositionViewModel(context.Message, box.Vehicle);
+                    var position = new PositionViewModel(context.Message, vehicleDto);
                     await SignalRHubManager.Clients.Group(position.CustomerName).receiveGpsStatements(position);
                 }
             }
@@ -126,12 +138,12 @@ namespace SmartFLEET.Web.Hubs
                 foreach (var @event in context.Message.Events)
                 {
                     // get current gps device 
-                    var box = await GetSenderBoxAsync(@event.Imei, dbContextScopeFactory).ConfigureAwait(false);
-                    if (box != null)
+                    var vehicleDto = await GetSenderBoxAsync(@event.Imei, dbContextScopeFactory).ConfigureAwait(false);
+                    if (vehicleDto != null)
                     {
                         // set position 
-                        var lasPosition = await GetLastPositionAsync(box.Id, dbContextScopeFactory).ConfigureAwait(false);
-                        var position = new PositionViewModel(@event, new VehicleDto(box.Vehicle.VehicleName, box.Id, box.Vehicle.CustomerId.ToString(), box.Vehicle.VehicleType), lasPosition);
+                        var lasPosition = await GetLastPositionAsync(vehicleDto.Id, dbContextScopeFactory).ConfigureAwait(false);
+                        var position = new PositionViewModel(@event, vehicleDto, lasPosition);
                         if (string.IsNullOrEmpty(position.CustomerName))
                             return;
                         var reverseGeoCodingService = new ReverseGeoCodingService();
