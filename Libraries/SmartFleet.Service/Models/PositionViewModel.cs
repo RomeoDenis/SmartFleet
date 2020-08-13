@@ -74,7 +74,7 @@ namespace SmartFleet.Service.Models
         }
 
 
-        public PositionViewModel(CreateNewBoxGps tk103Gps, Vehicle vehicle)
+        public PositionViewModel(CreateNewBoxGps tk103Gps, VehicleDto vehicle)
         {
             Latitude = tk103Gps.Latitude;
             Longitude = tk103Gps.Longitude;
@@ -85,7 +85,7 @@ namespace SmartFleet.Service.Models
             Speed = tk103Gps.Speed;
             VehicleName = vehicle.VehicleName;
             VehicleId = vehicle.Id.ToString();
-            CustomerName = vehicle.Customer?.Id.ToString();
+            CustomerName = vehicle.CustomerId;
             TimeStampUtc = tk103Gps.TimeStampUtc;
             SetVehicleImage(vehicle.VehicleType);
         }
