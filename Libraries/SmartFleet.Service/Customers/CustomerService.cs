@@ -16,17 +16,17 @@ namespace SmartFleet.Service.Customers
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<Core.Domain.Customers.Customer> _customerRepository;
         private readonly SmartFleetObjectContext _objectContext;
         private readonly UserManager<User> _userManager;
-        public CustomerService(IRepository<Customer> customerRepository,SmartFleetObjectContext objectContext)
+        public CustomerService(IRepository<Core.Domain.Customers.Customer> customerRepository,SmartFleetObjectContext objectContext)
         {
             _customerRepository = customerRepository;
             _objectContext = objectContext;
            _userManager = new UserManager<User>(new UserStore<User>(_objectContext));
 
         }
-        public bool AddCustomer(Customer customer, List<User> users)
+        public bool AddCustomer(Core.Domain.Customers.Customer customer, List<User> users)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace SmartFleet.Service.Customers
             }
 
         }
-        public Task<Customer> GetCustomerByNameAsync(string name)
+        public Task<Core.Domain.Customers.Customer> GetCustomerByNameAsync(string name)
         {
             var user = _userManager.Users.Include(x=>x.Customer)
                 .FirstOrDefault(x => x.UserName == name);
@@ -60,7 +60,7 @@ namespace SmartFleet.Service.Customers
             return _objectContext.Customers.FindAsync(user?.CustomerId);
         }
 
-        public async Task<Customer> GetCustomerWithZonesAndVehiclesAsync(string name)
+        public async Task<Core.Domain.Customers.Customer> GetCustomerWithZonesAndVehiclesAsync(string name)
         {
             var user = await _userManager.Users
                 .Include(x => x.Customer)
@@ -71,14 +71,14 @@ namespace SmartFleet.Service.Customers
             return user?.Customer;
         }
 
-        public Task<Customer> GetCustomerByIdAsync(Guid id)
+        public Task<Core.Domain.Customers.Customer> GetCustomerByIdAsync(Guid id)
         {
             var cst = _objectContext.Customers
                .FirstOrDefaultAsync(x => x.Id == id);
             return cst;
         }
 
-        public IQueryable<Customer> GetCustomers( )
+        public IQueryable<Core.Domain.Customers.Customer> GetCustomers( )
         {
             return _objectContext.Customers;
         }
