@@ -45,6 +45,6 @@ namespace SmartFLEET.Web.Hubs
         public static Dictionary<string, GeofenceHelper.Position> LastPosition = new Dictionary<string, GeofenceHelper.Position>();
 
         public static IMapper Mapper { get; set; }
-        public static IMediator Mediator { get; set; }
+        //public static IMediator Mediator  = new Mediator();
     }
 }

@@ -125,7 +125,7 @@ namespace SmartFLEET.Web
 
             var container = builder.Build();
             container.Resolve<IBusControl>().StartAsync();
-            SignalRHubManager.Mediator = container.Resolve<IMediator>();
+           // SignalRHubManager.Mediator = container.Resolve<IMediator>();
             var path = Server.MapPath("/") + @"bin";
             MicroServicesLoader.Loader(path);
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

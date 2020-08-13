@@ -26,7 +26,7 @@ namespace SmartFleet.Service.Models
             VehicleId = vehicle.Id.ToString();
             CustomerName = vehicle.Customer?.Id.ToString();
             TimeStampUtc = position.Timestamp;
-            //SetVehicleImage(vehicle);
+            SetVehicleImage(vehicle.VehicleType);
         }
 
       
@@ -43,7 +43,7 @@ namespace SmartFleet.Service.Models
             VehicleId = vehicle.Id.ToString();
             CustomerName = vehicle.Customer?.Id.ToString();
             TimeStampUtc = tk103Gps.TimeStampUtc;
-            //SetVehicleImage(vehicle);
+            SetVehicleImage(vehicle.VehicleType);
         }
 
         public PositionViewModel(CreateTeltonikaGps tk103Gps, Vehicle vehicle, SmartFleetObjectContext db, Guid boxId)
@@ -87,7 +87,7 @@ namespace SmartFleet.Service.Models
             VehicleId = vehicle.Id.ToString();
             CustomerName = vehicle.Customer?.Id.ToString();
             TimeStampUtc = tk103Gps.TimeStampUtc;
-            //SetVehicleImage(vehicle);
+            SetVehicleImage(vehicle.VehicleType);
         }
 
         public PositionViewModel(CreateTeltonikaGps tk103Gps, VehicleDto vehicle, GeofenceHelper.Position lasPosition)
@@ -116,9 +116,9 @@ namespace SmartFleet.Service.Models
         }
 
 
-        private void SetVehicleImage(VehicleDto vehicle)
+        private void SetVehicleImage(VehicleType vehicle)
          {
-            switch (vehicle.VehicleType)
+            switch (vehicle)
             {
                 case VehicleType.Track:
                 {

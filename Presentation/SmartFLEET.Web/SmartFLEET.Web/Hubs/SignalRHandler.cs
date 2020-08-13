@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
-using MediatR;
 using Microsoft.AspNet.SignalR;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
+using SmartFleet.Core.Geofence;
 using SmartFleet.Core.ReverseGeoCoding;
-using SmartFleet.Customer.Domain.Queries.Vehicles;
+using SmartFleet.Customer.Domain.Common.Dtos;
 using SmartFleet.Data;
-using SmartFleet.MobileUnit.Domain.Movements.Queries;
 using SmartFleet.Service.Models;
 using SmartFLEET.Web.Models.Eveents;
 
@@ -20,16 +19,13 @@ namespace SmartFLEET.Web.Hubs
     /// <summary>
     /// 
     /// </summary>
-    [Authorize]
     public class SignalRHandler : Hub,
         IConsumer<CreateTk103Gps>,
-        IConsumer<CreateNewBoxGps>, 
+        IConsumer<CreateNewBoxGps>,
         IConsumer<TLGpsDataEvents>,
         IConsumer<TLExcessSpeedEvent>,
         IConsumer<TLEcoDriverAlertEvent>
     {
-        
-       
         /// <summary>
         /// 
         /// </summary>
@@ -44,7 +40,7 @@ namespace SmartFLEET.Web.Hubs
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
                 // get current gps device 
-                var box = await GetSenderBoxAsync(context.Message, dbContextScopeFactory).ConfigureAwait(false);
+                var box = await GetSenderBox(context.Message, dbContextScopeFactory).ConfigureAwait(false);
                 if (box != null)
                 {
                     // set position 
@@ -55,7 +51,7 @@ namespace SmartFLEET.Web.Hubs
 
         }
 
-        private static async Task<Box> GetSenderBoxAsync(CreateTk103Gps message, IDbContextScope dbContextScopeFactory)
+        private static async Task<Box> GetSenderBox(CreateTk103Gps message, IDbContextScope dbContextScopeFactory)
         {
             var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
             var box = await dbContext.Boxes.Include(x => x.Vehicle).Include(x => x.Vehicle.Customer).FirstOrDefaultAsync(b =>
@@ -63,7 +59,7 @@ namespace SmartFLEET.Web.Hubs
             return box;
         }
 
-        
+
         private static async Task<Box> GetSenderBoxAsync(string imei, IDbContextScope dbContextScopeFactory)
         {
             var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
@@ -94,6 +90,7 @@ namespace SmartFLEET.Web.Hubs
         {
             SignalRHubManager.Clients = Clients;
             SignalRHubManager.Connections.Remove(Context.User.Identity.Name);
+            //SignalRHubManager.Connections.Clear();
             return base.OnDisconnected(stopCalled);
         }
 
@@ -119,31 +116,52 @@ namespace SmartFLEET.Web.Hubs
             }
         }
 
-        /// <inheritdoc />
         public async Task Consume(ConsumeContext<TLGpsDataEvents> context)
         {
             if (SignalRHubManager.Clients == null)
                 return;
 
-            foreach (var @event in context.Message.Events)
+            using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
-                // gets appropriate vehicle
-                var vehicleDto = await SendAsync(new GetVehicleByMobileUnitImeiQuery { Imei = @event.Imei }).ConfigureAwait(false);
-                if (vehicleDto == null) continue;
-                // sets position 
-                var lasPosition = await SendAsync(new GetLastPositionByMobileUnitIdQuery { MobileUnitId = vehicleDto.MobileUnitId }).ConfigureAwait(false);
-                var position = new PositionViewModel(@event, vehicleDto, lasPosition);
-                if (string.IsNullOrEmpty(position.CustomerName))
-                    return;
-                Thread.Sleep(1000);
-                var reverseGeoCodingService = new ReverseGeoCodingService();
-                position.Address = await reverseGeoCodingService.ReverseGeoCodingAsync(position.Latitude, position.Longitude).ConfigureAwait(false);
-                await SignalRHubManager.Clients.Group(position.CustomerName).receiveGpsStatements(position);
+                foreach (var @event in context.Message.Events)
+                {
+                    // get current gps device 
+                    var box = await GetSenderBoxAsync(@event.Imei, dbContextScopeFactory).ConfigureAwait(false);
+                    if (box != null)
+                    {
+                        // set position 
+                        var lasPosition = await GetLastPositionAsync(box.Id, dbContextScopeFactory).ConfigureAwait(false);
+                        var position = new PositionViewModel(@event, new VehicleDto(box.Vehicle.VehicleName, box.Id, box.Vehicle.CustomerId.ToString(), box.Vehicle.VehicleType), lasPosition);
+                        if (string.IsNullOrEmpty(position.CustomerName))
+                            return;
+                        var reverseGeoCodingService = new ReverseGeoCodingService();
+                        position.Address = await reverseGeoCodingService.ReverseGeoCodingAsync(position.Latitude, position.Longitude).ConfigureAwait(false);
+                        await SignalRHubManager.Clients.Group(position.CustomerName).receiveGpsStatements(position);
+
+                    }   
+                }
             }
         }
 
+        private async Task<GeofenceHelper.Position> GetLastPositionAsync(Guid boxId, IDbContextScope dbContextScopeFactory)
+        {
+            var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
+            var lastPosition = await
+                dbContext.Positions
+                    .Where(x => x.Box_Id == boxId)
+                    .OrderByDescending(p => p.Timestamp)
+                    .FirstOrDefaultAsync().ConfigureAwait(false);
+            if (lastPosition != null)
+                return new GeofenceHelper.Position
+                {
+                    Latitude = lastPosition.Lat,
+                    Longitude = lastPosition.Long
 
-        /// <inheritdoc />
+                };
+            return default(GeofenceHelper.Position);
+
+        }
+
         public async Task Consume(ConsumeContext<TLExcessSpeedEvent> context)
         {
             if (context.Message.CustomerId != null)
@@ -154,27 +172,12 @@ namespace SmartFLEET.Web.Hubs
 
             }
 
+
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public Task Consume(ConsumeContext<TLEcoDriverAlertEvent> context)
         {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <returns></returns>
-        public Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
-        {
-            return SignalRHubManager.Mediator.Send(request);
+            throw new System.NotImplementedException();
         }
     }
 }

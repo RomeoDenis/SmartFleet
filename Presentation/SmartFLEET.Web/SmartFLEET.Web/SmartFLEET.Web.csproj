@@ -360,6 +360,7 @@
     </Compile>
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="HtmlHelpers\HtmlExtensions.cs" />
+    <Compile Include="Hubs\ErrorHandlingPipelineModule.cs" />
     <Compile Include="Hubs\SignalRHandler.cs" />
     <Compile Include="Hubs\SignalRHubManager.cs" />
     <Compile Include="Models\Account\LoginModel.cs" />
