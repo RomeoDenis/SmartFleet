@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,7 +12,9 @@ using SmartFleet.Web.Framework.DataTables;
 
 namespace SmartFleet.Customer.Domain.Queries.Vehicles
 {
-    public class VehiclesQueriesHandler : IRequestHandler<GetVehiclesListQuery, DataTablesModel<VehicleDto>>
+    public class VehiclesQueriesHandler :
+        IRequestHandler<GetVehiclesListQuery, DataTablesModel<VehicleDto>>,
+        IRequestHandler<GetVehicleByMobileUnitIdQuery , VehicleDto>
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly IMapper _mapper;
@@ -44,6 +47,27 @@ namespace SmartFleet.Customer.Domain.Queries.Vehicles
                 return jsResult;
 
             }
+        }
+
+        public async Task<VehicleDto> Handle(GetVehicleByMobileUnitIdQuery request, CancellationToken cancellationToken)
+        {
+            using (var dbFactory = _dbContextScopeFactory.Create())
+            {
+                var db = dbFactory.DbContexts.Get<SmartFleetObjectContext>();
+                var query = await (from v in db.Vehicles
+                    join dbBox in db.Boxes on v.Id equals dbBox.VehicleId into boxes
+                    from box in boxes
+                    where box.Id == request.MobileUnitId
+                    select new 
+                    {
+                        v.Id,
+                        v.VehicleName,
+                        v.CustomerId
+                    }).FirstOrDefaultAsync(cancellationToken)
+                    .ConfigureAwait(false);
+                return query!= null ? new VehicleDto(query.VehicleName, query.Id, query.CustomerId.ToString()) : default;
+            }
+
         }
     }
 }
