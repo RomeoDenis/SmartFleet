@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MobileUnit\Commands\" />
+    <Folder Include="Movements\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

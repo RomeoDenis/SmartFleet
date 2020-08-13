@@ -6,6 +6,12 @@ namespace SmartFleet.Customer.Domain.Common.Dtos
 {
     public class VehicleDto
     {
+        public VehicleDto(string vehicleName , Guid id, string customerId)
+        {
+            VehicleName = vehicleName;
+            Id = id;
+            CustomerId = customerId;
+        }
         public Guid Id { get; set; }
         public string VehicleName { get; set; }
         public string LicensePlate { get; set; }
@@ -19,5 +25,6 @@ namespace SmartFleet.Customer.Domain.Common.Dtos
         public string VehicleType { get; set; }
         public string CreationDate { get; set; }
         public string InitServiceDate { get; set; }
+        public string CustomerId { get; set; }
     }
 }
