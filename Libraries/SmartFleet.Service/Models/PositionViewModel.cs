@@ -3,6 +3,7 @@ using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Domain.Movement;
 using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Core.Geofence;
+using SmartFleet.Customer.Domain.Common.Dtos;
 using SmartFleet.Data;
 
 namespace SmartFleet.Service.Models
@@ -25,7 +26,7 @@ namespace SmartFleet.Service.Models
             VehicleId = vehicle.Id.ToString();
             CustomerName = vehicle.Customer?.Id.ToString();
             TimeStampUtc = position.Timestamp;
-            SetVehicleImage(vehicle);
+            //SetVehicleImage(vehicle);
         }
 
       
@@ -42,7 +43,7 @@ namespace SmartFleet.Service.Models
             VehicleId = vehicle.Id.ToString();
             CustomerName = vehicle.Customer?.Id.ToString();
             TimeStampUtc = tk103Gps.TimeStampUtc;
-            SetVehicleImage(vehicle);
+            //SetVehicleImage(vehicle);
         }
 
         public PositionViewModel(CreateTeltonikaGps tk103Gps, Vehicle vehicle, SmartFleetObjectContext db, Guid boxId)
@@ -86,10 +87,10 @@ namespace SmartFleet.Service.Models
             VehicleId = vehicle.Id.ToString();
             CustomerName = vehicle.Customer?.Id.ToString();
             TimeStampUtc = tk103Gps.TimeStampUtc;
-            SetVehicleImage(vehicle);
+            //SetVehicleImage(vehicle);
         }
 
-        public PositionViewModel(CreateTeltonikaGps tk103Gps, Vehicle vehicle, GeofenceHelper.Position lasPosition)
+        public PositionViewModel(CreateTeltonikaGps tk103Gps, VehicleDto vehicle, GeofenceHelper.Position lasPosition)
         {
             double dir = 0;
             if (Math.Abs(lasPosition.Latitude - tk103Gps.Lat) > 0.0 )
@@ -108,14 +109,14 @@ namespace SmartFleet.Service.Models
             {
                 VehicleName = vehicle.VehicleName;
                 VehicleId = vehicle.Id.ToString();
-                CustomerName = vehicle.Customer?.Id.ToString();
+                CustomerName = vehicle.CustomerId;
                 TimeStampUtc = tk103Gps.Timestamp;
                 SetVehicleImage(vehicle, dir);
             }
         }
 
 
-        private void SetVehicleImage(Vehicle vehicle)
+        private void SetVehicleImage(VehicleDto vehicle)
          {
             switch (vehicle.VehicleType)
             {
@@ -131,7 +132,7 @@ namespace SmartFleet.Service.Models
                     break;
             }
         }
-        private void SetVehicleImage(Vehicle vehicle, double dir)
+        private void SetVehicleImage(VehicleDto vehicle, double dir)
         {
             switch (vehicle.VehicleType)
             {

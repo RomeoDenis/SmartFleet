@@ -83,6 +83,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Queries\LastPositionQueryTest.cs" />
     <Compile Include="Queries\VehicleByBoxIdQueryTest.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="UnitTest1.cs" />

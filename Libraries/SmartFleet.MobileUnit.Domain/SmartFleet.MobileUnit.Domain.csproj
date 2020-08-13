@@ -72,6 +72,8 @@
     <Compile Include="MobileUnit\Dtos\MobileUnitDto.cs" />
     <Compile Include="MobileUnit\Dtos\MobileUnitSelectListDto.cs" />
     <Compile Include="MobileUnit\Handlers\MobileUnitQueriesHandler.cs" />
+    <Compile Include="Movements\Handlers\MovementsQueriesHandler.cs" />
+    <Compile Include="Movements\Queries\GetLastPositionByMobileUnitIdQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MobileUnit\Queries\GetMobileUnitByIdQuery.cs" />
     <Compile Include="MobileUnit\Queries\GetMobileUnitByImeiQuery.cs" />
@@ -79,7 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MobileUnit\Commands\" />
-    <Folder Include="Movements\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -14,7 +14,7 @@ namespace SmartFleet.Customer.Domain.Queries.Vehicles
 {
     public class VehiclesQueriesHandler :
         IRequestHandler<GetVehiclesListQuery, DataTablesModel<VehicleDto>>,
-        IRequestHandler<GetVehicleByMobileUnitIdQuery , VehicleDto>
+        IRequestHandler<GetVehicleByMobileUnitImeiQuery , VehicleDto>
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly IMapper _mapper;
@@ -49,7 +49,7 @@ namespace SmartFleet.Customer.Domain.Queries.Vehicles
             }
         }
 
-        public async Task<VehicleDto> Handle(GetVehicleByMobileUnitIdQuery request, CancellationToken cancellationToken)
+        public async Task<VehicleDto> Handle(GetVehicleByMobileUnitImeiQuery request, CancellationToken cancellationToken)
         {
             using (var dbFactory = _dbContextScopeFactory.Create())
             {
@@ -57,15 +57,17 @@ namespace SmartFleet.Customer.Domain.Queries.Vehicles
                 var query = await (from v in db.Vehicles
                     join dbBox in db.Boxes on v.Id equals dbBox.VehicleId into boxes
                     from box in boxes
-                    where box.Id == request.MobileUnitId
+                    where box.Imei == request.Imei
                     select new 
                     {
                         v.Id,
                         v.VehicleName,
-                        v.CustomerId
+                        v.CustomerId, 
+                        v.VehicleType,
+                        BoxeID=box.Id
                     }).FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);
-                return query!= null ? new VehicleDto(query.VehicleName, query.Id, query.CustomerId.ToString()) : default;
+                return query!= null ? new VehicleDto(query.VehicleName, query.Id, query.CustomerId.ToString(), query.VehicleType){MobileUnitId = query.BoxeID} : default;
             }
 
         }

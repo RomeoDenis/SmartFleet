@@ -4,8 +4,8 @@ using SmartFleet.Customer.Domain.Common.Dtos;
 
 namespace SmartFleet.Customer.Domain.Queries.Vehicles
 {
-    public class GetVehicleByMobileUnitIdQuery : IRequest<VehicleDto>
+    public class GetVehicleByMobileUnitImeiQuery : IRequest<VehicleDto>
     {
-        public Guid MobileUnitId { get; set; }
+        public string Imei { get; set; }
     }
 }

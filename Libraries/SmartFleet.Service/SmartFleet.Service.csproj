@@ -101,6 +101,10 @@
       <Project>{4938638f-7b72-4632-ae2b-de790df79f83}</Project>
       <Name>SmartFleet.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartFleet.Customer.Domain\SmartFleet.Customer.Domain.csproj">
+      <Project>{0676812E-63FD-4B77-9A4D-CA05CA9EF3D9}</Project>
+      <Name>SmartFleet.Customer.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SmartFleet.Data\SmartFleet.Data.csproj">
       <Project>{47423b0c-d3f9-4b7a-ac4e-bcc78b4a1970}</Project>
       <Name>SmartFleet.Data</Name>
