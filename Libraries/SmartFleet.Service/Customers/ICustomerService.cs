@@ -16,32 +16,32 @@ namespace SmartFleet.Service.Customers
         /// <param name="customer"></param>
         /// <param name="users"></param>
         /// <returns></returns>
-        bool AddCustomer(Customer customer, List<User> users );
+        bool AddCustomer(Core.Domain.Customers.Customer customer, List<User> users );
 
         /// <summary>
         /// gets customer by current user's name
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        Task<Customer> GetCustomerByNameAsync(string name);
+        Task<Core.Domain.Customers.Customer> GetCustomerByNameAsync(string name);
         
             /// <summary>
             /// get  customer along with vehicles and zones by current user's name
             /// </summary>
             /// <param name="name"></param>
             /// <returns></returns>
-            Task<Customer> GetCustomerWithZonesAndVehiclesAsync(string name);
+            Task<Core.Domain.Customers.Customer> GetCustomerWithZonesAndVehiclesAsync(string name);
         /// <summary>
         /// get cuustomer by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Customer> GetCustomerByIdAsync(Guid id);
+        Task<Core.Domain.Customers.Customer> GetCustomerByIdAsync(Guid id);
         /// <summary>
         /// get all customers
         /// </summary>
         /// <returns></returns>
-        IQueryable<Customer> GetCustomers();
+        IQueryable<Core.Domain.Customers.Customer> GetCustomers();
         /// <summary>
         /// get user by name
         /// </summary>

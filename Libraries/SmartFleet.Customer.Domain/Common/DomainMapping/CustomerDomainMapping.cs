@@ -15,8 +15,7 @@ namespace SmartFleet.Customer.Domain.Common.DomainMapping
                 .ReverseMap();
             CreateMap<Vehicle, VehicleDto>()
                 .ForMember(x => x.Customer, o => o.MapFrom(v => v.Customer.Name))
-                .ForMember(x => x.CustomerId.ToString(), o => o.MapFrom(v => v.CustomerId))
-
+                .ForMember(x => x.CustomerId, o => o.MapFrom(v => v.CustomerId.ToString()))
                 .ForMember(x => x.Brand, o => o.MapFrom(v => v.Brand.Name))
                 .ForMember(x => x.Model, o => o.MapFrom(v => v.Model.Name))
                 .ForMember(x => x.CreationDate,

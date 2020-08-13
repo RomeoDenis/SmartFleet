@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using SmartFleet.Core.Data;
@@ -44,5 +45,6 @@ namespace SmartFLEET.Web.Hubs
         public static Dictionary<string, GeofenceHelper.Position> LastPosition = new Dictionary<string, GeofenceHelper.Position>();
 
         public static IMapper Mapper { get; set; }
+        //public static IMediator Mediator  = new Mediator();
     }
 }

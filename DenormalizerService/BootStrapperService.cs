@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using DenormalizerService.Infrastructure;
-using MassTransit;
 using SmartFleet.Core;
 
 namespace DenormalizerService

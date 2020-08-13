@@ -77,7 +77,7 @@
     <Compile Include="Queries\Customers\GetCustomersListQuery.cs" />
     <Compile Include="Queries\Models\ModelsQueriesHandler.cs" />
     <Compile Include="Queries\Models\GetModelsListQuery.cs" />
-    <Compile Include="Queries\Vehicles\GetVehicleByMobileUnitIdQuery.cs" />
+    <Compile Include="Queries\Vehicles\GetVehicleByMobileUnitImeiQuery.cs" />
     <Compile Include="Queries\Vehicles\VehiclesQueriesHandler.cs" />
     <Compile Include="Queries\Vehicles\GetVehiclesListQuery.cs" />
   </ItemGroup>

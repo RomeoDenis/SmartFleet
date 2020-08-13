@@ -123,16 +123,13 @@ namespace SmartFLEET.Web
                 .As<IBus>();
             #endregion
 
-
-
             var container = builder.Build();
             container.Resolve<IBusControl>().StartAsync();
+           // SignalRHubManager.Mediator = container.Resolve<IMediator>();
             var path = Server.MapPath("/") + @"bin";
             MicroServicesLoader.Loader(path);
-
-            //    container.Resolve<IAmbientDbContextLocator>();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
-           // GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver((IContainer)container);
+           
         }
 
         private static void RegisterDomains(ContainerBuilder builder)

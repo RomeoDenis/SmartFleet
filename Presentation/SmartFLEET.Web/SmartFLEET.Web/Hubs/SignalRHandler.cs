@@ -9,6 +9,7 @@ using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
 using SmartFleet.Core.Geofence;
 using SmartFleet.Core.ReverseGeoCoding;
+using SmartFleet.Customer.Domain.Common.Dtos;
 using SmartFleet.Data;
 using SmartFleet.Service.Models;
 using SmartFLEET.Web.Models.Eveents;
@@ -20,7 +21,7 @@ namespace SmartFLEET.Web.Hubs
     /// </summary>
     public class SignalRHandler : Hub,
         IConsumer<CreateTk103Gps>,
-        IConsumer<CreateNewBoxGps>, 
+        IConsumer<CreateNewBoxGps>,
         IConsumer<TLGpsDataEvents>,
         IConsumer<TLExcessSpeedEvent>,
         IConsumer<TLEcoDriverAlertEvent>
@@ -39,7 +40,7 @@ namespace SmartFLEET.Web.Hubs
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
                 // get current gps device 
-                var box = await GetSenderBoxAsync(context.Message, dbContextScopeFactory).ConfigureAwait(false);
+                var box = await GetSenderBox(context.Message, dbContextScopeFactory).ConfigureAwait(false);
                 if (box != null)
                 {
                     // set position 
@@ -50,7 +51,7 @@ namespace SmartFLEET.Web.Hubs
 
         }
 
-        private static async Task<Box> GetSenderBoxAsync(CreateTk103Gps message, IDbContextScope dbContextScopeFactory)
+        private static async Task<Box> GetSenderBox(CreateTk103Gps message, IDbContextScope dbContextScopeFactory)
         {
             var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
             var box = await dbContext.Boxes.Include(x => x.Vehicle).Include(x => x.Vehicle.Customer).FirstOrDefaultAsync(b =>
@@ -58,7 +59,7 @@ namespace SmartFLEET.Web.Hubs
             return box;
         }
 
-        
+
         private static async Task<Box> GetSenderBoxAsync(string imei, IDbContextScope dbContextScopeFactory)
         {
             var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
@@ -119,7 +120,7 @@ namespace SmartFLEET.Web.Hubs
         {
             if (SignalRHubManager.Clients == null)
                 return;
-         
+
             using (var dbContextScopeFactory = SignalRHubManager.DbContextScopeFactory.Create())
             {
                 foreach (var @event in context.Message.Events)
@@ -129,15 +130,15 @@ namespace SmartFLEET.Web.Hubs
                     if (box != null)
                     {
                         // set position 
-                        var lasPosition =await GetLastPositionAsync(box.Id , dbContextScopeFactory).ConfigureAwait(false);
-                        var position = new PositionViewModel(@event, box.Vehicle, lasPosition);
-                        if(string.IsNullOrEmpty(position.CustomerName))
+                        var lasPosition = await GetLastPositionAsync(box.Id, dbContextScopeFactory).ConfigureAwait(false);
+                        var position = new PositionViewModel(@event, new VehicleDto(box.Vehicle.VehicleName, box.Id, box.Vehicle.CustomerId.ToString(), box.Vehicle.VehicleType), lasPosition);
+                        if (string.IsNullOrEmpty(position.CustomerName))
                             return;
                         var reverseGeoCodingService = new ReverseGeoCodingService();
-                        position.Address =await reverseGeoCodingService.ReverseGeoCodingAsync(position.Latitude, position.Longitude).ConfigureAwait(false);
+                        position.Address = await reverseGeoCodingService.ReverseGeoCodingAsync(position.Latitude, position.Longitude).ConfigureAwait(false);
                         await SignalRHubManager.Clients.Group(position.CustomerName).receiveGpsStatements(position);
 
-                    }
+                    }   
                 }
             }
         }
@@ -145,12 +146,12 @@ namespace SmartFLEET.Web.Hubs
         private async Task<GeofenceHelper.Position> GetLastPositionAsync(Guid boxId, IDbContextScope dbContextScopeFactory)
         {
             var dbContext = dbContextScopeFactory.DbContexts.Get<SmartFleetObjectContext>();
-            var lastPosition = await 
+            var lastPosition = await
                 dbContext.Positions
                     .Where(x => x.Box_Id == boxId)
                     .OrderByDescending(p => p.Timestamp)
                     .FirstOrDefaultAsync().ConfigureAwait(false);
-            if (lastPosition!=null)
+            if (lastPosition != null)
                 return new GeofenceHelper.Position
                 {
                     Latitude = lastPosition.Lat,
@@ -170,6 +171,7 @@ namespace SmartFLEET.Web.Hubs
                 await SignalRHubManager.Clients.Group(context.Message.CustomerId.ToString()).receiveVehicleEvent(evt);
 
             }
+
 
         }
 
