@@ -26,17 +26,17 @@ function vehicleController($scope, vehicleService, $state, $rootScope) {
     $scope.addVehicle = function(vehicle) {
 
         vehicleService.addVehicle(vehicle).then(function (resp) {
-            console.log(resp.data);
-            if (resp.data.ValidationStatus === 2) {
+            if (resp.data.errors.length > 0) {
                 var msg = "";
-                for (var i = 0; i < resp.data.Errors.length; i++) {
-                    msg = msg + resp.data.Errors[i];
+                for (var i = 0; i < resp.data.errors.length; i++) {
+                    msg = msg + resp.data.errors[i];
                 }
                 $.bootstrapGrowl(msg,
                     {
                         ele: 'body', // which element to append to
                         type: 'danger' // (null, 'info', 'danger', 'success')
                     });
+                $scope.vehicle = resp.data.vehicle;
             } else {
                 $.bootstrapGrowl("Operation has been terminated  successfully !", {
                     ele: 'body', // which element to append to

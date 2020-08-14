@@ -4,6 +4,7 @@ using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Domain.Customers;
 using SmartFleet.Core.Domain.Users;
 using SmartFleet.Core.Domain.Vehicles;
+using SmartFleet.Customer.Domain.Commands.Vehicles;
 using SmartFleet.Service.Models;
 using SmartFLEET.Web.Areas.Administrator.Models;
 using SmartFLEET.Web.Models;
@@ -21,9 +22,8 @@ namespace SmartFLEET.Web.Automapper
         /// </summary>
         public SmartFleetAdminMappings()
         {
-            CreateMap<AddVehicleViewModel, Vehicle>()
-                .ForMember(x => x.Boxes, o => o.Ignore())
-                .ForMember(x => x.VehicleType, o => o.Ignore())
+            CreateMap<AddVehicleViewModel, CreateVehicleCommand>()
+                 .ForMember(x => x.VehicleType, o =>o.MapFrom(co=> co.VehicleType) )
                  .ReverseMap();
             CreateMap<AddCustomerViewModel, Customer>()
 

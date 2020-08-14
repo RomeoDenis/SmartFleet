@@ -7,6 +7,10 @@ namespace SmartFleet.Customer.Domain.Common.Dtos
 {
     public class VehicleDto
     {
+        public VehicleDto()
+        {
+            
+        }
         public VehicleDto(string vehicleName , Guid id, string customerId, VehicleType type)
         {
             VehicleName = vehicleName;

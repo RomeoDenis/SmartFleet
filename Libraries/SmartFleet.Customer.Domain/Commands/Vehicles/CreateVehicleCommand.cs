@@ -13,11 +13,12 @@ namespace SmartFleet.Customer.Domain.Commands.Vehicles
         public CreateVehicleCommand()
         {
             CreationDate = DateTime.Now;
+            CmdId = Guid.NewGuid();
         }
         public string VehicleName { get; set; }
         public string LicensePlate { get; set; }
         public string Vin { get; set; }
-        public Guid BrandId { get; set; }
+        public Guid? BrandId { get; set; }
         public Guid? ModelId { get; set; }
         public Guid CustomerId { get; set; }
         public VehicleStatus VehicleStatus { get; set; }
