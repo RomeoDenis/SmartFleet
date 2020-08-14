@@ -19,8 +19,8 @@ namespace SmartFleet.Service.Models
             Longitude = position.Long;
             Address = position.Address;
             //IMEI = position.IMEI;
-            //SerialNumber = tk103Gps.SerialNumber;
-            //Direction = tk103Gps.Address
+            //SerialNumber = tlGps.SerialNumber;
+            //Direction = tlGps.Address
             Speed = position.Speed;
             VehicleName = vehicle.VehicleName;
             VehicleId = vehicle.Id.ToString();
@@ -37,7 +37,7 @@ namespace SmartFleet.Service.Models
             Address = tk103Gps.Address;
             IMEI = tk103Gps.IMEI;
             SerialNumber = tk103Gps.SerialNumber;
-            //Direction = tk103Gps.Address
+            //Direction = tlGps.Address
             Speed = tk103Gps.Speed;
             VehicleName = vehicle.VehicleName;
             VehicleId = vehicle.Id.ToString();
@@ -46,20 +46,20 @@ namespace SmartFleet.Service.Models
             SetVehicleImage(vehicle.VehicleType);
         }
 
-        public PositionViewModel(CreateTeltonikaGps tk103Gps, Vehicle vehicle, SmartFleetObjectContext db, Guid boxId)
+        public PositionViewModel(CreateTeltonikaGps tlGps, Vehicle vehicle, SmartFleetObjectContext db, Guid boxId)
         {
-          //  var dir = GetDirection(tk103Gps, db, boxId);
-            Latitude = tk103Gps.Lat;
-            Longitude = tk103Gps.Long;
-            Address = tk103Gps.Address;
-            IMEI = tk103Gps.Imei;
-           // SerialNumber = tk103Gps.s;
-            //Direction = tk103Gps.Address
-            Speed = tk103Gps.Speed;
+          //  var dir = GetDirection(tlGps, db, boxId);
+            Latitude = tlGps.Lat;
+            Longitude = tlGps.Long;
+            Address = tlGps.Address;
+            IMEI = tlGps.Imei;
+           // SerialNumber = tlGps.s;
+            //Direction = tlGps.Address
+            Speed = tlGps.Speed;
             VehicleName = vehicle.VehicleName;
             VehicleId = vehicle.Id.ToString();
             CustomerName = vehicle.Customer?.Id.ToString();
-            TimeStampUtc = tk103Gps.Timestamp;
+            TimeStampUtc = tlGps.Timestamp;
             //SetVehicleImage(vehicle ,dir);
         }
         
@@ -81,7 +81,7 @@ namespace SmartFleet.Service.Models
             Address = tk103Gps.Address;
             IMEI = tk103Gps.IMEI;
             SerialNumber = tk103Gps.SerialNumber;
-            //Direction = tk103Gps.Address
+            //Direction = tlGps.Address
             Speed = tk103Gps.Speed;
             VehicleName = vehicle.VehicleName;
             VehicleId = vehicle.Id.ToString();
@@ -90,27 +90,27 @@ namespace SmartFleet.Service.Models
             SetVehicleImage(vehicle.VehicleType);
         }
 
-        public PositionViewModel(CreateTeltonikaGps tk103Gps, VehicleDto vehicle, GeofenceHelper.Position lasPosition)
+        public PositionViewModel(CreateTeltonikaGps tlGps, VehicleDto vehicle, GeofenceHelper.Position lasPosition)
         {
             double dir = 0;
-            if (Math.Abs(lasPosition.Latitude - tk103Gps.Lat) > 0.0 )
-                if( Math.Abs(lasPosition.Longitude - tk103Gps.Long) > 0.0)
-                    dir = GetDirection(tk103Gps, lasPosition);
+            if (Math.Abs(lasPosition.Latitude - tlGps.Lat) > 0.0 )
+                if( Math.Abs(lasPosition.Longitude - tlGps.Long) > 0.0)
+                    dir = GetDirection(tlGps, lasPosition);
             
-            Latitude = tk103Gps.Lat;
-            Longitude = tk103Gps.Long;
-            Address = tk103Gps.Address;
-            IMEI = tk103Gps.Imei;
-            // SerialNumber = tk103Gps.s;
-            //Direction = tk103Gps.Address
-            Speed = tk103Gps.Speed;
+            Latitude = tlGps.Lat;
+            Longitude = tlGps.Long;
+            Address = tlGps.Address;
+            IMEI = tlGps.Imei;
+            // SerialNumber = tlGps.s;
+            //Direction = tlGps.Address
+            Speed = tlGps.Speed;
             
             if (vehicle != null)
             {
                 VehicleName = vehicle.VehicleName;
                 VehicleId = vehicle.Id.ToString();
                 CustomerName = vehicle.CustomerId;
-                TimeStampUtc = tk103Gps.Timestamp;
+                TimeStampUtc = tlGps.Timestamp;
                 SetVehicleImage(vehicle, dir);
             }
         }
@@ -120,7 +120,7 @@ namespace SmartFleet.Service.Models
          {
             switch (vehicle)
             {
-                case VehicleType.Track:
+                case VehicleType.Truck:
                 {
                     ImageUri = Speed < 1.0 ? "../assets/vehicles/TractorTruckStopped.png" : "../assets/vehicles/TractorTruckMovingLeft.png";
                 }
@@ -136,7 +136,7 @@ namespace SmartFleet.Service.Models
         {
             switch (vehicle.VehicleType)
             {
-                case VehicleType.Track:
+                case VehicleType.Truck:
                 {
                     if (Speed > 0 && dir < 180)
                         ImageUri = "../assets/vehicles/TractorTruckMoving.png";

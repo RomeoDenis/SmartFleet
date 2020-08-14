@@ -33,7 +33,7 @@
                         <label class="col-md-4 control-label" for="VehicleType">Type</label>
                         <div class="col-md-5">
                             <select id="VehicleType" ng-required="true" ng-model="vehicle.VehicleType" name="VehicleType" class="form-control">
-                                <option ng-repeat="option in vehicle.VehicleTypes" value="{{option.Value}}">{{option.Value}}</option>
+                                <option ng-repeat="option in vehicle.VehicleTypes" value="{{option.Key}}">{{option.Value}}</option>
 
                             </select>
                         </div>
@@ -44,7 +44,7 @@
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="Model">Modèle</label>
                         <div class="col-md-5">
-                            <select id="Model_Id" name="Model_id" ng-model="vehicle.Model_Id" class="form-control">
+                            <select id="Model_Id" name="Model_id" ng-model="vehicle.ModelId" class="form-control">
                                 <option ng-repeat="option in vehicle.Models" value="{{option.Id}}">{{option.Name}}</option>
 
                             </select>
@@ -53,7 +53,7 @@
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="Brand">Marque</label>
                         <div class="col-md-5">
-                            <select id="Brand_Id" ng-model="vehicle.Brand_Id" name="Brand_Id" class="form-control">
+                            <select id="Brand_Id" ng-model="vehicle.BrandId" name="Brand_Id" class="form-control">
                                 <option ng-repeat="option in vehicle.Brands" value="{{option.Id}}">{{option.Name}}</option>
 
                             </select>
@@ -75,7 +75,7 @@
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="Boxe_Id">Boitiers</label>
                         <div class="col-md-5">
-                            <select id="Boxe_Id" name="Boxe_Id" ng-model="vehicle.Box_Id" class="form-control">
+                            <select id="Boxe_Id" name="Boxe_Id" ng-model="vehicle.BoxId" class="form-control">
                                 <option ng-repeat="option in vehicle.Boxes" value="{{option.Id}}">{{option.Imei}}</option>
 
                             </select>

@@ -21,10 +21,10 @@ namespace SmartFLEET.Web.Areas.Administrator.Models
         {
             _mediator = mediator;
 
-            VehicleTypes = new List<KeyValuePair<int, string>>();
+            VehicleTypes = new List<KeyValuePair<short, string>>();
             foreach (var vehicleType in Enum.GetValues(typeof(VehicleType)) .Cast<VehicleType>())
             {
-                VehicleTypes.Add(new KeyValuePair<int, string>((int) vehicleType, vehicleType.ToString()));
+                VehicleTypes.Add(new KeyValuePair<short, string>((short) vehicleType, vehicleType.ToString()));
             }
         }
 
@@ -39,39 +39,39 @@ namespace SmartFLEET.Web.Areas.Administrator.Models
         public string LicensePlate { get; set; }
         public string Vin { get; set; }
 
-        public Guid? Brand_Id { get; set; }
+        public Guid? BrandId { get; set; }
         [Required]
-        public Guid? Model_Id { get; set; }
+        public Guid? ModelId { get; set; }
         [Required]
         public Guid? CustomerId { get; set; }
         public VehicleStatus VehicleStatus { get; set; }
         [Required]
-        public string VehicleType { get; set; }
+        public short VehicleType { get; set; }
         [Required]
-        public Guid? Box_Id { get; set; }
+        public Guid? BoxId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public List<Brand> Brands => _mediator
+        public List<Brand> Brands => _mediator?
             .Send(new GetBrandsListQuery())
             .GetAwaiter()
             .GetResult();
-        public List<Model> Models => _mediator
+        public List<Model> Models => _mediator?
             .Send(new GetModelsListQuery())
             .GetAwaiter()
             .GetResult();
         /// <summary>
         /// 
         /// </summary>
-        public  List<CustomerItemViewModel> Customers => _mediator
+        public  List<CustomerItemViewModel> Customers => _mediator?
             .Send(new GetCustomersListQuery())
             .GetAwaiter()
             .GetResult()
             .Select(c=>new CustomerItemViewModel(){Id = c.Id, Name = c.Name}).ToList();
-        public List<BoxItemModelView> Boxes => _mediator.Send(new GetMobileUnitsWithoutVehicleIdQuery())
+        public List<BoxItemModelView> Boxes => _mediator?.Send(new GetMobileUnitsWithoutVehicleIdQuery())
             .GetAwaiter()
             .GetResult()
             .Select(b=>new BoxItemModelView() {Id =b.Id, Imei = b.Imei}).ToList();
-        public List<KeyValuePair<int, string>> VehicleTypes { get; set; }
+        public List<KeyValuePair<short, string>> VehicleTypes { get; set; }
     }
 }

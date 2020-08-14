@@ -12,7 +12,13 @@ namespace SmartFleet.Customer.Domain.Common.DomainMapping
         {
             CreateMap<CreateVehicleCommand, Vehicle>()
                 .ForMember(x => x.Id, o => o.MapFrom(p => p.CmdId))
+                .ForMember(x => x.VehicleType, o => o.MapFrom(co =>(VehicleType) co.VehicleType))
+                .ForMember(x => x.Box_Id, o => o.MapFrom(co => co.BoxId))
+                .ForMember(x => x.Brand_Id, o => o.MapFrom(co => co.BrandId))
+                .ForMember(x => x.Model_Id, o => o.MapFrom(co => co.ModelId))
+
                 .ReverseMap();
+
             CreateMap<Vehicle, VehicleDto>()
                 .ForMember(x => x.Customer, o => o.MapFrom(v => v.Customer.Name))
                 .ForMember(x => x.CustomerId, o => o.MapFrom(v => v.CustomerId.ToString()))

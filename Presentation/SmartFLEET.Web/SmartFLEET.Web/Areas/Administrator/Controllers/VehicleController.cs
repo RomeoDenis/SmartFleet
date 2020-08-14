@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
 using MediatR;
-using SmartFleet.Core.Domain.Vehicles;
+using SmartFleet.Customer.Domain.Commands.Vehicles;
 using SmartFleet.Customer.Domain.Queries.Vehicles;
 using SmartFleet.Service.Vehicles;
 using SmartFleet.Web.Framework.DataTables;
 using SmartFLEET.Web.Areas.Administrator.Models;
+using SmartFLEET.Web.Areas.Administrator.Validation;
 using SmartFLEET.Web.Controllers;
 
 namespace SmartFLEET.Web.Areas.Administrator.Controllers
@@ -35,7 +35,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
         //[HttpGet]
         public async Task<JsonResult> GetAllVehicles()
         {
-            var data = await Mediator.Send(new GetVehiclesListQuery
+            var data = await SendAsync(new GetVehiclesListQuery
             {
                 Request = Request
             }).ConfigureAwait(false);
@@ -94,25 +94,25 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddNewVehicle(AddVehicleViewModel model)
+        public async Task<ActionResult> AddNewVehicle(AddVehicleViewModel model)
         {
-            ValidationViewModel validationModel;
-
-            if (ModelState.IsValid)
+            var validator = new AddVehicleValidator();
+            var result = await validator.ValidateAsync(model).ConfigureAwait(false);
+            if (result.IsValid)
             {
-                var vehicle = Mapper.Map<Vehicle>(model);
-                vehicle.VehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), model.VehicleType);
-                _vehicleService.AddNewVehicleAsync(vehicle);
-                validationModel = new ValidationViewModel(new List<string>(), "Ok");
-                return Json(validationModel, JsonRequestBehavior.AllowGet);
+                try
+                {
+                    var vehicle = Mapper.Map<CreateVehicleCommand>(model);
+                    await SendAsync(vehicle).ConfigureAwait(false);
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception e)
+                {
+                    Json(e.Message);
+                }
             }
-
-            var errors = (from modelStateValue in ModelState.Values
-                from error in modelStateValue.Errors
-                select error.ErrorMessage).ToList();
-            validationModel = new ValidationViewModel(errors, "Validation errors");
-
-            return Json(validationModel, JsonRequestBehavior.AllowGet);
+            var validationModel = ValidationViewModel(result);
+            return Json(new { errors= validationModel, vehicle = model}, JsonRequestBehavior.AllowGet);
         }
     }
 }
