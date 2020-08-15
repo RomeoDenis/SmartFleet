@@ -1,4 +1,5 @@
-﻿<header class="main-header">
+﻿@using SmartFleet.Resources
+<header class="main-header">
     <!-- Logo -->
     <a href="@Url.Action("Index" ,"Home")" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -14,7 +15,7 @@
 
                     <a title="Suivi" id="btn-auto" href="#"> <i class="fa fa-wifi fa-lg"></i></a>
 
-                 
+
 
                 </li>
                 <li class="dropdown messages-menu">
@@ -27,7 +28,7 @@
 
                 </li>
                 <!-- Tasks: style can be found in dropdown.less -->
-              
+
                 <li>
                     <a id="btn-settings" title="Configuration" href="#" data-toggle="control-sidebar"><i class="fa fa-gears fa-lg"></i></a>
                 </li>
@@ -35,6 +36,28 @@
                 <li class="dropdown tasks-menu">
                     <a href="#"><i class="fa fa-bell fa-lg"></i></a>
 
+                </li>
+                <li class="dropdown messages-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-compass"></i>
+                        <span>@Resource.Language</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="@Url.Action("ChangeLanguage", "Language", new {language = "fr-FR"})">
+                                <span class="flag-icon flag-icon-fr"></span>
+                                <b>Fancais </b>
+                            </a>
+                            <a href="@Url.Action("ChangeLanguage", "Language", new {language = "en"})">
+                                <span class="flag-icon flag-icon-gb"></span>
+                                <b>Enhlish</b>
+                            </a>
+                            <a href="/ar">
+                                <span class="flag-icon flag-icon-dz"></span>
+                                <b>Arabe</b>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="dropdown tasks-menu">
                     <a href="@Url.Action("Logout", "Account")"><i class="fa fa-power-off fa-lg"></i></a>

@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using AutoMapper;
 using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Service.Customers;
-using SmartFleet.Service.Report;
 using SmartFleet.Service.Tracking;
 using SmartFleet.Service.Vehicles;
 using SmartFLEET.Web.Models;
@@ -59,7 +58,7 @@ namespace SmartFLEET.Web.Controllers
         public async Task<JsonResult> LoadNodes()
         {
             var user = User.Identity;
-            var cst = await _customerService.GetCustomerWithZonesAndVehiclesAsync(user.Name);
+            var cst = await _customerService.GetCustomerWithZonesAndVehiclesAsync(user.Name).ConfigureAwait(false);
             // add root nodes
             var nodes = AddRootNodes();
             if (cst == null)

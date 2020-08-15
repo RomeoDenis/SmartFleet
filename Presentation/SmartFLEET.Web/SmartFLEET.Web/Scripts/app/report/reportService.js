@@ -3,19 +3,19 @@
     this.getReport = function getReport(vehicleId, startPeriod) {
         return $http({
             method: 'GET',
-            url: '../VehicleReport/GetDailyVehicleReport/?vehicleId=' + vehicleId + "&startPeriod=" + startPeriod
+            url: currentLang +'/VehicleReport/GetDailyVehicleReport/?vehicleId=' + vehicleId + "&startPeriod=" + startPeriod
         });
     };
     this.getVehicles = function() {
         return $http({
             method: 'GET',
-            url: '../VehicleReport/GetVehicles'
+            url: currentLang +'/VehicleReport/GetVehicles'
         });
     }
     this.getReportContent = function getReportContent() {
         return $http({
             method: 'GET',
-            url: '../VehicleReport/Index'
+            url: currentLang +'/VehicleReport/Index'
         });
     }
 

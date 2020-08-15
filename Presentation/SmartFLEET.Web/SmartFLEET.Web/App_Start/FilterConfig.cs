@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using SmartFLEET.Web.Helpers;
 
 namespace SmartFLEET.Web
 {
@@ -6,6 +7,7 @@ namespace SmartFLEET.Web
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
+            filters.Add(new CultureFilter(defaultCulture: "en"));
             filters.Add(new HandleErrorAttribute());
         }
     }

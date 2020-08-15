@@ -552,6 +552,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:SmartFLEET.Web.Controllers.LanguageController.ChangeLanguage(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="language"></param>
+            <returns></returns>
+        </member>
         <member name="T:SmartFLEET.Web.Controllers.AccountController">
             <summary>
             

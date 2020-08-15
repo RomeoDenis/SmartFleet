@@ -18,8 +18,10 @@ var anchorId = null;
 var downloadFullReport = false;
 var getPossition = false;
 var layout;
+var currentLang = "";
 $(document).ready(function () {
-  
+
+    currentLang = getCookie("culture");
     //layout.close("west");
     initJstree();
     loadData(0.33);
@@ -185,14 +187,15 @@ function initMap(mapId) {
     map.invalidateSize();
 }
 function initVehicleMarkers() {
+
     $.ajax({
-        url: '/VehicleReport/AllVehiclesWithLastPosition',
+        url: currentLang+'/VehicleReport/AllVehiclesWithLastPosition',
         success: onGetAllVehiclesSuccess
     });
 }
 function initZones() {
     $.ajax({
-        url: '/InterestArea/GetAllZones',
+        url: currentLang+'/InterestArea/GetAllZones',
         success: onGetAllZonesSuccess
     });
 }
@@ -327,7 +330,7 @@ function initJstree() {
    
     $('#container').jstree({
         "core": {
-            "data": { "url": "/Home/LoadNodes" }
+            "data": { "url": currentLang+"/Home/LoadNodes" }
         },
         "search": {
             "case_insensitive": false,
@@ -363,7 +366,7 @@ function initJstree() {
 }
 function getChronogram() {
     $.ajax({
-        url: '/Position/GetCurrentDayPosition/?vehicleId=' + anchorId,
+        url: currentLang+'/Position/GetCurrentDayPosition/?vehicleId=' + anchorId,
         dataType: 'json',
         success: onGetTargetsSuccess,
         error: onGetTargetsSuccess
@@ -704,4 +707,19 @@ function parseDate(input) {
     var parts = input.match(/(\d+)/g);
     // new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
     return new Date(parts[0], parts[1] - 1, parts[2]); // months are 0-based
+}
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
