@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.Routing;
 using AutoMapper;
 using FluentValidation.Results;
 using MediatR;
 using SmartFleet.Data;
 using SmartFLEET.Web.Areas.Administrator.Models;
-using SmartFLEET.Web.Helpers;
 
 namespace SmartFLEET.Web.Controllers
 {
@@ -57,32 +53,10 @@ namespace SmartFLEET.Web.Controllers
             return errors;
         }
 
-      
-        protected override bool DisableAsyncSupport
-        {
-            get { return false; }
-        }
         protected Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
         {
             return Mediator.Send(request);
         }
-        protected override void Initialize(RequestContext requestContext)
-        {
-            if (requestContext.RouteData.Values["lang"] != null && requestContext.RouteData.Values["lang"] as string != "null")
-            {
-                var currentLangCode = requestContext.RouteData.Values["lang"] as string;
-                try
-                {
-                    var ci = new CultureInfo(currentLangCode);
-                    Thread.CurrentThread.CurrentUICulture = ci;
-                    Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(ci.Name);
-                }
-                catch (CultureNotFoundException ex)
-                {
-                }
-            }
-
-            base.Initialize(requestContext);
-        }
+        
     }
 }
