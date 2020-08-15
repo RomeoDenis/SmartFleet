@@ -32,7 +32,7 @@ function addzoneController($scope, $http) {
     }
     $scope.saveZone = function() {
         console.log($scope.zone);
-        $http.post("../InterestArea/AddNewZone", $scope.zone).then(function(resp) {
+        $http.post(currentLang + + "/InterestArea/AddNewZone", $scope.zone).then(function(resp) {
             console.log(resp);
             if (resp.data.ValidationStatus === 2) {
                 var msg = "";

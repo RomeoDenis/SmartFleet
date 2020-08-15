@@ -204,6 +204,7 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="RabbitMQ.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\RabbitMQ.Client.5.1.0\lib\net451\RabbitMQ.Client.dll</HintPath>
     </Reference>
@@ -333,6 +334,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\InterestAreaController.cs" />
+    <Compile Include="Controllers\LanguageController.cs" />
     <Compile Include="Helpers\AzureServiceBusModule.cs" />
     <Compile Include="Automapper\SmartFleetAdminMappings.cs" />
     <Compile Include="Areas\Administrator\Controllers\AdminController.cs" />
@@ -358,6 +360,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CultureFilter.cs" />
+    <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="HtmlHelpers\HtmlExtensions.cs" />
     <Compile Include="Hubs\ErrorHandlingPipelineModule.cs" />
@@ -3076,6 +3080,7 @@
     <Folder Include="Areas\Api\Models\" />
     <Folder Include="Areas\Api\Views\Shared\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Language\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\DenormalizerService\DenormalizerService.csproj">
@@ -3097,6 +3102,10 @@
     <ProjectReference Include="..\..\..\Libraries\SmartFleet.MobileUnit.Domain\SmartFleet.MobileUnit.Domain.csproj">
       <Project>{4b4e4009-53a6-4e8b-a765-d5bfc77e48a3}</Project>
       <Name>SmartFleet.MobileUnit.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\SmartFleet.Resources\SmartFleet.Resources.csproj">
+      <Project>{13b4741a-9aac-43fe-8f27-e4351871d3c4}</Project>
+      <Name>SmartFleet.Resources</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Libraries\SmartFleet.Service\SmartFleet.Service.csproj">
       <Project>{770f75a9-b482-4e94-8356-761106ede207}</Project>

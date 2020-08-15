@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Globalization;
+using System.Threading;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -46,9 +49,20 @@ namespace SmartFLEET.Web
                 HttpContext.Current.SkipAuthorization = true;
             }
         }
-       
 
-        
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            var culture = Request["culture"] ?? Request.Cookies["culture"]?.Name;
+            if (culture == null) culture = "en";
+            var ci = CultureInfo.GetCultureInfo(culture);
+
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
+
+            var cookie = new HttpCookie("culture", ci.Name);
+            Response.Cookies.Add(cookie);
+        }
         protected void Application_Start()
         {
             
