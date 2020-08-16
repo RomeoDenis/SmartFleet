@@ -126,11 +126,15 @@
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
     </Reference>
+    <Reference Include="StackExchange.Redis.StrongName, Version=1.2.6.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\StackExchange.Redis.StrongName.1.2.6\lib\net45\StackExchange.Redis.StrongName.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
@@ -188,6 +192,7 @@
     <Compile Include="Domain\Vehicles\VehicleEvent.cs" />
     <Compile Include="Domain\Vehicles\VehicleStatus.cs" />
     <Compile Include="Domain\Vehicles\VehicleType.cs" />
+    <Compile Include="Extension\ObjectExtension.cs" />
     <Compile Include="Geofence\GeofenceHelper.cs" />
     <Compile Include="Helpers\Commonhelper.cs" />
     <Compile Include="Helpers\StringExtension.cs" />

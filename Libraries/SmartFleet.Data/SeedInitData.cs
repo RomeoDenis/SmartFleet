@@ -80,7 +80,7 @@ namespace SmartFleet.Data
             {
                 if (!context.Models.Any(m => m.Name == modelName))
                 {
-                    var entity = new Model() { Name = modelName };
+                    var entity = new Model { Name = modelName };
                     context.Models.Add(entity);
                 }
             }
