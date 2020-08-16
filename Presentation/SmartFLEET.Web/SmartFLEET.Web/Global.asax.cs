@@ -72,7 +72,7 @@ namespace SmartFLEET.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             BundleTable.EnableOptimizations = false;
-            // seed user administrator and roles
+            // seeds init data
              SeedInitData.SeedInitialData();
 
             #region register different services and classes using autofac
@@ -139,7 +139,6 @@ namespace SmartFLEET.Web
 
             var container = builder.Build();
             container.Resolve<IBusControl>().StartAsync();
-           // SignalRHubManager.Mediator = container.Resolve<IMediator>();
             var path = Server.MapPath("/") + @"bin";
             MicroServicesLoader.Loader(path);
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));

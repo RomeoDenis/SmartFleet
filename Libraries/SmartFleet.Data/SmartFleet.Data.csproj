@@ -42,9 +42,16 @@
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis.StrongName, Version=1.2.6.0, Culture=neutral, PublicKeyToken=c219ff1ca8c2ce46, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\StackExchange.Redis.StrongName.1.2.6\lib\net45\StackExchange.Redis.StrongName.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,6 +70,8 @@
     <Compile Include="EfRepository.cs" />
     <Compile Include="EfScopeRepository.cs" />
     <Compile Include="IDbContext.cs" />
+    <Compile Include="IRedisCache.cs" />
+    <Compile Include="IRedisConnectionManager.cs" />
     <Compile Include="Migrations\201810061138495_init.cs" />
     <Compile Include="Migrations\201810061138495_init.Designer.cs">
       <DependentUpon>201810061138495_init.cs</DependentUpon>
@@ -137,6 +146,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RedisCache .cs" />
+    <Compile Include="RedisConnectionManager.cs" />
     <Compile Include="SeedInitData.cs" />
     <Compile Include="SmartFleetObjectContext.cs" />
   </ItemGroup>

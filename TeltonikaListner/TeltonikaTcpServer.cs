@@ -4,27 +4,35 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using SmartFleet.Core.Contracts.Commands;
+using SmartFleet.Core.Extension;
 using SmartFleet.Core.Helpers;
 using SmartFleet.Core.Protocols;
-using SmartFleet.Core.ReverseGeoCoding;
+using SmartFleet.Data;
+using StackExchange.Redis;
 
 namespace TeltonikaListner
 {
     public class TeltonikaTcpServer
     {
         private readonly IBusControl _bus;
-       
+        private readonly IRedisCache _redisCache;
+        private readonly IRedisConnectionManager _redisConnectionManager;
+
         private TcpListener _listener;
 
-        public TeltonikaTcpServer(IBusControl bus, ReverseGeoCodingService reverseGeoCodingService)
+        public TeltonikaTcpServer(
+            IBusControl bus,
+            IRedisCache redisCache, IRedisConnectionManager redisConnectionManager)
         {
             _bus = bus;
-         
+            _redisCache = redisCache;
+            _redisConnectionManager = redisConnectionManager;
         }
 
         public void Start()
@@ -70,17 +78,22 @@ namespace TeltonikaListner
             Trace.TraceInformation("--------------------------------------------");
             Byte[] b = { 0x01 };
             await stream.WriteAsync(b, 0, 1).ConfigureAwait(false);
-            var command = new CreateBoxCommand();
-            command.Imei = imei;
-            try
+            var modem = _redisCache.Get<CreateBoxCommand>(imei);
+            if (modem == null)
             {
-                await _bus.Publish(command).ConfigureAwait(false);
+                var command = new CreateBoxCommand();
+                command.Imei = imei;
+                try
+                {
+                    await _redisCache.SetAsync(imei, command).ConfigureAwait(false);
+                    await _bus.Publish(command).ConfigureAwait(false);
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
             while (true)
             {
@@ -119,7 +132,7 @@ namespace TeltonikaListner
             return gpsResult;
         }
 
-       
+        
         private static void LogAvlData(List<CreateTeltonikaGps> gpsResult)
         {
             foreach (var gpsData in gpsResult.OrderBy(x => x.Timestamp))
