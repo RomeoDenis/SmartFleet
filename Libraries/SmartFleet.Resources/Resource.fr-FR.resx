@@ -120,6 +120,12 @@
   <data name="CreateAccount" xml:space="preserve">
     <value>Créer nouveau compte</value>
   </data>
+  <data name="Driver" xml:space="preserve">
+    <value>Conducteur</value>
+  </data>
+  <data name="Drivers" xml:space="preserve">
+    <value>Conducteurs</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de pass</value>
   </data>
@@ -128,5 +134,11 @@
   </data>
   <data name="UserName" xml:space="preserve">
     <value>Identifiant</value>
+  </data>
+  <data name="Vehicle" xml:space="preserve">
+    <value>Véhicule</value>
+  </data>
+  <data name="Vehicles" xml:space="preserve">
+    <value>Véhicules</value>
   </data>
 </root>

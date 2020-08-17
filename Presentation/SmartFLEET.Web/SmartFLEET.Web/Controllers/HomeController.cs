@@ -9,7 +9,7 @@ using SmartFleet.Service.Customers;
 using SmartFleet.Service.Tracking;
 using SmartFleet.Service.Vehicles;
 using SmartFLEET.Web.Models;
-
+using SmartFleet.Resources;
 namespace SmartFLEET.Web.Controllers
 {
     /// <summary>
@@ -100,7 +100,7 @@ namespace SmartFLEET.Web.Controllers
             {
                 id = "not-assigned-" + Guid.Empty,
                 parent = "vehicles",
-                text = "Not assigned",
+                text = Resource.NotAssigned,
             });
            
             return nodes;
@@ -114,13 +114,13 @@ namespace SmartFLEET.Web.Controllers
             {
                 id = "vehicles",
                 parent = "#",
-                text = "Vehicules",
+                text = Resource.Vehicles,
             });
             nodes.Add(new JsTreeModel
             {
                 id = "drivers" ,
                 parent = "#",
-                text = "Condcuteurs",
+                text = Resource.Drivers,
             });
             return nodes;
         }

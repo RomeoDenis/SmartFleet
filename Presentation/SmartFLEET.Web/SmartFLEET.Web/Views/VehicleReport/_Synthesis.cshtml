@@ -1,17 +1,18 @@
-﻿ <div class="row">
+﻿@using SmartFleet.Resources
+ <div class="row">
      <h5  class="col-md-2"><b>Date :</b> {{ReportDate}}</h5>
-     <h5  class="col-md-6"><b>Véhicule :</b> {{VehicleName}}</h5>
+     <h5  class="col-md-6"><b>@Resource.Vehicle :</b> {{VehicleName}}</h5>
      <a class="btn btn-default btn-sm col-md-1"> <i style="color: green" class="fa fa-file-excel-o"> Excel</i></a>
      <a class="btn btn-default btn-sm col-md-1" ng-click="ExportToPdf()"> <i class="fa fa-file-pdf-o"> PDF</i></a>
      </div>
 
 <div class="row">
-    <h5 id="beginService" class="col-md-4"><b>Début de service: </b> {{BeginService}}</h5>
-    <h5 id="endService" class="col-md-8"><b>Fin de service :</b> {{EndService}}</h5>
+    <h5 id="beginService" class="col-md-4"><b>@Resource.StartService: </b> {{BeginService}}</h5>
+    <h5 id="endService" class="col-md-8"><b>@Resource.EndService :</b> {{EndService}}</h5>
 </div>
 <div class="row">
     <div class="col-md-3">
-        <h5><b>Vitesse moyenne</b></h5>
+        <h5><b>@Resource.AvgSpeed</b></h5>
         <ng-gauge type="{{optionsAvg.type}}" size="{{optionsAvg.size}}" thick="{{optionsAvg.thick}}" label="{{optionsAvg.label}}" append="{{optionsAvg.append}}"
                   prepend="{{optionsAvg.prepend}}" cap="{{optionsAvg.cap}}" foreground-color="{{optionsAvg.foregroundColor}}"
                   background-color="{{optionsAvg.backgroundColor}}" value="optionsAvg.value" min="optionsAvg.min" max="optionsAvg.max"
@@ -19,7 +20,7 @@
 
     </div>
     <div class="col-md-3">
-        <h5><b>Vitesse max</b></h5>
+        <h5><b>@Resource.SpeedMax</b></h5>
         <ng-gauge type="{{options.type}}" size="{{options.size}}" thick="{{options.thick}}" label="{{options.label}}" append="{{options.append}}"
                   prepend="{{options.prepend}}" cap="{{options.cap}}" foreground-color="{{options.foregroundColor}}"
                   background-color="{{options.backgroundColor}}" value="options.value" min="options.min" max="options.max"
@@ -37,7 +38,7 @@
 
     </div>
     <div class="col-md-3">
-        <h5><b>Moyenne Cons carburant</b></h5>
+        <h5><b>@Resource.AvgFuelConsumption</b></h5>
         <ng-gauge type="{{optionsFuel.type}}" size="{{optionsFuel.size}}" thick="{{optionsFuel.thick}}" label="{{optionsFuel.label}}" append="{{optionsFuel.append}}"
                   prepend="{{optionsFuel.prepend}}" cap="{{optionsFuel.cap}}" foreground-color="{{optionsFuel.foregroundColor}}"
                   background-color="{{optionsFuel.backgroundColor}}" value="optionsFuel.value" min="optionsFuel.min" max="optionsAvg.max"

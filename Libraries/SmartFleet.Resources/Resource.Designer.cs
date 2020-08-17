@@ -61,11 +61,47 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Activities.
+        /// </summary>
+        public static string Activities {
+            get {
+                return ResourceManager.GetString("Activities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Average fuel consumption.
+        /// </summary>
+        public static string AvgFuelConsumption {
+            get {
+                return ResourceManager.GetString("AvgFuelConsumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Average speed.
+        /// </summary>
+        public static string AvgSpeed {
+            get {
+                return ResourceManager.GetString("AvgSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Create an account.
         /// </summary>
         public static string CreateAccount {
             get {
                 return ResourceManager.GetString("CreateAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Daily report.
+        /// </summary>
+        public static string DailyReport {
+            get {
+                return ResourceManager.GetString("DailyReport", resourceCulture);
             }
         }
         
@@ -84,6 +120,24 @@ namespace SmartFleet.Resources {
         public static string Drivers {
             get {
                 return ResourceManager.GetString("Drivers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à End of service.
+        /// </summary>
+        public static string EndService {
+            get {
+                return ResourceManager.GetString("EndService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Fuel consumption.
+        /// </summary>
+        public static string FuelConsumption {
+            get {
+                return ResourceManager.GetString("FuelConsumption", resourceCulture);
             }
         }
         
@@ -147,6 +201,42 @@ namespace SmartFleet.Resources {
         public static string Signin {
             get {
                 return ResourceManager.GetString("Signin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Speed.
+        /// </summary>
+        public static string Speed {
+            get {
+                return ResourceManager.GetString("Speed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Max speed.
+        /// </summary>
+        public static string SpeedMax {
+            get {
+                return ResourceManager.GetString("SpeedMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Begin of service.
+        /// </summary>
+        public static string StartService {
+            get {
+                return ResourceManager.GetString("StartService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Synthesis.
+        /// </summary>
+        public static string Synthesis {
+            get {
+                return ResourceManager.GetString("Synthesis", resourceCulture);
             }
         }
         

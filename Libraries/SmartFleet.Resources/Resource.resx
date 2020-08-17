@@ -117,14 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Activities" xml:space="preserve">
+    <value>Activities</value>
+  </data>
+  <data name="AvgFuelConsumption" xml:space="preserve">
+    <value>Average fuel consumption</value>
+  </data>
+  <data name="AvgSpeed" xml:space="preserve">
+    <value>Average speed</value>
+  </data>
   <data name="CreateAccount" xml:space="preserve">
     <value>Create an account</value>
+  </data>
+  <data name="DailyReport" xml:space="preserve">
+    <value>Daily report</value>
   </data>
   <data name="Driver" xml:space="preserve">
     <value>Driver</value>
   </data>
   <data name="Drivers" xml:space="preserve">
     <value>Drivers</value>
+  </data>
+  <data name="EndService" xml:space="preserve">
+    <value>End of service</value>
+  </data>
+  <data name="FuelConsumption" xml:space="preserve">
+    <value>Fuel consumption</value>
   </data>
   <data name="Identifiers" xml:space="preserve">
     <value>Identifiers</value>
@@ -146,6 +164,18 @@
   </data>
   <data name="Signin" xml:space="preserve">
     <value>Sign in</value>
+  </data>
+  <data name="Speed" xml:space="preserve">
+    <value>Speed</value>
+  </data>
+  <data name="SpeedMax" xml:space="preserve">
+    <value>Max speed</value>
+  </data>
+  <data name="StartService" xml:space="preserve">
+    <value>Begin of service</value>
+  </data>
+  <data name="Synthesis" xml:space="preserve">
+    <value>Synthesis</value>
   </data>
   <data name="UserName" xml:space="preserve">
     <value>User name</value>

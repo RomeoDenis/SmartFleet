@@ -30,7 +30,7 @@ function reportController($scope, reportService, $compile, $http) {
     }
    
     $scope.ExportToPdf =function() {
-        var url = '../VehicleReport/ExportReportPdf/?vehicleId=' + $scope.vehicleId + "&startPeriod=" + $scope.startPeriod;
+        var url = currentLang+'/VehicleReport/ExportReportPdf/?vehicleId=' + $scope.vehicleId + "&startPeriod=" + $scope.startPeriod;
         window.open(url);
     }
     $scope.Download = function() {
@@ -40,7 +40,7 @@ function reportController($scope, reportService, $compile, $http) {
             alert("il faut choisir une date de début et un véhicule");
             return;
         }
-        $http.get('../VehicleReport/GetDailyVehicleReport/?vehicleId=' +
+        $http.get(currentLang+'/VehicleReport/GetDailyVehicleReport/?vehicleId=' +
                 $scope.vehicleId +
                 "&startPeriod=" +
                 $scope.startPeriod)
@@ -78,7 +78,7 @@ function reportController($scope, reportService, $compile, $http) {
                     else item.MotionStatus = "Conduite";
                     $scope.targetList.push(item);
                 }
-                setFuelChart(resp.data.FuelConsumptions);
+                //setFuelChart(resp.data.FuelConsumptions);
                 $("#daily-report").show();
                 $("#report-content").html("");
                 var com = $compile(template)($scope);
@@ -127,11 +127,6 @@ function fuelOptions(value, measure) {
 }
 function setFuelChart(fuelConsuptions) {
     var ctx = $("#fuel-chart");
-    var lineChart = new Chart(ctx, {
-        type: 'line',
-        data: fuelData,
-        options: chartOptions
-    });
     var chartOptions = {
         legend: {
             display: true,
@@ -149,4 +144,10 @@ function setFuelChart(fuelConsuptions) {
             data: [0, 59, 75, 20, 20, 55, 40],
         }]
     };
+    var lineChart = new Chart(ctx, {
+        type: 'line',
+        data: fuelData,
+        options: chartOptions
+    });
+    
 }

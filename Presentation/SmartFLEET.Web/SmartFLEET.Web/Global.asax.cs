@@ -72,8 +72,10 @@ namespace SmartFLEET.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             BundleTable.EnableOptimizations = false;
+           // HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
+
             // seeds init data
-             SeedInitData.SeedInitialData();
+            SeedInitData.SeedInitialData();
 
             #region register different services and classes using autofac
 #if DEBUG
@@ -136,8 +138,7 @@ namespace SmartFLEET.Web
                 .As<IBusControl>()
                 .As<IBus>();
             #endregion
-
-            var container = builder.Build();
+             var container = builder.Build();
             container.Resolve<IBusControl>().StartAsync();
             var path = Server.MapPath("/") + @"bin";
             MicroServicesLoader.Loader(path);

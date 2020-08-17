@@ -54,6 +54,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HibernatingRhinos.Profiler.Appender">
+      <HintPath>..\..\..\..\..\Pictures\Profiler\HibernatingRhinos.Profiler.Appender.dll</HintPath>
+    </Reference>
     <Reference Include="MediatR, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MediatR.5.1.0\lib\net45\MediatR.dll</HintPath>
     </Reference>
@@ -87,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateVehicleTest.cs" />
+    <Compile Include="Queries\GetPositionsOfVehicleTest.cs" />
     <Compile Include="Queries\LastPositionQueryTest.cs" />
     <Compile Include="Queries\VehicleByBoxIdQueryTest.cs" />
     <Compile Include="TestBase.cs" />
@@ -113,6 +117,10 @@
     <ProjectReference Include="..\..\Libraries\SmartFleet.MobileUnit.Domain\SmartFleet.MobileUnit.Domain.csproj">
       <Project>{4B4E4009-53A6-4E8B-A765-D5BFC77E48A3}</Project>
       <Name>SmartFleet.MobileUnit.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\SmartFleet.Service\SmartFleet.Service.csproj">
+      <Project>{770F75A9-B482-4E94-8356-761106EDE207}</Project>
+      <Name>SmartFleet.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SmartFleet.Web.Framework\SmartFleet.Web.Framework.csproj">
       <Project>{1968E0CF-2109-472D-A36D-34192264A897}</Project>

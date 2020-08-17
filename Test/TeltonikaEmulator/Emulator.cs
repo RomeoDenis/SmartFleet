@@ -69,11 +69,11 @@ namespace TeltonikaEmulator
                         try
                         {
                             token.ThrowIfCancellationRequested();
-                            await RunEmulation(config,config.IMEIs[ i1], data, token);
+                            await RunEmulationAsync(config,config.IMEIs[ i1], data, token).ConfigureAwait(false);
                         }
                         catch (OperationCanceledException e)
                         {
-                           
+                            Console.WriteLine(e.Message);
                             UpdateStartBtn?.Invoke(false);
                             state.Stop();
                             throw;
@@ -88,7 +88,7 @@ namespace TeltonikaEmulator
 
         }
 
-        private async Task RunEmulation(EmulationConfig config, string i1, IGrouping<string, Encoding.EncodedAvlData> data, CancellationToken token)
+        private async Task RunEmulationAsync(EmulationConfig config, string i1, IGrouping<string, Encoding.EncodedAvlData> data, CancellationToken token)
         {
 
             // initialiser le client
@@ -102,7 +102,7 @@ namespace TeltonikaEmulator
             try
             {
                 // tentative de connection au serveur
-                await _client.ConnectAsync(token);
+                await _client.ConnectAsync(token).ConfigureAwait(false);
                 _client.IsConnected = true;
                 GetLog($"Etablissement de la connexion  au serveur  {config.IpAddress} : {config.Port} ...", LogType.Info);
             }
@@ -114,9 +114,9 @@ namespace TeltonikaEmulator
             // authentification par l'envoi de l'IMEI
             Byte[] imei = BitConverter.GetBytes((ushort)15).Reverse().Concat(System.Text.Encoding.ASCII.GetBytes(i1)).ToArray();
 
-            await _client.SendAsync(imei, token);
+            await _client.SendAsync(imei, token).ConfigureAwait(false);
 
-            var bt = await _client.ReceiveAsync(token);
+            var bt = await _client.ReceiveAsync(token).ConfigureAwait(false);
             if (bt[0] == 0x001)
             {
                 GetLog($"Envoie de {data.Count()} trames  IEMI :{i1} ... ", LogType.Info);
@@ -126,8 +126,8 @@ namespace TeltonikaEmulator
                     if (token.IsCancellationRequested)
                         return;
 
-                    await _client.SendAsync(encodedAvlData.Data, token);
-                    var aqt = await _client.ReceiveAsync(token);
+                    await _client.SendAsync(encodedAvlData.Data, token).ConfigureAwait(false);
+                    var aqt = await _client.ReceiveAsync(token).ConfigureAwait(false);
                     Console.WriteLine(aqt[3]);
                     Thread.Sleep((int)config.SleepPeriod);
                 }

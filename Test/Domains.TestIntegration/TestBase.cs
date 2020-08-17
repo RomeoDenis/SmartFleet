@@ -24,7 +24,7 @@ namespace Domains.TestIntegration
             Mapper = mapperConfiguration.CreateMapper();
             IDbContextScope dbContextScope = new DbContextScope();
             Factory.Setup(x => x.Create(DbContextScopeOption.JoinExisting)).Returns(dbContextScope);
-
+            //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
         }
     }
 }

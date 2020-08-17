@@ -7,9 +7,9 @@ namespace SmartFleet.Service.Tracking
 {
     public interface IPositionService
     {
-        Task<List<Position>> GetLastVehiclPosition(string userName);
+        Task<List<Position>> GetLastVehiclePositionAsync(string userName);
 
-        Task<List<Position>> GetVehiclePositionsByPeriod(Guid vehivleId, DateTime startPeriod,
+        Task<List<Position>> GetVehiclePositionsByPeriodAsync(Guid vehicleId, DateTime startPeriod,
             DateTime endPeriod);
     }
 }
