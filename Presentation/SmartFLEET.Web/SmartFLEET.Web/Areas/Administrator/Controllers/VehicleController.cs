@@ -104,7 +104,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
                 {
                     var vehicle = Mapper.Map<CreateVehicleCommand>(model);
                     await SendAsync(vehicle).ConfigureAwait(false);
-                    return Json("ok", JsonRequestBehavior.AllowGet);
+                    return Json( new {errors= new string[]{""}} , JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception e)
                 {

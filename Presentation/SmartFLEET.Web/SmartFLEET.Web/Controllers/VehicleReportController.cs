@@ -84,7 +84,7 @@ namespace SmartFLEET.Web.Controllers
         {
             var report = new ActivitiesReport();
             var user = User.Identity;
-            var positions = report.PositionViewModels(await _positionService.GetLastVehiclPosition(user.Name));
+            var positions = report.PositionViewModels(await _positionService.GetLastVehiclePositionAsync(user.Name));
             return Json(positions, JsonRequestBehavior.AllowGet);
         }
 
@@ -94,19 +94,10 @@ namespace SmartFLEET.Web.Controllers
         /// <param name="vehicleId"></param>
         /// <param name="startPeriod"></param>
         /// <returns></returns>
-        public async Task<JsonResult> GetDailyVehicleReport(string vehicleId, string startPeriod)
+        public async Task<JsonResult> GetDailyVehicleReport(string vehicleId, DateTime startPeriod)
         {
             var id = Guid.Parse(vehicleId);
-            DateTime start;
-            try
-            {
-                DateTime.TryParseExact(startPeriod, "yyyy-MM-dd", null, DateTimeStyles.AssumeLocal, out start);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            
 
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalRHandler>();
             var report = new CompleteDailyReport();
@@ -120,9 +111,9 @@ namespace SmartFLEET.Web.Controllers
                 // ignored
             }
 
-            var endPeriod = start.AddHours(24).AddTicks(-1);
-            var vehicle = await _vehicleService.GetVehicleByIdAsync(id);
-            var positions = await _positionService.GetVehiclePositionsByPeriod(id, start, endPeriod);
+            var endPeriod = startPeriod.AddHours(24).AddTicks(-1);
+            var vehicle = await _vehicleService.GetVehicleByIdAsync(id).ConfigureAwait(false);
+            var positions = await _positionService.GetVehiclePositionsByPeriodAsync(id, startPeriod, endPeriod).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(connctionId))
                 hubContext.Clients.Client(connctionId).sendprogressVal(50);
@@ -131,7 +122,7 @@ namespace SmartFLEET.Web.Controllers
                 return Json(new CompleteDailyReport
                     {
                         VehicleName = vehicle?.VehicleName,
-                        ReportDate = start.ToShortDateString(),
+                        ReportDate = startPeriod.ToShortDateString(),
                         Positions = new List<TargetViewModel>()
                     }, JsonRequestBehavior.AllowGet);
 
@@ -144,8 +135,8 @@ namespace SmartFLEET.Web.Controllers
                     .sendprogressVal(val);
             };
             report.Build(positions.OrderBy(p => p.Timestamp).ToList(), vehicle);
-            report.FuelConsumption = _vehicleService.GetFuelConsumptionByPeriod(start, endPeriod, id, report.Distance);
-            report.FuelConsumptions = _vehicleService.GetFuelConsumptionList(start, endPeriod, id).ToList();
+            report.FuelConsumption = _vehicleService.GetFuelConsumptionByPeriod(startPeriod, endPeriod, id, report.Distance);
+            report.FuelConsumptions = _vehicleService.GetFuelConsumptionList(startPeriod, endPeriod, id).ToList();
             return Json(report, JsonRequestBehavior.AllowGet);
 
         }
@@ -173,7 +164,7 @@ namespace SmartFLEET.Web.Controllers
 
             var endPeriod = start.AddHours(24).AddTicks(-1);
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id).ConfigureAwait(false);
-            var positions = await _positionService.GetVehiclePositionsByPeriod(id, start, endPeriod).ConfigureAwait(false);
+            var positions = await _positionService.GetVehiclePositionsByPeriodAsync(id, start, endPeriod).ConfigureAwait(false);
             MemoryStream stream = new MemoryStream();
             if (positions.Any())
             {

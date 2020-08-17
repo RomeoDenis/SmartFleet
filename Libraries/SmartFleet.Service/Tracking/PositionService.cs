@@ -21,11 +21,7 @@ namespace SmartFleet.Service.Tracking
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="positionRepository"></param>
         /// <param name="geoCodingService"></param>
-        /// <param name="objectContext"></param>
-        /// <param name="gpsDeviceRepository"></param>
-        /// <param name="vehicleRepository"></param>
         /// <param name="dbContextScopeFactory"></param>
         public PositionService(  ReverseGeoCodingService geoCodingService, IDbContextScopeFactory dbContextScopeFactory)
         {
@@ -33,7 +29,7 @@ namespace SmartFleet.Service.Tracking
             _dbContextScopeFactory = dbContextScopeFactory;
         }
 
-        public async Task<List<Position>> GetLastVehiclPosition(string userName)
+        public async Task<List<Position>> GetLastVehiclePositionAsync(string userName)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
@@ -45,7 +41,7 @@ namespace SmartFleet.Service.Tracking
                     .Include(x => x.Customer.Vehicles)
                     .Where(x => x.UserName == userName)
                     .SelectMany(x => x.Customer.Vehicles.Where(v=>v.VehicleStatus == VehicleStatus.Active).Select(v => v))
-                    .ToArrayAsync();
+                    .ToArrayAsync().ConfigureAwait(false);
                     
                 if (!vehicles .Any())
                     return positions;
@@ -57,17 +53,17 @@ namespace SmartFleet.Service.Tracking
                         .Where(b => b.VehicleId == vehicle.Id 
                                     &&b.BoxStatus == BoxStatus.Valid)
                         .Select(x => x.Id)
-                        .ToArrayAsync();
+                        .ToArrayAsync().ConfigureAwait(false);
                     if (!boxes.Any()) continue;
                     foreach (var geDevice in boxes)
                     {
                         var position = await _objectContext
                             .Positions
                             .OrderByDescending(x => x.Timestamp)
-                            .FirstOrDefaultAsync(p => p.Box_Id == geDevice);
+                            .FirstOrDefaultAsync(p => p.Box_Id == geDevice).ConfigureAwait(false);
                         if (position == null) continue;
                         position.Vehicle = vehicle;
-                        await _geoCodingService.ReverseGeoCodingAsync(position);
+                        await _geoCodingService.ReverseGeoCodingAsync(position).ConfigureAwait(false);
                         positions.Add(position);
                     }
 
@@ -76,20 +72,28 @@ namespace SmartFleet.Service.Tracking
             }
         }
 
-        public async Task<List<Position>> GetVehiclePositionsByPeriod(Guid vehivleId, DateTime startPeriod,DateTime endPeriod)
+        public async Task<List<Position>> GetVehiclePositionsByPeriodAsync(Guid vehicleId, DateTime startPeriod,DateTime endPeriod)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _objectContext = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                var vehicle = await _objectContext.Vehicles.Include(v => v.Boxes).FirstOrDefaultAsync(v => v.Id == vehivleId).ConfigureAwait(false);
-                if (vehicle == null) return new List<Position>();
-                var box = vehicle.Boxes.FirstOrDefault();
+                
+                var box = await _objectContext
+                    .Boxes
+                    .Select(x=>new {  x.Id, x.VehicleId })
+                    .FirstOrDefaultAsync(v => v.VehicleId == vehicleId)
+                    .ConfigureAwait(false);
+                
                 if (box == null) return new List<Position>();
-                var positions = 
+                
+                if (box.Id == Guid.Empty) return new List<Position>();
+                
+                var positions =await 
                     _objectContext
-                    .Positions
-                    .Where(p => p.Box_Id == box.Id && p.Timestamp >= startPeriod && p.Timestamp <= endPeriod)
-                    .ToList();
+                        .Positions
+                        .Where(p => p.Box_Id == box.Id && p.Timestamp >= startPeriod && p.Timestamp <= endPeriod)
+                        .ToListAsync()
+                        .ConfigureAwait(false);
                 return positions;
             }
         }

@@ -16,8 +16,6 @@ namespace TeltonikaEmulator.TcpClient
         private readonly string _server;
         private System.Net.Sockets.TcpClient _client;
         private NetworkStream _stream;
-        private int minBufferSize = 8192;
-        private int maxBufferSize = 15 * 1024 * 1024;
         private int _bufferSize = 4;
         public Client(String server, Int32 port)
         {
@@ -26,7 +24,6 @@ namespace TeltonikaEmulator.TcpClient
 
         }
 
-        public event EventHandler<byte[]> OnDataReceived;
         public event EventHandler OnDisconnected;
 
         public void Disconnect()
@@ -36,7 +33,7 @@ namespace TeltonikaEmulator.TcpClient
         }
 
 
-        private async Task Close()
+        private async Task CloseAsync()
         {
             await Task.Yield();
             if (_client != null)
@@ -52,11 +49,11 @@ namespace TeltonikaEmulator.TcpClient
                 _stream = null;
             }
         }
-        private async Task CloseIfCanceled(CancellationToken token, Action onClosed = null)
+        private async Task CloseIfCanceledAsync(CancellationToken token, Action onClosed = null)
         {
             if (token.IsCancellationRequested)
             {
-                await Close();
+                await CloseAsync().ConfigureAwait(false);
                 onClosed?.Invoke();
                 token.ThrowIfCancellationRequested();
             }
@@ -65,8 +62,8 @@ namespace TeltonikaEmulator.TcpClient
         {
             try
             {
-                await _stream.WriteAsync(data, 0, data.Length, token);
-                await _stream.FlushAsync(token);
+                await _stream.WriteAsync(data, 0, data.Length, token).ConfigureAwait(false);
+                await _stream.FlushAsync(token).ConfigureAwait(false);
 
             }
             catch (IOException ex)
@@ -79,6 +76,7 @@ namespace TeltonikaEmulator.TcpClient
             catch (Exception e)
             {
                 Thread.Sleep(500);
+                Console.WriteLine(e.Message);
                // await SendAsync(data, token);
             }
         }
@@ -94,7 +92,7 @@ namespace TeltonikaEmulator.TcpClient
                 if (!IsConnected || IsRecieving)
                     throw new InvalidOperationException();
                 IsRecieving = true;
-                int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length, token);
+                int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length, token).ConfigureAwait(false);
 
                 data = new byte[bytesRead];
                 Array.Copy(buffer, data, bytesRead);
@@ -128,21 +126,22 @@ namespace TeltonikaEmulator.TcpClient
             try
             {
                 //Connect async method
-                await Close();
+                await CloseAsync().ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
                 _client = new System.Net.Sockets.TcpClient();
                 cancellationToken.ThrowIfCancellationRequested();
-                await _client.ConnectAsync(_server, _port);
-                await CloseIfCanceled(cancellationToken);
+                await _client.ConnectAsync(_server, _port).ConfigureAwait(false);
+                await CloseIfCanceledAsync(cancellationToken).ConfigureAwait(false);
                 // get stream and do SSL handshake if applicable
 
                 _stream = _client.GetStream();
-                await CloseIfCanceled(cancellationToken);
+                await CloseIfCanceledAsync(cancellationToken).ConfigureAwait(false);
 
             }
             catch (Exception e)
             {
-                CloseIfCanceled(cancellationToken).Wait();
+                Console.WriteLine(e.Message);
+                await CloseIfCanceledAsync(cancellationToken).ConfigureAwait(false);
                 throw;
             }
         }

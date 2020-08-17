@@ -43,7 +43,7 @@ namespace SmartFLEET.Web.Controllers
             var endPeriod = DateTime.Now;
             var startPeriod = DateTime.Now.Date;
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id).ConfigureAwait(false);
-            var positions = await _positionService.GetVehiclePositionsByPeriod(id, startPeriod, endPeriod).ConfigureAwait(false);
+            var positions = await _positionService.GetVehiclePositionsByPeriodAsync(id, startPeriod, endPeriod).ConfigureAwait(false);
             if (!positions.Any())
                 return Json(new List<TargetViewModel>(), JsonRequestBehavior.AllowGet);
             var gpsCollection = positions.Select(x =>
@@ -59,7 +59,7 @@ namespace SmartFLEET.Web.Controllers
            var startPeriod = start.ParseToDate();
             var endPeriod =startPeriod.Date.AddDays(1).AddTicks(-1);
             var vehicle = await ObjectContext.Vehicles.FindAsync(id).ConfigureAwait(false);
-            var positions = await _positionService.GetVehiclePositionsByPeriod(id, startPeriod.ToUniversalTime(), endPeriod.ToUniversalTime()).ConfigureAwait(false);
+            var positions = await _positionService.GetVehiclePositionsByPeriodAsync(id, startPeriod.ToUniversalTime(), endPeriod.ToUniversalTime()).ConfigureAwait(false);
             if (!positions.Any()) return Json(new List<TargetViewModel>(), JsonRequestBehavior.AllowGet);
             var gpsCollection = positions.OrderBy(x=>x.Timestamp)
                 .Select(x =>new { Latitude = x.Lat, Longitude = x.Long, GpsStatement = x.Timestamp.ToString("O") });

@@ -660,7 +660,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:SmartFLEET.Web.Controllers.VehicleReportController.GetDailyVehicleReport(System.String,System.String)">
+        <member name="M:SmartFLEET.Web.Controllers.VehicleReportController.GetDailyVehicleReport(System.String,System.DateTime)">
             <summary>
             
             </summary>
