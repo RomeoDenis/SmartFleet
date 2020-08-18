@@ -100,7 +100,7 @@ namespace EdgeService.Handler
                         position.Id = Guid.NewGuid();
                         position.Priority = context.Message.Priority;
                         position.Satellite = context.Message.Satellite;
-                        position.Timestamp = context.Message.Timestamp;
+                        position.Timestamp = context.Message.DateTimeUtc;
                         Semaphore.WaitOne();
                         var address = await _geoCodingService.ExecuteQueryAsync(context.Message.Lat, context.Message.Long).ConfigureAwait(false);
                         position.Address = address.display_name;

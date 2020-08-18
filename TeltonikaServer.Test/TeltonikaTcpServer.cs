@@ -122,9 +122,9 @@ namespace TeltonikaServer.Test
        
         private static void LogAvlData(List<CreateTeltonikaGps> gpsResult)
         {
-            foreach (var gpsData in gpsResult.OrderBy(x => x.Timestamp))
+            foreach (var gpsData in gpsResult.OrderBy(x => x.DateTimeUtc))
             {
-                Console.WriteLine("Date:" + gpsData.Timestamp + " Latitude: " + gpsData.Lat + " Longitude" +
+                Console.WriteLine("Date:" + gpsData.DateTimeUtc + " Latitude: " + gpsData.Lat + " Longitude" +
                                        gpsData.Long + " Speed :" + gpsData.Speed + "Direction: " + gpsData.Direction);
                 Console.WriteLine("--------------------------------------------");
                 foreach (var io in gpsData.IoElements_1B)

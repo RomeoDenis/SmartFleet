@@ -112,7 +112,7 @@ namespace TeltonicaService.Handlers
                                     {
                                         Milestone = distance,
                                         VehicleId = box.VehicleId.Value,
-                                        EventUtc = createTeltonikaGps.Timestamp
+                                        EventUtc = createTeltonikaGps.DateTimeUtc
                                     }).ConfigureAwait(false);
                                 }
                             } 
@@ -242,7 +242,7 @@ namespace TeltonicaService.Handlers
                 {
                     FuelConsumption = Convert.ToInt32(fuelUsed),
                     Milestone = Convert.ToInt32(milestone),
-                    DateTimeUtc = data.Timestamp,
+                    DateTimeUtc = data.DateTimeUtc,
                     FuelLevel = Convert.ToInt32(fuelLevel)
                 };
             return default(TLFuelMilstoneEvent);
@@ -256,7 +256,7 @@ namespace TeltonicaService.Handlers
                 CustomerId = customerId,
                 VehicleId = vehicleId,
                 VehicleEventType = VehicleEvent.EXCESS_SPEED,
-                EventUtc = data.Timestamp,
+                EventUtc = data.DateTimeUtc,
                 Latitude = (float?)data.Lat,
                 Longitude = (float?)data.Long,
                 Address = data.Address,
@@ -277,7 +277,7 @@ namespace TeltonicaService.Handlers
                     CustomerId = customerId,
                     VehicleId = vehicleId,
                     VehicleEventType = VehicleEvent.EXCESS_ENGINE_SPEED,
-                    EventUtc = data.Timestamp,
+                    EventUtc = data.DateTimeUtc,
                     Latitude = (float?)data.Lat,
                     Longitude = (float?)data.Long,
                     Address = data.Address
@@ -295,7 +295,7 @@ namespace TeltonicaService.Handlers
                                 CustomerId = customerId,
                                 VehicleId = vehicleId,
                                 VehicleEventType = VehicleEvent.EXCESS_ACCELERATION,
-                                EventUtc = data.Timestamp,
+                                EventUtc = data.DateTimeUtc,
                                 Latitude = (float?)data.Lat,
                                 Longitude = (float?)data.Long,
                                 Address = data.Address
@@ -310,7 +310,7 @@ namespace TeltonicaService.Handlers
                                 CustomerId = customerId,
                                 VehicleId = vehicleId,
                                 VehicleEventType = VehicleEvent.SUDDEN_BRAKING,
-                                EventUtc = data.Timestamp,
+                                EventUtc = data.DateTimeUtc,
                                 Latitude = (float?)data.Lat,
                                 Longitude = (float?)data.Long,
                                 Address = data.Address
@@ -325,7 +325,7 @@ namespace TeltonicaService.Handlers
                                 CustomerId = customerId,
                                 VehicleId = vehicleId,
                                 VehicleEventType = VehicleEvent.FAST_CORNER,
-                                EventUtc = data.Timestamp,
+                                EventUtc = data.DateTimeUtc,
                                 Latitude = (float?)data.Lat,
                                 Longitude = (float?)data.Long,
                                 Address = data.Address

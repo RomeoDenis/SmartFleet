@@ -28,13 +28,7 @@ namespace SmartFleet.Service.Report
         /// <returns></returns>
         public  List<PositionViewModel> PositionViewModels(List<Position> positionsOfVehicle )
         {
-            var positions = new List<PositionViewModel>();
-
-            // get current account's vehicles
-            foreach (var p in positionsOfVehicle )
-                positions.Add(new PositionViewModel(p, p.Vehicle));
-
-            return positions;
+            return positionsOfVehicle.Select(p => new PositionViewModel(p, p.Vehicle)).ToList();
         }
         
         /// <summary>
@@ -45,11 +39,7 @@ namespace SmartFleet.Service.Report
         /// <param name="vehicleName"></param>
         /// <returns></returns>
         public List<TargetViewModel> BuildDailyReport(List<Position> positions, DateTime startPeriod, string vehicleName)
-        {
-            // string timeZone = "W. Central Africa Standard Time";
-            //  TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-            //foreach (var position in positions.OrderBy(w=>w.Timestamp))
-            //    position.Timestamp = TimeZoneInfo.ConvertTimeFromUtc(position.Timestamp, cstZone);
+        { 
             // ReSharper disable once TooManyChainedReferences
             var firstPos = positions.OrderBy(p => p.Timestamp).ThenBy(p => p.MotionStatus).FirstOrDefault();
             var currentStatus =firstPos ?.MotionStatus;
@@ -78,8 +68,8 @@ namespace SmartFleet.Service.Report
                 else if (!motionStatusChanged)
                 {
                     // ReSharper disable once PossibleMultipleEnumeration
-                    var poriod = GetLastPeriods(periods, orderedEnumerable);
-                    periods.Add(poriod);
+                    var item = GetLastPeriods(periods, orderedEnumerable);
+                    periods.Add(item);
                 }
             }
             var tmp = new List<Periods>();
@@ -128,8 +118,8 @@ namespace SmartFleet.Service.Report
             var query = orderedEnumerable.Where(x => x.Timestamp >= end);
             var enumerable
                 = query as Position[] ?? query.ToArray();
-            var poriod = new Periods(enumerable.LastOrDefault()?.Timestamp, end, enumerable.LastOrDefault()?.MotionStatus);
-            return poriod;
+            var lastPeriods = new Periods(enumerable.LastOrDefault()?.Timestamp, end, enumerable.LastOrDefault()?.MotionStatus);
+            return lastPeriods;
         }
 
         // ReSharper disable once MethodTooLong
@@ -177,13 +167,13 @@ namespace SmartFleet.Service.Report
         private static bool MotionStatusChanged(Position position, List<Periods> periods, ref MotionStatus? currentStatus,
             ref DateTime? start)
         {
-            Trace.WriteLine("Timestamp: " + position.Timestamp + " MotionStatus: " + position.MotionStatus);
+            Trace.WriteLine("DateTimeUtc: " + position.Timestamp + " MotionStatus: " + position.MotionStatus);
             if (currentStatus == position.MotionStatus)
                 return false;
-            var poriod = new Periods(position.Timestamp, start, currentStatus);
+            var item = new Periods(position.Timestamp, start, currentStatus);
             currentStatus = position.MotionStatus;
             start = position.Timestamp;
-            periods.Add(poriod);
+            periods.Add(item);
             Trace.WriteLine("period added at : " + position.Timestamp + " MotionStatus: " + position.MotionStatus);
             return true;
         }
@@ -244,9 +234,6 @@ namespace SmartFleet.Service.Report
             {
                 trgt.EndPeriod = lastPosition.Timestamp.ToString("O");
                 trgt.EndPeriod1 = lastPosition.Timestamp.ToString("g");
-
-                //   trgt.Latitude = firstPosition.Lat;
-                // trgt.Logitude = firstPosition.Long;
                 trgt.ArrivalAddres = lastPosition.Address;
             }
         }

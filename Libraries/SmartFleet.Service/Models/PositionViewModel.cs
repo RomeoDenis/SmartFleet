@@ -59,7 +59,7 @@ namespace SmartFleet.Service.Models
             VehicleName = vehicle.VehicleName;
             VehicleId = vehicle.Id.ToString();
             CustomerName = vehicle.Customer?.Id.ToString();
-            TimeStampUtc = tlGps.Timestamp;
+            TimeStampUtc = tlGps.DateTimeUtc;
             //SetVehicleImage(vehicle ,dir);
         }
         
@@ -110,7 +110,7 @@ namespace SmartFleet.Service.Models
                 VehicleName = vehicle.VehicleName;
                 VehicleId = vehicle.Id.ToString();
                 CustomerName = vehicle.CustomerId;
-                TimeStampUtc = tlGps.Timestamp;
+                TimeStampUtc = tlGps.DateTimeUtc;
                 SetVehicleImage(vehicle, dir);
             }
         }

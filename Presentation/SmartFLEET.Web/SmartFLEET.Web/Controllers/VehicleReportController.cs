@@ -101,10 +101,10 @@ namespace SmartFLEET.Web.Controllers
 
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalRHandler>();
             var report = new CompleteDailyReport();
-            var connctionId = string.Empty;
+            var connectionId = string.Empty;
             try
             {
-               connctionId= SignalRHubManager.Connections[User.Identity.Name];
+               connectionId= SignalRHubManager.Connections[User.Identity.Name];
             }
             catch (Exception)
             {
@@ -115,8 +115,8 @@ namespace SmartFLEET.Web.Controllers
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id).ConfigureAwait(false);
             var positions = await _positionService.GetVehiclePositionsByPeriodAsync(id, startPeriod, endPeriod).ConfigureAwait(false);
 
-            if (!string.IsNullOrEmpty(connctionId))
-                hubContext.Clients.Client(connctionId).sendprogressVal(50);
+            if (!string.IsNullOrEmpty(connectionId))
+                hubContext.Clients.Client(connectionId).sendprogressVal(50);
             if (!positions.Any())
             {
                 return Json(new CompleteDailyReport
@@ -129,9 +129,9 @@ namespace SmartFLEET.Web.Controllers
             }
             report.UpdateProgress += val =>
             {
-                if(string.IsNullOrEmpty(connctionId))
+                if(string.IsNullOrEmpty(connectionId))
                     return;
-                hubContext.Clients.Client(connctionId)
+                hubContext.Clients.Client(connectionId)
                     .sendprogressVal(val);
             };
             report.Build(positions.OrderBy(p => p.Timestamp).ToList(), vehicle);
@@ -181,7 +181,7 @@ namespace SmartFLEET.Web.Controllers
         public async Task<JsonResult> GetListOfVehicls()
         {
             var parm = RequestHelper.GetDataGridParams(Request);
-            var vehicles = Mapper.Map<List<VehicleViewModel>>(await _customerService.GetAllVehiclesOfUserAsync(User.Identity.Name, parm.page, parm.rows));
+            var vehicles = Mapper.Map<List<VehicleViewModel>>(await _customerService.GetAllVehiclesOfUserAsync(User.Identity.Name, parm.Item1, parm.Item2).ConfigureAwait(false));
             return Json(vehicles, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]

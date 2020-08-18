@@ -60,15 +60,12 @@ namespace SmartFleet.Service.Common
                 new Paragraph("Vitesse moyene: " + report.AvgSpeed.ToString(CultureInfo.InvariantCulture) + " Km/h"));
             bodyLeftCell.AddElement(new Paragraph("Vitesse max: " + report.MaxSpeed + " Km/h"));
 
-            var bodyRightCell = new PdfPCell()
-                ;
+            var bodyRightCell = new PdfPCell() ;
             bodyRightCell.Border = 0;
             table.AddCell(bodyLeftCell);
             // table.AddCell(emptyCell);
             table.AddCell(bodyRightCell);
             table.DefaultCell.Border = 0;
-            ;
-
             doc.Add(table);
             doc.Add(new Chunk(Environment.NewLine));
             p.Alignment = Element.ALIGN_CENTER;
