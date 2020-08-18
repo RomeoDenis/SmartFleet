@@ -48,13 +48,9 @@ namespace SmartFleet.TcpWorker
         public override void OnStop()
         {
             Trace.TraceInformation("SmartFleet.TcpWorker is stopping");
-
             _cancellationTokenSource.Cancel();
             _runCompleteEvent.WaitOne();
-           // _listener.Stop();
-            //_bus.StopAsync();
             base.OnStop();
-
             Trace.TraceInformation("SmartFleet.TcpWorker has stopped");
         }
 

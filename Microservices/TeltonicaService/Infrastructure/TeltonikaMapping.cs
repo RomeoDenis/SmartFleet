@@ -8,7 +8,7 @@ namespace TeltonicaService.Infrastucture
         public TeltonikaMapping()
         {
             CreateMap< CreateTeltonikaGps, TLGpsDataEvent>()
-                .ForMember(x => x.DateTimeUtc, o => o.MapFrom(v => v.Timestamp))
+                .ForMember(x => x.DateTimeUtc, o => o.MapFrom(v => v.DateTimeUtc))
                 .ReverseMap();
         }
     }

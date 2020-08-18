@@ -176,6 +176,8 @@ namespace SmartFLEET.Web.Hubs
 
         public async Task Consume(ConsumeContext<TLExcessSpeedEvent> context)
         {
+            if (SignalRHubManager.Clients == null)
+                return;
             if (context.Message.CustomerId != null)
             {
                 var evt = SignalRHubManager.Mapper.Map<TLVehicleEventVM>(context.Message);

@@ -1,5 +1,4 @@
-﻿@using SmartFLEET.Web.HtmlHelpers
-<div id="Modal-2" ui-view class="ui-layout-center "  style=" height: 100%;width: 100%">
+﻿<div id="Modal-2" ui-view class="ui-layout-center "  style=" height: 100%;width: 100%">
     
     <div id="map" class="map" style="height: 94%; width: 100%; position: relative; overflow: hidden;">
         <input type="hidden" value="@ViewBag.GroupName" id="client-group"/>
@@ -17,10 +16,7 @@
     </div>
     <div id="report-content" ng-controller="reportController">
        
-        @*@{
-            Html.RenderPartial("Index", "VehicleReport");
-        }*@
-
+     
         
     </div>
     @RenderPage("_settings.cshtml")

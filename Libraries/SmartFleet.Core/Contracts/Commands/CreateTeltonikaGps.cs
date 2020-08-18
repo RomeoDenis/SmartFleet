@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace SmartFleet.Core.Contracts.Commands
 {
@@ -32,7 +30,7 @@ namespace SmartFleet.Core.Contracts.Commands
         public byte Priority { get; set; }
         public byte Satellite { get; set; }
         public double Speed { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime DateTimeUtc { get; set; }
         public string Status { get; set; }
         public bool StopFlag { get; set; }
         public bool IsStop { get; set; }

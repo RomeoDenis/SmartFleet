@@ -26,8 +26,8 @@ namespace SmartFleet.Service.Report
             var positionReport = new ActivitiesReport();
             positionReport.UpdateProgress += val => UpdateProgress?.Invoke(val);
             Positions.AddRange( positionReport.BuildDailyReport(positions, positions.FirstOrDefault().Timestamp.Date, vehicle.VehicleName));
-            Distance = Enumerable.Where(Positions, x=>x.MotionStatus == MotionStatus.Moving.ToString()).Sum(x => x.Distance);
-            Distance = Math.Round((double) Distance, 2);
+            Distance = Positions.Where(x=>x.MotionStatus == MotionStatus.Moving.ToString()).Sum(x => x.Distance);
+            Distance = Math.Round(Distance, 2);
 
         }
 
@@ -41,8 +41,8 @@ namespace SmartFleet.Service.Report
             var positionReport = new ActivitiesReport();
             positionReport.UpdateProgress += val => UpdateProgress?.Invoke(val);
             Positions.AddRange(positionReport.BuildDailyReport(positions, positions.FirstOrDefault().Timestamp.Date, vehicle.VehicleName));
-            Distance = Enumerable.Where(Positions, x => x.MotionStatus == MotionStatus.Moving.ToString()).Sum(x => x.Distance);
-            Distance = Math.Round((double) Distance, 2);
+            Distance = Positions.Where(x => x.MotionStatus == MotionStatus.Moving.ToString()).Sum(x => x.Distance);
+            Distance = Math.Round(Distance, 2);
 
         }
         public string Day { get; set; }

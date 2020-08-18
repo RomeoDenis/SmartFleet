@@ -4,17 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using SmartFleet.Core.Contracts.Commands;
-using SmartFleet.Core.Extension;
 using SmartFleet.Core.Helpers;
 using SmartFleet.Core.Protocols;
 using SmartFleet.Data;
-using StackExchange.Redis;
 
 namespace TeltonikaListner
 {
@@ -22,17 +19,15 @@ namespace TeltonikaListner
     {
         private readonly IBusControl _bus;
         private readonly IRedisCache _redisCache;
-        private readonly IRedisConnectionManager _redisConnectionManager;
 
         private TcpListener _listener;
 
         public TeltonikaTcpServer(
             IBusControl bus,
-            IRedisCache redisCache, IRedisConnectionManager redisConnectionManager)
+            IRedisCache redisCache)
         {
             _bus = bus;
             _redisCache = redisCache;
-            _redisConnectionManager = redisConnectionManager;
         }
 
         public void Start()
@@ -81,8 +76,7 @@ namespace TeltonikaListner
             var modem = _redisCache.Get<CreateBoxCommand>(imei);
             if (modem == null)
             {
-                var command = new CreateBoxCommand();
-                command.Imei = imei;
+                var command = new CreateBoxCommand {Imei = imei};
                 try
                 {
                     await _redisCache.SetAsync(imei, command).ConfigureAwait(false);
@@ -135,10 +129,10 @@ namespace TeltonikaListner
         
         private static void LogAvlData(List<CreateTeltonikaGps> gpsResult)
         {
-            foreach (var gpsData in gpsResult.OrderBy(x => x.Timestamp))
+            foreach (var gpsData in gpsResult.OrderBy(x => x.DateTimeUtc))
             {
-                Trace.TraceInformation("Date:" + gpsData.Timestamp + " Latitude: " + gpsData.Lat + " Longitude" +
-                                       gpsData.Long + " Speed :" + gpsData.Speed + "Direction: " + gpsData.Direction);
+                Trace.TraceInformation(
+                    $"Date:{gpsData.DateTimeUtc} Latitude: {gpsData.Lat} Longitude{gpsData.Long} Speed :{gpsData.Speed} Direction: {gpsData.Direction}");
                 Trace.TraceInformation("--------------------------------------------");
                 foreach (var io in gpsData.IoElements_1B)
                     Trace.TraceInformation("Propriété IO (1 byte) : " + (TNIoProperty) io.Key + " Valeur:" + io.Value);

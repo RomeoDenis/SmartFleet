@@ -63,7 +63,7 @@ namespace SmartFLEET.Web.Controllers
             // ReSharper disable once TooManyChainedReferences
             var q = RequestHelper.GetDataGridParams(Request);
 
-            return Json(await _customerService.GetAllAreasAsync(User.Identity.Name, q.page, q.rows).ConfigureAwait(false), JsonRequestBehavior.AllowGet);
+            return Json(await _customerService.GetAllAreasAsync(User.Identity.Name, q.Item1, q.Item2).ConfigureAwait(false), JsonRequestBehavior.AllowGet);
         }
         public async Task<ActionResult> GetAllZones()
         {
