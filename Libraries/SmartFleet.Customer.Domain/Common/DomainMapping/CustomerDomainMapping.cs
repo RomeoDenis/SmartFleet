@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using AutoMapper;
+using SmartFleet.Core.Contracts.Commands;
+using SmartFleet.Core.Domain.Gpsdevices;
 using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Customer.Domain.Commands.Vehicles;
 using SmartFleet.Customer.Domain.Common.Dtos;
@@ -18,7 +20,7 @@ namespace SmartFleet.Customer.Domain.Common.DomainMapping
                 .ForMember(x => x.Model_Id, o => o.MapFrom(co => co.ModelId))
 
                 .ReverseMap();
-
+            CreateMap<CreateBoxCommand, Box>().ReverseMap();
             CreateMap<Vehicle, VehicleDto>()
                 .ForMember(x => x.Customer, o => o.MapFrom(v => v.Customer.Name))
                 .ForMember(x => x.CustomerId, o => o.MapFrom(v => v.CustomerId.ToString()))

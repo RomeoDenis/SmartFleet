@@ -3085,10 +3085,6 @@
     <Folder Include="Views\Language\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DenormalizerService\DenormalizerService.csproj">
-      <Project>{db226b09-319b-478b-8db2-a6d65337e22e}</Project>
-      <Name>DenormalizerService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Libraries\SmartFleet.Core\SmartFleet.Core.csproj">
       <Project>{4938638f-7b72-4632-ae2b-de790df79f83}</Project>
       <Name>SmartFleet.Core</Name>
@@ -3112,10 +3108,6 @@
     <ProjectReference Include="..\..\..\Libraries\SmartFleet.Service\SmartFleet.Service.csproj">
       <Project>{770f75a9-b482-4e94-8356-761106ede207}</Project>
       <Name>SmartFleet.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Microservices\TeltonicaService\TeltonicaService.csproj">
-      <Project>{18d81881-5271-4dd3-9e2b-07a1dea0156f}</Project>
-      <Name>TeltonicaService</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\SmartFleet.Web.Framework\SmartFleet.Web.Framework.csproj">
       <Project>{1968e0cf-2109-472d-a36d-34192264a897}</Project>

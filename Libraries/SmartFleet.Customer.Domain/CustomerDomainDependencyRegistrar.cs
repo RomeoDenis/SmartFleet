@@ -13,6 +13,7 @@ namespace SmartFleet.Customer.Domain
             builder.RegisterAssemblyTypes(allHandlers)
                 .Where(t => t.Name.EndsWith("Handler"))
                 .AsImplementedInterfaces();
+
            
         }
     }

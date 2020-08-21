@@ -74,21 +74,7 @@ namespace TeltonikaListner
             Byte[] b = { 0x01 };
             await stream.WriteAsync(b, 0, 1).ConfigureAwait(false);
             var modem = _redisCache.Get<CreateBoxCommand>(imei);
-            if (modem == null)
-            {
-                var command = new CreateBoxCommand {Imei = imei};
-                try
-                {
-                    await _redisCache.SetAsync(imei, command).ConfigureAwait(false);
-                    await _bus.Publish(command).ConfigureAwait(false);
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-            }
+            
             while (true)
             {
                 stream = client.GetStream();
@@ -110,7 +96,17 @@ namespace TeltonikaListner
                     Events = gpsResult
                 };
                 await _bus.Publish(events).ConfigureAwait(false);
-           
+                var lastGpsData = gpsResult.Last();
+                if (modem == null)
+                {
+                    modem = new CreateBoxCommand();
+                    modem.Imei = imei;
+                }
+                modem.Longitude = lastGpsData.Long;
+                modem.Latitude = lastGpsData.Lat;
+                modem.LastValidGpsDataUtc = lastGpsData.DateTimeUtc;
+                modem.Speed = lastGpsData.Speed;
+                await _bus.Publish(modem).ConfigureAwait(false);
                 // break;
             }
             // ReSharper disable once FunctionNeverReturns

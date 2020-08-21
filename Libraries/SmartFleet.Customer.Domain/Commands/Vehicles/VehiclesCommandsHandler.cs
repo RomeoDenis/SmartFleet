@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
 using SmartFleet.Core.Domain.Vehicles;
@@ -18,11 +19,13 @@ namespace SmartFleet.Customer.Domain.Commands.Vehicles
 
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly IMapper _mapper;
+        private readonly IRedisCache _redisCache;
 
-        public VehiclesCommandsHandler(IDbContextScopeFactory dbContextScopeFactory, IMapper mapper)
+        public VehiclesCommandsHandler(IDbContextScopeFactory dbContextScopeFactory, IMapper mapper,IRedisCache redisCache )
         {
             _dbContextScopeFactory = dbContextScopeFactory;
             _mapper = mapper;
+            _redisCache = redisCache;
         }
 
 
@@ -36,19 +39,19 @@ namespace SmartFleet.Customer.Domain.Commands.Vehicles
                 if (vehicle.Box_Id.HasValue)
                     vehicle.VehicleStatus = VehicleStatus.Active;
                 var boxId = request.BoxId;
-                var box = await db.Boxes.FirstOrDefaultAsync(b => b.Id == boxId, cancellationToken)
+                var modem = await db.Boxes.FirstOrDefaultAsync(b => b.Id == boxId, cancellationToken)
                     .ConfigureAwait(false);
 
-                if (box != null)
+                if (modem != null)
                 {
-                    box.VehicleId = request.CmdId;
-                    box.BoxStatus = BoxStatus.Valid;
-
+                    modem.VehicleId = request.CmdId;
+                    modem.BoxStatus = BoxStatus.Valid;
+                    await _redisCache.SetAsync(modem.Imei, _mapper.Map<CreateBoxCommand>(modem)).ConfigureAwait(false);
                 }
 
                 db.Vehicles.Add(vehicle);
                 await contextFScope.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
+                await _redisCache.SetAsync(vehicle.Id.ToString(), vehicle).ConfigureAwait(false);
             }
 
             return default;

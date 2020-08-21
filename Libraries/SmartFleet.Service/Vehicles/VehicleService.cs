@@ -4,10 +4,8 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
-using SmartFleet.Core.Domain.Users;
 using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Data;
 
@@ -82,7 +80,7 @@ namespace SmartFleet.Service.Vehicles
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 return await _db.Vehicles.Include(x => x.Brand).Include(x => x.Customer).Include(x => x.Model)
-                    .Include(x => x.Boxes).FirstOrDefaultAsync(v => v.Id == id);
+                    .Include(x => x.Boxes).FirstOrDefaultAsync(v => v.Id == id).ConfigureAwait(false);
             }
         }
         public async Task<List<Vehicle>> GetAllVehiclesQueryAsync()
@@ -94,7 +92,8 @@ namespace SmartFleet.Service.Vehicles
                     .Include("Brand")
                     .Include("Model")
                     .Include("Customer")
-                    .ToListAsync();
+                    .ToListAsync()
+                    .ConfigureAwait(false);
             }
         }
 
@@ -105,7 +104,7 @@ namespace SmartFleet.Service.Vehicles
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 return await _db.Vehicles
                     .Where(v=>v.CustomerId == customerId)
-                    .ToListAsync();
+                    .ToListAsync().ConfigureAwait(false);
             }
         }
 
@@ -142,9 +141,9 @@ namespace SmartFleet.Service.Vehicles
 
             //Gestion du nombre de litres consommés qui revient à 0 à chaque ignition OFF
             var vehicleFuelZeroDetected = false;
-            var vehicleFuelConsummedReset = false;
+            var vehicleFuelConsumedReset = false;
             var previousValidFuelConsumed = default(Int32);
-            var previousFuelConsummed = fuelRecords.First().FuelUsed;
+            var previousFuelConsumed = fuelRecords.First().FuelUsed;
             var fuel = 0;
             foreach (var record in fuelRecords)
             {
@@ -153,25 +152,25 @@ namespace SmartFleet.Service.Vehicles
                 {
                     //Détection d'un véhicule dont le nombre de litres de consommés revient à zéro à chaque ignition off
                     if (record.FuelUsed < previousValidFuelConsumed)
-                        vehicleFuelConsummedReset = true;
+                        vehicleFuelConsumedReset = true;
                     //Sinon il ne s'agissait que d'un pic négatif à zéro mais le nombre de litres consommés évolue normalement
                     else
                         fuel -= previousValidFuelConsumed;
                     vehicleFuelZeroDetected = false;
                 }
                 //Si le nombre de litres consommés diminue
-                else if (previousFuelConsummed - 5 > record.FuelUsed)
+                else if (previousFuelConsumed - 5 > record.FuelUsed)
                 {
                     vehicleFuelZeroDetected = true;
-                    previousValidFuelConsumed = previousFuelConsummed;
-                    fuel += previousFuelConsummed;
+                    previousValidFuelConsumed = previousFuelConsumed;
+                    fuel += previousFuelConsumed;
                 }
 
-                previousFuelConsummed = record.FuelUsed;
+                previousFuelConsumed = record.FuelUsed;
             }
 
             //S'il s'agit un véhicule dont le nombre total de litres consommés revient à zéro à chque ignition OFF
-            if (vehicleFuelConsummedReset)
+            if (vehicleFuelConsumedReset)
                 fuel += fuelRecords.Last().FuelUsed - fuelRecords.First().FuelUsed;
             else
                 fuel = fuelRecords.Last(p => p.FuelUsed > 0).FuelUsed -

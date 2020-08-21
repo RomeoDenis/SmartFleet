@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +39,9 @@ namespace SmartFleet.Core.ReverseGeoCoding
             var lon = gpsStatement.Longitude.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var client = new HttpClient();
             var url = $"{_locationiqUrl}{KEY}&lat={lat}&lon={lon}&format=json";
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
+           
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -54,6 +57,7 @@ namespace SmartFleet.Core.ReverseGeoCoding
             var lat = gpsStatement.Lat.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var lon = gpsStatement.Long.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var client = new HttpClient();
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var url = $"{_locationiqUrl}{KEY}&lat={lat}&lon={lon}&format=json";
             HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
@@ -73,7 +77,7 @@ namespace SmartFleet.Core.ReverseGeoCoding
             var lon = Long.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             var client = new HttpClient();
             var url = $"{_locationiqUrl}{KEY}&lat={lat}&lon={lon}&format=json";
-
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
@@ -92,7 +96,8 @@ namespace SmartFleet.Core.ReverseGeoCoding
             var _lon = lng.ToString(CultureInfo.InvariantCulture).Replace(",", ".");
             count++;
             Debug.WriteLine(count);
-            var url = $"{_nominatimUrl}&lat={_lat}&lon={_lon}";
+            var url =  $"https://nominatim.openstreetmap.org/reverse.php?format=json&lat={_lat}&lon={_lon}";
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var request = new RestRequest(Method.GET);
             //request.Resource = "wsRest/wsServerArticle/getArticle";
             client.BaseUrl = new System.Uri(url);
@@ -119,16 +124,36 @@ namespace SmartFleet.Core.ReverseGeoCoding
         }
         public  async Task<string> ReverseGoecodeAsync(double lat, double log)
         {
-            var r = await ExecuteQueryAsync(lat, log).ConfigureAwait(false);
-            Thread.Sleep(1000);
-            if (r.display_name != null)
-                return r.display_name;
-            var ad = await ReverseGeoCodingAsync(lat, log)
-                .ConfigureAwait(false);
-            if (ad == null) return string.Empty;
-            Thread.Sleep(1000);
-            return ad;
 
+            string add;
+            do
+            {
+
+                try
+                {
+                    var r = await ExecuteQueryAsync(lat, log).ConfigureAwait(false);
+                    if (r != default(NominatimResult) && r.display_name != null &&
+                        !string.IsNullOrEmpty(r.display_name))
+                    {
+                        Thread.Sleep(1000);
+                        return r.display_name;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    Thread.Sleep(1000);
+                }
+                
+                add = await ReverseGeoCodingAsync(lat, log)
+                    .ConfigureAwait(false);
+                Thread.Sleep(1000);
+                if (add != string.Empty && !string.IsNullOrEmpty(add))
+                     return add;
+                 
+            } while (add == string.Empty);
+
+            return add;
         }
 
     }
