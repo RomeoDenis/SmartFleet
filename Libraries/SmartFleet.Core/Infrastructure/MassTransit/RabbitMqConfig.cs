@@ -47,7 +47,7 @@ namespace SmartFleet.Core.Infrastructure.MassTransit
 
             });
         }
-        public static IBusControl InitAzureRecievingBus<T>(string endpoint) where T : class, IConsumer, new()
+        public static IBusControl InitReceiverAzureBus<T>(string endpoint) where T : class, IConsumer, new()
         {
             var bus = Bus.Factory.CreateUsingAzureServiceBus(sbc =>
             {

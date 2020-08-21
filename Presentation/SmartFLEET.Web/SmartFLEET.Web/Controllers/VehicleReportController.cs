@@ -84,7 +84,7 @@ namespace SmartFLEET.Web.Controllers
         {
             var report = new ActivitiesReport();
             var user = User.Identity;
-            var positions = report.PositionViewModels(await _positionService.GetLastVehiclePositionAsync(user.Name));
+            var positions = await _positionService.GetLastVehiclePositionAsync(user.Name).ConfigureAwait(false);
             return Json(positions, JsonRequestBehavior.AllowGet);
         }
 

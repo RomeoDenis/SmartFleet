@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DenormalizerService.Infrastructure;
 using MassTransit;
+using SmartFleet.Core.Contracts;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
@@ -24,19 +25,21 @@ namespace DenormalizerService.Handler
         IConsumer<TlFuelEevents>,
         IConsumer<TLExcessSpeedEvent>,
         IConsumer<TLEcoDriverAlertEvent>,
-        IConsumer<TLMilestoneVehicleEvent>
+        IConsumer<TLMilestoneVehicleEvent>,
+        IConsumer<TlIdentifierEvent>
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly ReverseGeoCodingService _geoCodingService;
         private static SemaphoreSlim _semaphore;
         private SmartFleetObjectContext _db;
-
+        private readonly IRedisCache _redisCache;
         public DenormalizerHandler()
         {
             new SemaphoreSlim(1, 1);
             _geoCodingService = new ReverseGeoCodingService();
             _dbContextScopeFactory = DependencyRegistrar.ResolveDbContextScopeFactory();
             _semaphore = new SemaphoreSlim(1);
+            _redisCache = DependencyRegistrar.ResolveRedisCache();
         }
 
         public async Task Consume(ConsumeContext<CreateTk103Gps> context)
@@ -126,7 +129,7 @@ namespace DenormalizerService.Handler
                 if (box.BoxStatus == BoxStatus.WaitInstallation)
                     box.BoxStatus = BoxStatus.Prepared;
                 box.LastGpsInfoTime = context.Message.TimeStampUtc;
-                var address = await _geoCodingService.ExecuteQueryAsync(context.Message.Latitude, context.Message.Longitude).ConfigureAwait(false);
+                var address = await _geoCodingService.ReverseGoecodeAsync(context.Message.Latitude, context.Message.Longitude).ConfigureAwait(false);
                 Position position = new Position
                 {
                     Box_Id = box.Id,
@@ -139,7 +142,7 @@ namespace DenormalizerService.Handler
                     Priority = 0,
                     Satellite = 0,
                     Timestamp = context.Message.TimeStampUtc,
-                    Address = address.display_name,
+                    Address = address,
                     MotionStatus = (int)context.Message.Speed > 2 ? MotionStatus.Moving : MotionStatus.Stopped
                 };
                 _db.Positions.Add(position);
@@ -204,10 +207,12 @@ namespace DenormalizerService.Handler
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                await _redisCache.SetAsync(context.Message.Imei, context.Message).ConfigureAwait(false);
 
-                var existingBox = await _db.Boxes.FirstOrDefaultAsync(b => b.Imei == context.Message.Imei).ConfigureAwait(false);
-              if(existingBox!=null)
-                  return;
+                var existingBox = await _db.Boxes.FirstOrDefaultAsync(b => b.Imei == context.Message.Imei)
+                    .ConfigureAwait(false);
+                if (existingBox != null)
+                    return;
                 var box = new Box();
                 box.Id = Guid.NewGuid();
                 box.BoxStatus = BoxStatus.WaitPreparation;
@@ -221,6 +226,7 @@ namespace DenormalizerService.Handler
                 {
                     _db.Boxes.Add(box);
                     await contextFScope.SaveChangesAsync().ConfigureAwait(false);
+              
                 }
                 catch (Exception e)
                 {
@@ -330,6 +336,16 @@ namespace DenormalizerService.Handler
                 }
             }
             
+        }
+
+        public async Task Consume(ConsumeContext<TlIdentifierEvent> context)
+        {
+            using (var contextFScope = _dbContextScopeFactory.Create())
+            {
+                await contextFScope.SaveChangesAsync().ConfigureAwait(false);
+
+            }
+
         }
     }
 }

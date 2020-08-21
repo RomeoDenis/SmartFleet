@@ -27,6 +27,7 @@ namespace SmartFleet.Customer.Domain.Commands.Vehicles
         public DateTime CreationDate { get; set; }
         public DateTime MileStoneUpdateUtc { get; set; }
         public Guid CmdId { get; set; }
+        public bool CANEnabled { get; set; }
     }
 
     public class CreateVehicleCommandValidator : AbstractValidator<CreateVehicleCommand>

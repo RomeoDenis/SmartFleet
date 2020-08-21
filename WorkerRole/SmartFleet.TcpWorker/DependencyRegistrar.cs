@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.IO;
 using Autofac;
 using MassTransit;
 using SmartFleet.Core.Infrastructure.MassTransit;
@@ -29,8 +30,11 @@ namespace SmartFleet.TcpWorker
             Container.Resolve<ReverseGeoCodingService>();
             Container.Resolve<IBusControl>();
             Container.Resolve<IRedisCache>();
+            var path = Directory.GetCurrentDirectory(); 
+            MicroServicesLoader.Loader(path);
             var listener = Container.Resolve<TeltonikaTcpServer>();
             listener.Start();
+            
 
         }
 

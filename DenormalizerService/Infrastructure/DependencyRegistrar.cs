@@ -1,9 +1,11 @@
-﻿using Autofac;
+﻿using System.Configuration;
+using Autofac;
 using DenormalizerService.Handler;
 using MassTransit;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Infrastructure.MassTransit;
 using SmartFleet.Core.Infrastructure.Registration;
+using SmartFleet.Data;
 using SmartFleet.Data.Dbcontextccope.Implementations;
 
 namespace DenormalizerService.Infrastructure
@@ -20,7 +22,8 @@ namespace DenormalizerService.Infrastructure
                 .As<IBusControl>()
                 .As<IBus>();
             builder.RegisterType<DbContextScopeFactory>().As<IDbContextScopeFactory>();
-
+            builder.Register(c => new RedisConnectionManager(ConfigurationManager.AppSettings["RedisUrl"], ConfigurationManager.AppSettings["redisPass"])).As<IRedisConnectionManager>();
+            builder.RegisterType<RedisCache>().As<IRedisCache>();
             Container = builder.Build();
         }
 
@@ -28,7 +31,10 @@ namespace DenormalizerService.Infrastructure
         {
             return Container.Resolve<IBusControl>();
         }
-       
+        public static IRedisCache ResolveRedisCache()
+        {
+            return Container.Resolve<IRedisCache>();
+        }
         public static IDbContextScopeFactory ResolveDbContextScopeFactory()
         {
             return Container.Resolve<IDbContextScopeFactory>();

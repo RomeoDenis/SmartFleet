@@ -35,11 +35,8 @@ function reportController($scope, reportService, $compile, $http) {
     }
     $scope.Download = function() {
 // ReSharper disable once RedundantUnits
-        console.log("im here");
-        if ($scope.startPeriod === "" || $scope.vehicleId === "") {
-            alert("il faut choisir une date de début et un véhicule");
-            return;
-        }
+        console.log($scope.vehicleId);
+        
         $http.get(currentLang+'/VehicleReport/GetDailyVehicleReport/?vehicleId=' +
                 $scope.vehicleId +
                 "&startPeriod=" +
@@ -86,7 +83,11 @@ function reportController($scope, reportService, $compile, $http) {
 
                 $("#report-win").append($("#report-content"));
                 $("#prg-wwin").window('close');
-            });
+            },
+                function (data) {
+                    console.log(data);
+                    // Handle error here
+                });
 
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Domain.Movement;
 using SmartFleet.Core.Domain.Vehicles;
@@ -10,6 +11,14 @@ namespace SmartFleet.Service.Models
 {
     public class PositionViewModel
     {
+        public PositionViewModel() { }
+        public PositionViewModel(string vehicleName, string customerName, VehicleType vehicleType, string vehicleId)
+        {
+            VehicleName = vehicleName;
+            CustomerName = customerName;
+            VehicleId = vehicleId;
+            SetVehicleImage(vehicleType);
+        }
         
         public PositionViewModel(Position position, Vehicle vehicle)
         {

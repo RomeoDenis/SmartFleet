@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
 using System.Threading;
 using System.Web.Http;
@@ -138,10 +139,16 @@ namespace SmartFLEET.Web
                 .As<IBusControl>()
                 .As<IBus>();
             #endregion
-             var container = builder.Build();
+
+            #region register redis cache
+
+            builder.Register(c => new RedisConnectionManager(ConfigurationManager.AppSettings["RedisUrl"], ConfigurationManager.AppSettings["redisPass"])).As<IRedisConnectionManager>();
+            builder.RegisterType<RedisCache>().As<IRedisCache>();
+
+            #endregion
+            var container = builder.Build();
             container.Resolve<IBusControl>().StartAsync();
-            var path = Server.MapPath("/") + @"bin";
-            MicroServicesLoader.Loader(path);
+           
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
            
         }

@@ -4,11 +4,11 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartFleet.Core.Data;
-using SmartFleet.Core.Domain.Gpsdevices;
 using SmartFleet.Core.Domain.Movement;
 using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Core.ReverseGeoCoding;
 using SmartFleet.Data;
+using SmartFleet.Service.Models;
 
 namespace SmartFleet.Service.Tracking
 {
@@ -29,44 +29,32 @@ namespace SmartFleet.Service.Tracking
             _dbContextScopeFactory = dbContextScopeFactory;
         }
 
-        public async Task<List<Position>> GetLastVehiclePositionAsync(string userName)
+        public async Task<List<PositionViewModel>> GetLastVehiclePositionAsync(string userName)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _objectContext = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                var positions = new List<Position>();
-                // ReSharper disable once ComplexConditionExpression
-                var vehicles = await _objectContext.UserAccounts
-                    .Include(x => x.Customer)
-                    .Include(x => x.Customer.Vehicles)
-                    .Where(x => x.UserName == userName)
-                    .SelectMany(x => x.Customer.Vehicles.Where(v=>v.VehicleStatus == VehicleStatus.Active).Select(v => v))
-                    .ToArrayAsync().ConfigureAwait(false);
-                    
-                if (!vehicles .Any())
-                    return positions;
-
-                foreach (var vehicle in vehicles)
+                var positions = new List<PositionViewModel>();
+                
+                var query = await (from customer in _objectContext.Customers
+                    join account in _objectContext.UserAccounts on customer.Id equals account.CustomerId
+                    where account.UserName == userName
+                    join vcl in _objectContext.Vehicles on customer.Id equals vcl.CustomerId into vehicleJoin
+                    from vehicle in vehicleJoin
+                    join box in _objectContext.Boxes on vehicle.Id equals box.VehicleId into boxesJoin
+                    from box in boxesJoin
+                    join position in _objectContext.Positions on box.Id equals position.Box_Id  
+                    group position by position.Box_Id into g
+                    select new {boxId = g.Key, Position = g.OrderByDescending(x=>x.Timestamp).Select(x=> new PositionViewModel {Address = x.Address, Latitude = x.Lat, Longitude = x.Long}).FirstOrDefault() } ).ToArrayAsync().ConfigureAwait(false);
+                foreach (var item in query)
                 {
-                    var boxes = await _objectContext
-                        .Boxes
-                        .Where(b => b.VehicleId == vehicle.Id 
-                                    &&b.BoxStatus == BoxStatus.Valid)
-                        .Select(x => x.Id)
-                        .ToArrayAsync().ConfigureAwait(false);
-                    if (!boxes.Any()) continue;
-                    foreach (var geDevice in boxes)
-                    {
-                        var position = await _objectContext
-                            .Positions
-                            .OrderByDescending(x => x.Timestamp)
-                            .FirstOrDefaultAsync(p => p.Box_Id == geDevice).ConfigureAwait(false);
-                        if (position == null) continue;
-                        position.Vehicle = vehicle;
-                        await _geoCodingService.ReverseGeoCodingAsync(position).ConfigureAwait(false);
-                        positions.Add(position);
-                    }
-
+                   
+                    var vehicle = await _objectContext.Boxes.Include(x=>x.Vehicle).Where(x => x.Id == item.boxId).Select(x => new  {x.Vehicle.VehicleType, x.Vehicle.VehicleName, x.Vehicle.CustomerId, x.VehicleId}).FirstOrDefaultAsync().ConfigureAwait(false);
+                    var pos = new PositionViewModel(vehicle?.VehicleName, vehicle?.CustomerId.ToString(), vehicle.VehicleType, vehicle?.VehicleId.ToString());
+                    pos.Address = item.Position.Address;
+                    pos.Latitude = item.Position.Latitude;
+                    pos.Longitude = item.Position.Longitude;
+                    positions.Add(pos);
                 }
                 return positions;
             }

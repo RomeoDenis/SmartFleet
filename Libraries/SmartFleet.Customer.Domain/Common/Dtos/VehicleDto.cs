@@ -5,6 +5,7 @@ using SmartFleet.Core.Domain.Vehicles;
 
 namespace SmartFleet.Customer.Domain.Common.Dtos
 {
+    [Serializable]
     public class VehicleDto
     {
         public VehicleDto()

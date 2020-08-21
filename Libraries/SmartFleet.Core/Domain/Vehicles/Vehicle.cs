@@ -35,12 +35,14 @@ namespace SmartFleet.Core.Domain.Vehicles
         public double Milestone { get; set; }
         public bool SpeedAlertEnabled { get; set; }
         public bool CANEnabled { get; set; }
+        public bool EcoDrive { get; set; }
+        public bool TachoEnabled { get; set; }
         [NotMapped]
         public Guid? Box_Id { get; set; }
         public Guid? InterestAreaId { get; set; }
         public InterestArea InterestArea { get; set; }
         public ICollection<Driver> Drivers { get; set; }
-        public ICollection<VehicleAlarrm> Alarrms { get; set; }
+        public ICollection<VehicleAlarrm> Alarms { get; set; }
         public DateTime? MileStoneUpdateUtc { get; set; }
     }
 }

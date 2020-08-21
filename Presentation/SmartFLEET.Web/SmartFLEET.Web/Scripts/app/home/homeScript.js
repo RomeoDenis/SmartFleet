@@ -133,7 +133,12 @@ $(document).ready(function () {
 function initCalender() {
     $('#cc').calendar({
         onSelect: function (date) {
+
             if (downloadFullReport) {
+                if (anchorId === "" || anchorId.indexOf('00000000-0000-0000-0000-000000000000') !== -1) {
+                    alert("il faut choisir une date de début et un véhicule");
+                    return;
+                }
                 $("#chronogram").window('close');
                 $("#prg-wwin").window('open');
                 $('#prgBar').progressbar('setValue', 0);

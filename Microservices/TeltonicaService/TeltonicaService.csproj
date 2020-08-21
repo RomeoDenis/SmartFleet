@@ -91,6 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootstrapService.cs" />
+    <Compile Include="Handlers\DriverCardService.cs" />
+    <Compile Include="Handlers\EcoDriveService.cs" />
+    <Compile Include="Handlers\ITeltonikaAvlService.cs" />
     <Compile Include="Handlers\TeltonikaHandler.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Infrastructure\TeltonikaMapping.cs" />
