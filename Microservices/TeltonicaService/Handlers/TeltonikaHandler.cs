@@ -45,7 +45,7 @@ namespace TeltonicaService.Handlers
             using (var contextFScope = DbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                var box = await _db.Boxes.Include(x => x.Vehicle).SingleOrDefaultAsync(b => b.Imei == context.Imei)
+                var box = await _db.Boxes.Include(x => x.Vehicle).FirstOrDefaultAsync(b => b.Imei == context.Imei)
                     .ConfigureAwait(false);
                 return box;
             }

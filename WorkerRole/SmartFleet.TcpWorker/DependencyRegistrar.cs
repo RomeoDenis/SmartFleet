@@ -16,7 +16,7 @@ namespace SmartFleet.TcpWorker
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<ReverseGeoCodingService>();
-            var bus = RabbitMqConfig.ConfigureSenderBus();
+            var bus = RabbitMqConfig.CreateBus("teltonika.listener");
             builder.RegisterInstance(bus).As<IBusControl>();
             builder.RegisterType<TeltonikaTcpServer>();
             builder.Register(c => new RedisConnectionManager(ConfigurationManager.AppSettings["RedisUrl"],  ConfigurationManager.AppSettings["redisPass"])).As<IRedisConnectionManager>();

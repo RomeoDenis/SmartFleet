@@ -3,11 +3,12 @@
   <Role name="SmartFLEET.Web">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=smartstore2020;AccountKey=$(_smartstore2020.key_)" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="pentesst" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEFzHcDE3R0CqSChoM0nluY4wDQYJKoZIhvcNAQEBBQAEggEADx5Wxh8hgrBcluOQBA7w/lsM2VOjBAXslaWziLneSMjE1+UAZzYK6NyOP/OU1FFalzDnuYAck3T+Oo7xfHtONfiX7EZPrzM5yCvw2QPXrPR6m+83nyZhlgazidcnAJ0lfv/xAJbpIUHNeNTaqydJKSiEOlG4PAOvKN8lmXZRoJGgtQaJvEMyXEsUDk858IeI4CaG+F9Gsx23TrJZSk3SKYAo5sSyjkXQHdsxD/bE4ya6UgStrUlASHXpuT8FTUIkM9qR+/SK9koqOncKwjW9663fPRRmpE9whzQu68B0KMY/rkygF0UiC+eNtph+5KLMBorwjiHQmCw/YTzEme7/1DAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECKpt6pP8I2X6gBB63lNLg8hopciK4daoe22k" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2020-05-31T23:59:59.0000000+01:00" />
+      <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" value="46489315-2998-4f1c-a550-ea813ca02310" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="E25E32FD3203B1B3C782262BB705CA4E6DA3EA09" thumbprintAlgorithm="sha1" />
@@ -16,15 +17,16 @@
   <Role name="SmartFleet.TcpWorker">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=smartstore2020;AccountKey=$(_smartstore2020.key_)" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="pentesst" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEFzHcDE3R0CqSChoM0nluY4wDQYJKoZIhvcNAQEBBQAEggEADx5Wxh8hgrBcluOQBA7w/lsM2VOjBAXslaWziLneSMjE1+UAZzYK6NyOP/OU1FFalzDnuYAck3T+Oo7xfHtONfiX7EZPrzM5yCvw2QPXrPR6m+83nyZhlgazidcnAJ0lfv/xAJbpIUHNeNTaqydJKSiEOlG4PAOvKN8lmXZRoJGgtQaJvEMyXEsUDk858IeI4CaG+F9Gsx23TrJZSk3SKYAo5sSyjkXQHdsxD/bE4ya6UgStrUlASHXpuT8FTUIkM9qR+/SK9koqOncKwjW9663fPRRmpE9whzQu68B0KMY/rkygF0UiC+eNtph+5KLMBorwjiHQmCw/YTzEme7/1DAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECKpt6pP8I2X6gBB63lNLg8hopciK4daoe22k" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2020-05-31T23:59:59.0000000+01:00" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+      <Setting name="APPINSIGHTS_INSTRUMENTATIONKEY" value="46489315-2998-4f1c-a550-ea813ca02310" />
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="E25E32FD3203B1B3C782262BB705CA4E6DA3EA09" thumbprintAlgorithm="sha1" />
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="526DD506524EB589874B8546955B9170DA3DE20B" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
 </ServiceConfiguration>
