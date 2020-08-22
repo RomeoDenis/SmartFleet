@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DenormalizerService.Infrastructure;
 using MassTransit;
-using SmartFleet.Core.Contracts;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Gpsdevices;
@@ -38,7 +37,7 @@ namespace DenormalizerService.Handler
             new SemaphoreSlim(1, 1);
             _geoCodingService = new ReverseGeoCodingService();
             _dbContextScopeFactory = DependencyRegistrar.ResolveDbContextScopeFactory();
-            _semaphore = new SemaphoreSlim(1);
+            _semaphore = new SemaphoreSlim(1,1);
             _redisCache = DependencyRegistrar.ResolveRedisCache();
         }
 
@@ -207,12 +206,15 @@ namespace DenormalizerService.Handler
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                await _redisCache.SetAsync(context.Message.Imei, context.Message).ConfigureAwait(false);
+                var modem = _redisCache.Get<CreateBoxCommand>(context.Message.Imei);
 
-                var existingBox = await _db.Boxes.FirstOrDefaultAsync(b => b.Imei == context.Message.Imei)
-                    .ConfigureAwait(false);
-                if (existingBox != null)
+                if (modem != null)
+                {
+                    await _redisCache.SetAsync(context.Message.Imei, context.Message).ConfigureAwait(false);
+                    _semaphore.Release();
                     return;
+                }
+                await _redisCache.SetAsync(context.Message.Imei, context.Message).ConfigureAwait(false);
                 var box = new Box();
                 box.Id = Guid.NewGuid();
                 box.BoxStatus = BoxStatus.WaitPreparation;

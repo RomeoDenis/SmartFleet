@@ -5,13 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>2.9</ProductVersion>
-    <ProjectGuid>e0042702-a5b5-48bf-88ed-2e1fae61f76b</ProjectGuid>
+    <ProjectGuid>1635ad38-bf59-4439-bbcd-9994d912dd3e</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SmartFLEET.Web.Azure</RootNamespace>
-    <AssemblyName>SmartFLEET.Web.Azure</AssemblyName>
+    <RootNamespace>SmartFleet.Azure</RootNamespace>
+    <AssemblyName>SmartFleet.Azure</AssemblyName>
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
-    <Name>SmartFLEET.Web.Azure</Name>
+    <Name>SmartFleet.Azure</Name>
     <PackageEnableRemoteDebugger>False</PackageEnableRemoteDebugger>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -56,18 +56,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Profiles" />
     <Folder Include="SmartFleet.TcpWorkerContent\" />
-    <Folder Include="SmartFleet.TcpWorkerRoleContent\" />
     <Folder Include="SmartFLEET.WebContent\" />
   </ItemGroup>
   <ItemGroup>
     <DiagnosticsConfiguration Include="SmartFleet.TcpWorkerContent\diagnostics.wadcfgx" />
-    <DiagnosticsConfiguration Include="SmartFleet.TcpWorkerRoleContent\diagnostics.wadcfgx" />
     <DiagnosticsConfiguration Include="SmartFLEET.WebContent\diagnostics.wadcfgx" />
-  </ItemGroup>
-  <ItemGroup>
-    <PublishProfile Include="Profiles\sm-deployStaging1.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
