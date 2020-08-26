@@ -24,7 +24,7 @@ namespace SmartFLEET.Web.Controllers
            
         }
 
-        private void NewMethod()
+        private void GetCurrentAuthService()
         {
             _authenticationService.AuthenticationManager = _authenticationService.AuthenticationManager?? HttpContext.GetOwinContext().Authentication;
         }
@@ -51,9 +51,8 @@ namespace SmartFLEET.Web.Controllers
         public async Task<ActionResult> Login(LoginModel model)
         { 
             if (!ModelState.IsValid) return View(model);
-            NewMethod();
-            var userExists =
-                await _authenticationService.AuthenticationAsync(model.UserName, model.Password, model.RememberMe).ConfigureAwait(false);
+            GetCurrentAuthService();
+            var userExists = await _authenticationService.AuthenticationAsync(model.UserName, model.Password, model.RememberMe).ConfigureAwait(false);
             if (userExists == null) return View();
             return _authenticationService.GetRoleByUserId(userExists.Id).Any(identityUserRole => identityUserRole.Equals("customer") || identityUserRole.Equals("user")) ?
                 RedirectToAction("Index", "Home") :
@@ -67,7 +66,7 @@ namespace SmartFLEET.Web.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            NewMethod();
+            GetCurrentAuthService();
 
             _authenticationService.Logout();
             return RedirectToAction("Login", "Account", new { area = "" });

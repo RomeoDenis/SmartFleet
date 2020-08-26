@@ -183,7 +183,6 @@
     <Compile Include="Domain\Gpsdevices\Sim.cs" />
     <Compile Include="Domain\Movement\GpSdata.cs" />
     <Compile Include="Domain\Movement\Position.cs" />
-    <Compile Include="Domain\Users\SignalRConnetion.cs" />
     <Compile Include="Domain\Users\User.cs" />
     <Compile Include="Domain\Vehicles\Brand.cs" />
     <Compile Include="Domain\Vehicles\Driver.cs" />
@@ -221,8 +220,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\Gps\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

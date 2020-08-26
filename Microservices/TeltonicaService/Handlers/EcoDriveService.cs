@@ -6,7 +6,7 @@ namespace TeltonicaService.Handlers
 {
     public class EcoDriveService
     {
-        private CreateTeltonikaGps _data;
+        private readonly CreateTeltonikaGps _data;
 
         public EcoDriveService(CreateTeltonikaGps data)
         {

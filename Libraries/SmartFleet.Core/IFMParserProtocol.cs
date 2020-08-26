@@ -3,7 +3,7 @@ using SmartFleet.Core.Contracts.Commands;
 
 namespace SmartFleet.Core
 {
-    public interface IFMParserProtocol
+    public interface IFmParserProtocol
     {
         List<CreateTeltonikaGps> DecodeAvl(List<byte> receiveBytes, string imei);
     }

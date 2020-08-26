@@ -5,7 +5,7 @@ using SmartFleet.Core.Contracts.Commands;
 
 namespace SmartFleet.Core.Protocols.Teltonika
 {
-    public class FmxxxxParser : IFMParserProtocol
+    public class FmxxxxParser : IFmParserProtocol
     {
 
         public List<CreateTeltonikaGps> DecodeAvl(List<byte> receiveBytes, string imei)
@@ -17,6 +17,7 @@ namespace SmartFleet.Core.Protocols.Teltonika
             
             var results = new List<CreateTeltonikaGps>();
             int tokenAddress = 10;
+            var lastDatetime = default(DateTime);
             for (int n = 0; n < numberOfData; n++)
             {
                 CreateTeltonikaGps gpsData = new CreateTeltonikaGps();
@@ -28,7 +29,17 @@ namespace SmartFleet.Core.Protocols.Teltonika
                 long timeSt = Convert.ToInt64(hexTimeStamp, 16);
 
                 DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                DateTime dateTime = origin.AddMilliseconds(Convert.ToDouble(timeSt));
+                DateTime dateTime = default;
+                try
+                {
+                     dateTime = origin.AddMilliseconds(Convert.ToDouble(timeSt));
+                     lastDatetime = dateTime;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    dateTime = lastDatetime;
+                }
                 int priority = Convert.ToInt32(receiveBytes.Skip(tokenAddress + 8).Take(1).ToList()[0]);
 
                 string longt = string.Empty;
@@ -156,7 +167,8 @@ namespace SmartFleet.Core.Protocols.Teltonika
                 gpsData.Priority = (byte) priority;
                 gpsData.Satellite = (byte) satellites;
                 gpsData.Speed =speed;
-                gpsData.DateTimeUtc = dateTime;
+                if(dateTime!= default(DateTime))
+                    gpsData.DateTimeUtc = dateTime;
                 gpsData.Imei = imei.Substring(0, 15);
                 gpsData.DataEventIO = eventIoElementId;
                 results.Add(gpsData);

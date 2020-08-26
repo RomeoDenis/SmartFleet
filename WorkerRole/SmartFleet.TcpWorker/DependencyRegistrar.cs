@@ -1,7 +1,9 @@
 ﻿using System.Configuration;
 using System.IO;
+using System.Net;
 using Autofac;
 using MassTransit;
+using Serilog;
 using SmartFleet.Core.Infrastructure.MassTransit;
 using SmartFleet.Core.ReverseGeoCoding;
 using SmartFleet.Data;
@@ -16,11 +18,12 @@ namespace SmartFleet.TcpWorker
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<ReverseGeoCodingService>();
-            var bus = RabbitMqConfig.CreateBus("teltonika.listener");
+            var bus = RabbitMqConfig.CreateBus("teltonika.listner");
             builder.RegisterInstance(bus).As<IBusControl>();
-            builder.RegisterType<TeltonikaTcpServer>();
+            builder.RegisterInstance(InitLog()).As<ILogger>();
             builder.Register(c => new RedisConnectionManager(ConfigurationManager.AppSettings["RedisUrl"],  ConfigurationManager.AppSettings["redisPass"])).As<IRedisConnectionManager>();
             builder.RegisterType<RedisCache>().As<IRedisCache>();
+            builder.RegisterType<TeltonikaTcpServer>().SingleInstance();
             return builder.Build();
         }
 
@@ -30,13 +33,25 @@ namespace SmartFleet.TcpWorker
             Container.Resolve<ReverseGeoCodingService>();
             Container.Resolve<IBusControl>();
             Container.Resolve<IRedisCache>();
+            Container.Resolve<ILogger>();
+           
             var path = Directory.GetCurrentDirectory(); 
             MicroServicesLoader.Loader(path);
-            var listener = Container.Resolve<TeltonikaTcpServer>();
-            listener.Start();
-            
 
         }
 
+        public static TeltonikaTcpServer StartListener()
+        {
+            var listener = Container.Resolve<TeltonikaTcpServer>();
+            return listener;
+        }
+        private static ILogger InitLog()
+        {
+            var log = new LoggerConfiguration()
+                // .WriteTo.Console()
+                .WriteTo.File("tcp-worker-role.txt")
+                .CreateLogger();
+            return log;
+        }
     }
 }
