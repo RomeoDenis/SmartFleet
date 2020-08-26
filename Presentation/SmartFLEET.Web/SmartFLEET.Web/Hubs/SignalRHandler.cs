@@ -147,7 +147,7 @@ namespace SmartFLEET.Web.Hubs
                         if (string.IsNullOrEmpty(position.CustomerName))
                             return;
                         var reverseGeoCodingService = new ReverseGeoCodingService();
-                        position.Address = await reverseGeoCodingService.ReverseGeoCodingAsync(position.Latitude, position.Longitude).ConfigureAwait(false);
+                        position.Address = await reverseGeoCodingService.ReverseGeocodeAsync(position.Latitude, position.Longitude).ConfigureAwait(false);
                         await SignalRHubManager.Clients.Group(position.CustomerName).receiveGpsStatements(position);
 
                     }   

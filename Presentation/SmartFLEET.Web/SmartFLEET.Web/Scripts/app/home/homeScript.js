@@ -228,7 +228,6 @@ function initSignalR() {
     $.connection.hub.start().done(joinSignalRGroup);
 }
 function onRecieveProgressVal(val) {
-    console.log(val);
     $('#prgBar').progressbar('setValue', val);
 } 
 function onRecieveData(gpsStatement) {
@@ -275,9 +274,7 @@ function onRecieveData(gpsStatement) {
 }
 function joinSignalRGroup() {
     var groupName = $("#client-group").val();
-    console.log(groupName);
     hub.server.join(groupName);
-   // loadData(1);
 
 }
 function onReceiveVehicleEvent(event) {
@@ -489,7 +486,6 @@ function initGpsData(periods, gpsCollection, divName) {
     if (periods[periods.length - 1] != undefined)
         end = periods[periods.length - 1].EndPeriod;
     var start = periods[0].StartPeriod;
-    console.log(end);
     $.each(periods,
         function (i, v) {
             var activity = "";
@@ -591,8 +587,6 @@ function InitTimelineChart(container, data, start, end, height) {
         max = today;
         end = today;
     } else max = end;
-    //console.log(today);
-    //console.log(today);
     var options = {
         width: '100%',
         locale: 'fr',

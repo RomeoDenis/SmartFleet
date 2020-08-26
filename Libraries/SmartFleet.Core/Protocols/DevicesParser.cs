@@ -15,13 +15,16 @@ namespace SmartFleet.Core.Protocols
         {
             string myString = System.Text.Encoding.ASCII.GetString(receiveBytes.ToArray()).Trim();
             Trace.WriteLine(myString);
-            IFMParserProtocol parser = null;
+            IFmParserProtocol parser = null;
             //Get codec ID and initialize appropriate parser
             var head = receiveBytes.Skip(8).Take(1).ToList();
             var codecId = Convert.ToInt32(head[0]);
             switch (codecId)
             {
                 case 8:
+                    parser = new FmxxxxParser();
+                    break;
+                case 142:
                     parser = new FmxxxxParser();
                     break;
                 case 7:
@@ -33,5 +36,7 @@ namespace SmartFleet.Core.Protocols
            return parser.DecodeAvl(receiveBytes, imei);
           
         }
+
+        public event Action<string> OnDataReceive;
     }
 }

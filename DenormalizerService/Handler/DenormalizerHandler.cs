@@ -34,7 +34,6 @@ namespace DenormalizerService.Handler
         private readonly IRedisCache _redisCache;
         public DenormalizerHandler()
         {
-            new SemaphoreSlim(1, 1);
             _geoCodingService = new ReverseGeoCodingService();
             _dbContextScopeFactory = DependencyRegistrar.ResolveDbContextScopeFactory();
             _semaphore = new SemaphoreSlim(1,1);
@@ -128,7 +127,7 @@ namespace DenormalizerService.Handler
                 if (box.BoxStatus == BoxStatus.WaitInstallation)
                     box.BoxStatus = BoxStatus.Prepared;
                 box.LastGpsInfoTime = context.Message.TimeStampUtc;
-                var address = await _geoCodingService.ReverseGoecodeAsync(context.Message.Latitude, context.Message.Longitude).ConfigureAwait(false);
+                var address = await _geoCodingService.ReverseGeocodeAsync(context.Message.Latitude, context.Message.Longitude).ConfigureAwait(false);
                 Position position = new Position
                 {
                     Box_Id = box.Id,
@@ -148,13 +147,13 @@ namespace DenormalizerService.Handler
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
             }
         }
-        private async Task<Box> GetModemDeviceAsync(TLGpsDataEvent context)
+        private async Task<Box> GetModemDeviceAsync(string imei)
         {
            
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                var box = await _db.Boxes.SingleOrDefaultAsync(b => b.Imei == context.Imei).ConfigureAwait(false);
+                var box = await _db.Boxes.SingleOrDefaultAsync(b => b.Imei == imei).ConfigureAwait(false);
                return box;
             }
 
@@ -164,7 +163,7 @@ namespace DenormalizerService.Handler
            
             try
             {
-                var box = await GetModemDeviceAsync(context.Message).ConfigureAwait(false);
+                var box = await GetModemDeviceAsync(context.Message.Imei).ConfigureAwait(false);
                 if (box != null)
                 {
                     using (var contextFScope = _dbContextScopeFactory.Create())
@@ -187,7 +186,7 @@ namespace DenormalizerService.Handler
                         box.LastGpsInfoTime = context.Message.DateTimeUtc;
                         _db.Positions.Add(position);
                        await contextFScope.SaveChangesAsync().ConfigureAwait(false);
-                       _semaphore.Release();
+                       //_semaphore.Release();
                     }
                 }
             }
@@ -202,19 +201,15 @@ namespace DenormalizerService.Handler
 
         public async Task Consume(ConsumeContext<CreateBoxCommand> context)
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
+            //await _semaphore.WaitAsync().ConfigureAwait(false);
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                var modem = _redisCache.Get<CreateBoxCommand>(context.Message.Imei);
-
-                if (modem != null)
-                {
-                    await _redisCache.SetAsync(context.Message.Imei, context.Message).ConfigureAwait(false);
-                    _semaphore.Release();
-                    return;
-                }
                 await _redisCache.SetAsync(context.Message.Imei, context.Message).ConfigureAwait(false);
+                var existingBox = await GetModemDeviceAsync(context.Message.Imei).ConfigureAwait(false);
+                if(existingBox!= null)
+                    return;
+
                 var box = new Box();
                 box.Id = Guid.NewGuid();
                 box.BoxStatus = BoxStatus.WaitPreparation;
@@ -233,12 +228,12 @@ namespace DenormalizerService.Handler
                 catch (Exception e)
                 {
                     Trace.WriteLine(e);
-                    _semaphore.Release();
+                    //_semaphore.Release();
                     throw;
                 }
             }
 
-            _semaphore.Release();
+            //_semaphore.Release();
         }
 
         public async Task Consume(ConsumeContext<TlFuelEevents> context)

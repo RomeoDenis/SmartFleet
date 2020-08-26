@@ -1,9 +1,11 @@
+using System;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Serilog;
 using Serilog.Core;
+using TeltonikaListner;
 
 namespace SmartFleet.TcpWorker
 {
@@ -12,7 +14,8 @@ namespace SmartFleet.TcpWorker
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent _runCompleteEvent = new ManualResetEvent(false);
         private static Logger _log;
-         /// <summary>
+
+        /// <summary>
         /// 
         /// </summary>
         // ReSharper disable once MethodNameNotMeaningful
@@ -20,9 +23,12 @@ namespace SmartFleet.TcpWorker
         {
             InitLog();
             // init teltonika server 
-             DependencyRegistrar.ResolveDependencies();
+            DependencyRegistrar.ResolveDependencies();
+            var listener = DependencyRegistrar.StartListener();
+            listener.Start();
+            
         }
-       
+
         private static void InitLog()
         {
             _log = new LoggerConfiguration()
@@ -30,16 +36,15 @@ namespace SmartFleet.TcpWorker
                 .WriteTo.File("tcp-worker-role.txt")
                 .CreateLogger();
         }
-         public override bool OnStart()
+        public override bool OnStart()
         {
             // Définir le nombre maximum de connexions simultanées
             ServicePointManager.DefaultConnectionLimit = 12;
 
             // Pour plus d'informations sur la gestion des modifications de configuration
             // consultez la rubrique MSDN à l'adresse https://go.microsoft.com/fwlink/?LinkId=166357.
-
             bool result = base.OnStart();
-
+           
             Trace.TraceInformation("SmartFleet.TcpWorker has been started");
 
             return result;

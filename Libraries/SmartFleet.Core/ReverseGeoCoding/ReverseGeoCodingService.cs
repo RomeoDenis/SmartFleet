@@ -122,7 +122,7 @@ namespace SmartFleet.Core.ReverseGeoCoding
             }
 
         }
-        public  async Task<string> ReverseGoecodeAsync(double lat, double log)
+        public  async Task<string> ReverseGeocodeAsync(double lat, double log)
         {
 
             string add;

@@ -59,7 +59,7 @@ namespace TeltonicaService.Handlers
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 return await _db.Positions.OrderByDescending(x => x.Timestamp).Where(x => x.Box_Id == boxId)
-                    .Select(p => new PositionQuery() {VehicleId = p.Box.VehicleId, Lat = p.Lat, Long = p.Long})
+                    .Select(p => new PositionQuery {VehicleId = p.Box.VehicleId, Lat = p.Lat, Long = p.Long})
                     .FirstOrDefaultAsync().ConfigureAwait(false);
             }
         }
@@ -69,7 +69,6 @@ namespace TeltonicaService.Handlers
 
             try
             {
-                // await _semaphore.WaitAsync().ConfigureAwait(false);
                 var box = await GetBoxAsync(context.Message.Events.LastOrDefault()).ConfigureAwait(false);
                 List<TLEcoDriverAlertEvent> ecoDriveEvents = new List<TLEcoDriverAlertEvent>();
                 List<TLGpsDataEvent> gpsDataEvents = new List<TLGpsDataEvent>();
@@ -81,9 +80,8 @@ namespace TeltonicaService.Handlers
                 foreach (var source in context.Message.Events)
                 {
                     if (box == null)
-                    {
                         continue;
-                    }
+
                     ecoDrive = new EcoDriveService(data: source);
                     cardService = new DriverCardService();
                     
@@ -92,7 +90,6 @@ namespace TeltonicaService.Handlers
                     gpsDataEvent.BoxId = box.Id;
                     Trace.WriteLine(
                         gpsDataEvent.DateTimeUtc + " lat:" + gpsDataEvent.Lat + " long:" + gpsDataEvent.Long);
-                    // await context.Publish(gpsDataEvent);
                     gpsDataEvents.Add(gpsDataEvent);
 
                     if (box.Vehicle == null) continue;
@@ -103,7 +100,7 @@ namespace TeltonicaService.Handlers
                     if (canInfo != default(TLFuelMilstoneEvent))
                     {
                         canInfo.VehicleId = box.Vehicle.Id;
-                        if (box.Vehicle.CustomerId.HasValue)
+                        if (box.Vehicle?.CustomerId != null)
                             canInfo.CustomerId = box.Vehicle.CustomerId.Value;
                         // calcul de la distance par rapport au dernier point GPS
                         if (canInfo.Milestone <= 0)
@@ -127,21 +124,18 @@ namespace TeltonicaService.Handlers
                             }
                         }
 
-                        // await context.Publish(canInfo);
                         tlFuelMilestoneEvents.Add(canInfo);
                     }
                     // ReSharper disable once ComplexConditionExpression
                     if (box.Vehicle.SpeedAlertEnabled && box.Vehicle.MaxSpeed <= source.Speed || source.Speed > 85)
                     {
                         var alertExceedSpeed = ecoDrive.ProceedTLSpeedingAlert( box.Vehicle.Id, box.Vehicle.CustomerId);
-                        // await context.Publish(alertExeedSpeed);
                         speedEvents.Add(alertExceedSpeed);
                     }
 
                     var ecoDriveEvent = ecoDrive.ProceedEcoDriverEvents( box.Vehicle.Id, box.Vehicle.CustomerId);
                     if (ecoDriveEvent != default(TLEcoDriverAlertEvent))
-                        //ecoDriveEvents.Add(ecoDriveEvent);
-                        await context.Publish(ecoDriveEvent).ConfigureAwait(false);
+                       await context.Publish(ecoDriveEvent).ConfigureAwait(false);
                 }
 
                 if(identifierEvents.Any())
@@ -154,7 +148,7 @@ namespace TeltonicaService.Handlers
                 {
                     try
                     {
-                        await GeoReverseCodeGpsData(gpsDataEvents).ConfigureAwait(false);
+                        await GeoReverseCodeGpsDataAsync(gpsDataEvents).ConfigureAwait(false);
                     }
                     catch (Exception e)
                     {
@@ -170,19 +164,17 @@ namespace TeltonicaService.Handlers
                     var events = new TlFuelEevents
                     {
                         Id = Guid.NewGuid(),
-                        Events = tlFuelMilestoneEvents,
-                        //TlGpsDataEvents = gpsDataEvents
+                        Events = tlFuelMilestoneEvents
                     };
                     await context.Publish(events).ConfigureAwait(false);
 
                 }
-                // _semaphore.Release();
+                
 
             }
             catch (Exception e)
             {
                 Trace.TraceWarning(e.Message + " details:" + e.StackTrace);
-                //_semaphore.Release();
                 throw;
             }
 
@@ -201,12 +193,12 @@ namespace TeltonicaService.Handlers
             return distance;
         }
 
-        private async Task GeoReverseCodeGpsData(List<TLGpsDataEvent> gpsRessult)
+        private async Task GeoReverseCodeGpsDataAsync(List<TLGpsDataEvent> gpsRessult)
         {
             foreach (var gpSdata in gpsRessult)
             {
                 Thread.Sleep(1000);
-                gpSdata.Address = await _reverseGeoCodingService.ReverseGoecodeAsync(gpSdata.Lat, gpSdata.Long)
+                gpSdata.Address = await _reverseGeoCodingService.ReverseGeocodeAsync(gpSdata.Lat, gpSdata.Long)
                     .ConfigureAwait(false);
             }
 
@@ -224,9 +216,6 @@ namespace TeltonicaService.Handlers
                 context.AllIoElements.Add((TNIoProperty) ioElement.Key, ioElement.Value);
         }
 
-     
-
-       
     }
 
     internal class PositionQuery
