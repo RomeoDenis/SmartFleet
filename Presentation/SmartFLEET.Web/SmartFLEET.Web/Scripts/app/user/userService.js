@@ -3,15 +3,15 @@
     this.getUser = function getUser(userId) {
         return $http({
             method: 'GET',
-            url: currentLang +'/Administrator/user/GetUser/' + userId
+            url: '../Administrator/user/GetUser/' + userId
         });
     }
     this.addUser = function addUser(user) {
         //  console.log(user);
-        return $http.post(currentLang +"/Administrator/user/AddUser", user);
+        return $http.post("../Administrator/user/AddUser", user);
     }
     this.getTimeZones = function getTimeZones() {
         //  console.log(user);
-        return $http.post(currentLang +"/Administrator/User/GetTimeZones");
+        return $http.post( "../Administrator/User/GetTimeZones");
     }
 }]);

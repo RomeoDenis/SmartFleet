@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Movement;
-using SmartFleet.Core.Domain.Vehicles;
 using SmartFleet.Core.ReverseGeoCoding;
 using SmartFleet.Data;
 using SmartFleet.Service.Models;

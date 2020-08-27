@@ -32,7 +32,7 @@ namespace SmartFLEET.Web.Automapper
                 //   .ForMember(x => x.VehicleType, o => o.MapFrom(x => (VehicleType)Enum.Parse(typeof(VehicleType), x.VehicleType)))
                 .ReverseMap();
             CreateMap<Customer, CustomerVm>()
-                .ForMember(x => x.CreationDate, o => o.MapFrom(v => v.CreationDate.Value.ToString("d")))
+                .ForMember(x => x.CreationDate, o => o.MapFrom(v => v.CreationDate.HasValue? v.CreationDate.Value.ToString("d") : ""))
 
                 //.ForMember(x => x.CustomerStatus, o => o.MapFrom(v => v.CustomerStatus.ToString()))
                 .ReverseMap();

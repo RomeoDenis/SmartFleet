@@ -93,6 +93,7 @@ namespace SmartFleet.Service.Customers
             var customer =await _userManager.Users.Include(x=>x.Customer).Select(x=> new { x.CustomerId , x.UserName}).FirstOrDefaultAsync(x => x.UserName == userName).ConfigureAwait(false);
             if (customer != null)
                 return await _objectContext.InterestAreas
+                    .Where(x => x.CustomerId == customer.CustomerId)
                     .OrderBy(x=>x.Name)
                     .Skip(page-1)
                     .Take(size*page)
@@ -102,9 +103,10 @@ namespace SmartFleet.Service.Customers
 
         public async Task<List<InterestArea>> GetAllAreasAsync(string userName)
         {
-            var customer = await _userManager.Users.Include(x => x.Customer).Select(x => new { x.CustomerId, x.UserName }).FirstOrDefaultAsync(x => x.UserName == userName).ConfigureAwait(false);
+            var customer = await _userManager.Users.Include(x => x.Customer).Where(x=>x.UserName == userName).Select(x => new { x.CustomerId, x.UserName }).FirstOrDefaultAsync().ConfigureAwait(false);
             if (customer != null)
                 return await _objectContext.InterestAreas
+                    .Where(x=>x.CustomerId == customer.CustomerId)
                     .OrderBy(x => x.Name)
                     .ToListAsync().ConfigureAwait(false);
             return new List<InterestArea>();
