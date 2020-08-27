@@ -42,7 +42,7 @@ namespace SmartFLEET.Web
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Application_AuthenticateRequest(object sender, System.EventArgs e)
+        protected void Application_AuthenticateRequest(object sender, EventArgs e)
         {
             // Skip authenticating all ext.axd embedded resources (.js, .css, images)
             if (HttpContext.Current.Request.FilePath.EndsWith("/ext.axd"))

@@ -63,14 +63,12 @@ namespace TeltonikaListner
         {
             try
             {
-                string imei = string.Empty;
+                string imei;
                 var client = (TcpClient) state;
                 byte[] buffer = new byte[client.ReceiveBufferSize];
                 NetworkStream stream = ((TcpClient) state).GetStream();
-                stream.Read(buffer, 0, client.ReceiveBufferSize);
-                //buffer.ToList().Skip(4).Take(4).ToList().ForEach(delegate(byte b) { imei += $"{b:X2}"; });
+                stream.Read(buffer, 0, client.ReceiveBufferSize); 
                 imei =CleanInput (Encoding.ASCII.GetString(buffer.ToArray()).Trim()); 
-                Trace.TraceInformation(imei);
                 if (Commonhelper.IsValidImei(imei))
                     await ParseAvlDataAsync(client, stream, imei).ConfigureAwait(false);
             }
@@ -165,7 +163,6 @@ namespace TeltonikaListner
             List<CreateTeltonikaGps> gpsResult = new List<CreateTeltonikaGps>();
             var parser = new DevicesParser();
             gpsResult.AddRange(parser.Decode(new List<byte>(buffer), imei));
-           // await GeoReverseCodeGpsData(gpsResult);
             LogAvlData(gpsResult);
             return gpsResult;
         }

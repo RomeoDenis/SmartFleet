@@ -197,7 +197,6 @@
     <Compile Include="Geofence\GeofenceHelper.cs" />
     <Compile Include="Helpers\Commonhelper.cs" />
     <Compile Include="Helpers\StringExtension.cs" />
-    <Compile Include="ICommonServer.cs" />
     <Compile Include="IMicroService.cs" />
     <Compile Include="Infrastructure\MassTransit\MicroServicesLoader.cs" />
     <Compile Include="Infrastructure\MassTransit\RabbitMqConfig.cs" />
