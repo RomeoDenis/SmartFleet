@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SmartFleet.Core.Domain.Customers;
 using SmartFleet.Core.Domain.Users;
 using SmartFleet.Core.Domain.Vehicles;
 
@@ -9,6 +10,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Models
 {
     public class CustomerVm
     {
+       
         public Guid Id { get; set; }
         public string Name { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]

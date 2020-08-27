@@ -39,7 +39,7 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
                 recordsTotal =  query.recordsTotal,
                 draw = query.draw,
                 recordsFiltered = query.recordsFiltered,
-                data = Mapper.Map<List<CustomerVm>>( query.data),
+                data =   Mapper.Map<List<CustomerVm>>(query.data),
                 lenght = query.length
             };
             return Json(jsResult, JsonRequestBehavior.AllowGet);

@@ -193,9 +193,9 @@ namespace TeltonicaService.Handlers
             return distance;
         }
 
-        private async Task GeoReverseCodeGpsDataAsync(List<TLGpsDataEvent> gpsRessult)
+        private async Task GeoReverseCodeGpsDataAsync(List<TLGpsDataEvent> gpsResult)
         {
-            foreach (var gpSdata in gpsRessult)
+            foreach (var gpSdata in gpsResult)
             {
                 Thread.Sleep(1000);
                 gpSdata.Address = await _reverseGeoCodingService.ReverseGeocodeAsync(gpSdata.Lat, gpSdata.Long)

@@ -134,7 +134,7 @@ namespace SmartFLEET.Web
             builder.RegisterInstance(queryBuilder).As<DataTablesLinqQueryBulider>();
             #endregion
             #region add masstransit consumer
-            builder.Register(context => RabbitMqConfig.InitReceiverAzureBus<SignalRHandler>("Smartfleet.Web.endpoint"))
+            builder.Register(context => RabbitMqConfig.InitReceiverBus<SignalRHandler>("Smartfleet.Web.endpoint"))
                 .SingleInstance()
                 .As<IBusControl>()
                 .As<IBus>();

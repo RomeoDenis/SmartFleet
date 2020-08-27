@@ -68,7 +68,7 @@ namespace SmartFLEET.Web.Controllers
 
             foreach (var area in cst.Areas)
                 nodes.AddRange(cst.Vehicles.Where(x => x.InterestAreaId == area.Id).Select(x => AddVehicleNodes(x, area.Name)));
-            // add not assigned vehicless
+            // add not assigned vehicles
             nodes.AddRange(cst.Vehicles.Where(v=> cst.Areas.All(a => a.Id != v.InterestAreaId)).Select(x=>AddVehicleNodes(x, "not-assigned")));
             return Json(nodes, JsonRequestBehavior.AllowGet);
         }
