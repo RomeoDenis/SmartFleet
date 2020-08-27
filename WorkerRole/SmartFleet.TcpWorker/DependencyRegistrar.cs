@@ -1,6 +1,5 @@
 ﻿using System.Configuration;
 using System.IO;
-using System.Net;
 using Autofac;
 using MassTransit;
 using Serilog;

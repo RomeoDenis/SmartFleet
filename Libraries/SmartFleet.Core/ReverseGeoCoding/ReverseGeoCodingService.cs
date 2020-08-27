@@ -132,8 +132,7 @@ namespace SmartFleet.Core.ReverseGeoCoding
                 try
                 {
                     var r = await ExecuteQueryAsync(lat, log).ConfigureAwait(false);
-                    if (r != default(NominatimResult) && r.display_name != null &&
-                        !string.IsNullOrEmpty(r.display_name))
+                    if (r?.display_name != null && !string.IsNullOrEmpty(r.display_name))
                     {
                         Thread.Sleep(1000);
                         return r.display_name;

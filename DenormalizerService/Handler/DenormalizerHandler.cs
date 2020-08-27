@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
@@ -29,17 +30,26 @@ namespace DenormalizerService.Handler
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly ReverseGeoCodingService _geoCodingService;
-        private static SemaphoreSlim _semaphore;
         private SmartFleetObjectContext _db;
         private readonly IRedisCache _redisCache;
+        private  readonly ConcurrentDictionary<String, Semaphore> _streamLock ;
+
         public DenormalizerHandler()
         {
             _geoCodingService = new ReverseGeoCodingService();
             _dbContextScopeFactory = DependencyRegistrar.ResolveDbContextScopeFactory();
-            _semaphore = new SemaphoreSlim(1,1);
+            _streamLock = new ConcurrentDictionary<String, Semaphore>();
             _redisCache = DependencyRegistrar.ResolveRedisCache();
+        } 
+        void GetSemaphore(String id)
+        {
+            _streamLock.GetOrAdd(id, new Semaphore(1, 1)).WaitOne();
         }
 
+         void ReleaseSemaphore(String id)
+        {
+            _streamLock.GetOrAdd(id, new Semaphore(1, 1)).Release();
+        }
         public async Task Consume(ConsumeContext<CreateTk103Gps> context)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
@@ -201,7 +211,7 @@ namespace DenormalizerService.Handler
 
         public async Task Consume(ConsumeContext<CreateBoxCommand> context)
         {
-            //await _semaphore.WaitAsync().ConfigureAwait(false);
+            GetSemaphore(context.Message.Imei);
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
                 _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
@@ -225,15 +235,14 @@ namespace DenormalizerService.Handler
                     await contextFScope.SaveChangesAsync().ConfigureAwait(false);
               
                 }
-                catch (Exception e)
+                
+                catch (Exception ex)
                 {
-                    Trace.WriteLine(e);
-                    //_semaphore.Release();
-                    throw;
+                    Console.WriteLine("Concurrency Exception Occurred.");
                 }
             }
 
-            //_semaphore.Release();
+            ReleaseSemaphore(context.Message.Imei);
         }
 
         public async Task Consume(ConsumeContext<TlFuelEevents> context)
