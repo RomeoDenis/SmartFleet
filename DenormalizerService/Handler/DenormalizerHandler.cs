@@ -9,6 +9,7 @@ using DenormalizerService.Infrastructure;
 using MassTransit;
 using SmartFleet.Core.Contracts.Commands;
 using SmartFleet.Core.Data;
+using SmartFleet.Core.Domain.DriverCards;
 using SmartFleet.Core.Domain.Gpsdevices;
 using SmartFleet.Core.Domain.Movement;
 using SmartFleet.Core.Domain.Vehicles;
@@ -30,7 +31,6 @@ namespace DenormalizerService.Handler
     {
         private readonly IDbContextScopeFactory _dbContextScopeFactory;
         private readonly ReverseGeoCodingService _geoCodingService;
-        private SmartFleetObjectContext _db;
         private readonly IRedisCache _redisCache;
         private  readonly ConcurrentDictionary<String, Semaphore> _streamLock ;
 
@@ -54,11 +54,11 @@ namespace DenormalizerService.Handler
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
-                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 Box box;
-                using (DbContextTransaction scope = _db.Database.BeginTransaction())
+                using (DbContextTransaction scope = db.Database.BeginTransaction())
                 {
-                     box = await _db.Boxes.FirstOrDefaultAsync(x => x.SerialNumber == context.Message.SerialNumber)
+                     box = await db.Boxes.FirstOrDefaultAsync(x => x.SerialNumber == context.Message.SerialNumber)
                         .ConfigureAwait(false);
                     scope.Commit();
 
@@ -77,7 +77,7 @@ namespace DenormalizerService.Handler
                     box.Vehicle = null;
                     box.Imei = context.Message.IMEI;
                     box.SerialNumber = context.Message.SerialNumber;
-                    _db.Boxes.Add(box);
+                    db.Boxes.Add(box);
                 }
 
                 if (box.BoxStatus == BoxStatus.WaitInstallation)
@@ -100,7 +100,7 @@ namespace DenormalizerService.Handler
                     Address = address.display_name,
                     MotionStatus = (int)context.Message.Speed > 2 ? MotionStatus.Moving : MotionStatus.Stopped
                 };
-                _db.Positions.Add(position);
+                db.Positions.Add(position);
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
 
             }
@@ -110,11 +110,11 @@ namespace DenormalizerService.Handler
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
-                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 Box box;
-                using (DbContextTransaction scope = _db.Database.BeginTransaction())
+                using (DbContextTransaction scope = db.Database.BeginTransaction())
                 {
-                    box = await _db.Boxes.FirstOrDefaultAsync(x => x.SerialNumber == context.Message.SerialNumber)
+                    box = await db.Boxes.FirstOrDefaultAsync(x => x.SerialNumber == context.Message.SerialNumber)
                         .ConfigureAwait(false);
                     scope.Commit();
 
@@ -131,7 +131,7 @@ namespace DenormalizerService.Handler
                     box.Vehicle = null;
                     box.Imei = context.Message.IMEI;
                     box.SerialNumber = context.Message.SerialNumber;
-                    _db.Boxes.Add(box);
+                    db.Boxes.Add(box);
 
                 }
                 if (box.BoxStatus == BoxStatus.WaitInstallation)
@@ -153,7 +153,7 @@ namespace DenormalizerService.Handler
                     Address = address,
                     MotionStatus = (int)context.Message.Speed > 2 ? MotionStatus.Moving : MotionStatus.Stopped
                 };
-                _db.Positions.Add(position);
+                db.Positions.Add(position);
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
             }
         }
@@ -162,8 +162,8 @@ namespace DenormalizerService.Handler
            
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
-                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                var box = await _db.Boxes.SingleOrDefaultAsync(b => b.Imei == imei).ConfigureAwait(false);
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                var box = await db.Boxes.SingleOrDefaultAsync(b => b.Imei == imei).ConfigureAwait(false);
                return box;
             }
 
@@ -178,10 +178,10 @@ namespace DenormalizerService.Handler
                 {
                     using (var contextFScope = _dbContextScopeFactory.Create())
                     {
-                        _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                        var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
 
                         var position = new Position();
-                        position.Box_Id = box?.Id;
+                        position.Box_Id = box.Id;
                         position.Altitude = context.Message.Altitude;
                         position.Direction = context.Message.Direction;
                         position.Lat = context.Message.Lat;
@@ -194,7 +194,7 @@ namespace DenormalizerService.Handler
                         position.Timestamp = context.Message.DateTimeUtc;
                         position.MotionStatus =  context.Message.Speed > 0.0 ? MotionStatus.Moving : MotionStatus.Stopped;
                         box.LastGpsInfoTime = context.Message.DateTimeUtc;
-                        _db.Positions.Add(position);
+                        db.Positions.Add(position);
                        await contextFScope.SaveChangesAsync().ConfigureAwait(false);
                        //_semaphore.Release();
                     }
@@ -214,7 +214,7 @@ namespace DenormalizerService.Handler
             GetSemaphore(context.Message.Imei);
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
-                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 await _redisCache.SetAsync(context.Message.Imei, context.Message).ConfigureAwait(false);
                 var existingBox = await GetModemDeviceAsync(context.Message.Imei).ConfigureAwait(false);
                 if(existingBox!= null)
@@ -222,7 +222,7 @@ namespace DenormalizerService.Handler
 
                 var box = new Box();
                 box.Id = Guid.NewGuid();
-                box.BoxStatus = BoxStatus.WaitPreparation;
+                box.BoxStatus = BoxStatus.WaitInstallation;
                 box.CreationDate = DateTime.UtcNow;
                 box.Icci = String.Empty;
                 box.PhoneNumber = String.Empty;
@@ -231,14 +231,16 @@ namespace DenormalizerService.Handler
                 box.SerialNumber = String.Empty;
                 try
                 {
-                    _db.Boxes.Add(box);
+                    db.Boxes.Add(box);
                     await contextFScope.SaveChangesAsync().ConfigureAwait(false);
               
                 }
                 
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Concurrency Exception Occurred.");
+                    Console.WriteLine(ex.Message);
+                    ReleaseSemaphore(context.Message.Imei);
+                    throw;
                 }
             }
 
@@ -250,10 +252,10 @@ namespace DenormalizerService.Handler
            
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
-                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
                 var fuelRecordMsg = context.Message.Events.OrderBy(x => x.DateTimeUtc).Last();
 
-                var lastRecord = await _db.FuelConsumptions.OrderByDescending(x => x.DateTimeUtc)
+                var lastRecord = await db.FuelConsumptions.OrderByDescending(x => x.DateTimeUtc)
                     // ReSharper disable once TooManyChainedReferences
                     .FirstOrDefaultAsync(x => x.VehicleId == fuelRecordMsg.VehicleId).ConfigureAwait(false);
                 var fuelConsumption = SetFuelConsumptionObject(fuelRecordMsg);
@@ -266,7 +268,7 @@ namespace DenormalizerService.Handler
                 else if (!fuelRecordMsg.MileStoneCalculated)
                     fuelConsumption.TotalFuelConsumed = fuelRecordMsg.FuelConsumption;
 
-                _db.FuelConsumptions.Add(fuelConsumption);
+                db.FuelConsumptions.Add(fuelConsumption);
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
                 
             }
@@ -290,8 +292,8 @@ namespace DenormalizerService.Handler
             
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
-                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                _db.VehicleAlerts.Add(new VehicleAlert
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                db.VehicleAlerts.Add(new VehicleAlert
                 {
                     Id = Guid.NewGuid(),
                     VehicleEvent =  context.Message.VehicleEventType,
@@ -311,8 +313,8 @@ namespace DenormalizerService.Handler
            
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
-                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                _db.VehicleAlerts.Add(new VehicleAlert
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                db.VehicleAlerts.Add(new VehicleAlert
                 {
                     Id = Guid.NewGuid(),
                     VehicleEvent = context.Message.VehicleEventType,
@@ -331,8 +333,8 @@ namespace DenormalizerService.Handler
           
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
-                _db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
-                var vehicle = await _db.Vehicles.FindAsync(context.Message.VehicleId).ConfigureAwait(false);
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                var vehicle = await db.Vehicles.FindAsync(context.Message.VehicleId).ConfigureAwait(false);
                 if (vehicle != null)
                 {
                     vehicle.Milestone += context.Message.Milestone;
@@ -348,6 +350,12 @@ namespace DenormalizerService.Handler
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
+                var db = contextFScope.DbContexts.Get<SmartFleetObjectContext>();
+                db.Identifiers.Add(new Identifier
+                {
+                    CustomerId = context.Message.CustomerId,
+                    CardNumber = Int64.Parse(context.Message.IdentifierNumber)
+                });
                 await contextFScope.SaveChangesAsync().ConfigureAwait(false);
 
             }

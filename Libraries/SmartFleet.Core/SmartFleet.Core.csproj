@@ -181,6 +181,7 @@
     <Compile Include="Domain\EcoDrive\VehicleAlarrm.cs" />
     <Compile Include="Domain\Gpsdevices\Box.cs" />
     <Compile Include="Domain\Gpsdevices\Sim.cs" />
+    <Compile Include="Domain\DriverCards\Identifier.cs" />
     <Compile Include="Domain\Movement\GpSdata.cs" />
     <Compile Include="Domain\Movement\Position.cs" />
     <Compile Include="Domain\Users\User.cs" />

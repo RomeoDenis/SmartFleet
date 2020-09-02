@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<SmartFleet.Core.Domain.Gpsdevices.Box>
 
-<div class="box" style="width: 97%; padding:10px">
+<div class="box" style="width: 97%; padding:10px" ng-controller="mobileUnitController">
     <h3>Liste des boitiers</h3>
 
     <p>
@@ -9,9 +9,9 @@
             <div class="panel panel-default" style="margin-top: 5px">
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <button type="button" class="btn btn-default" id="dicValueCreate">
-                            <span class="fa fa-plus" aria-hidden="true"></span> Nouveau client
-                        </button>
+                        <a  data-toggle="modal" class="btn btn-default" ui-sref="AddMobileUnit" >
+                            Add GPS device
+                        </a>
 
                     </li>
                 </ul>

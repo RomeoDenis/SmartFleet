@@ -39,6 +39,11 @@ namespace SmartFleet.Core.Contracts.Commands
         [JsonProperty(PropertyName = "speed", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 
         public double Speed { get; set; }
+        [JsonProperty(PropertyName = "phone", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 
+        public string PhoneNumber { get; set; }
+        [JsonProperty(PropertyName = "type", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+
+        public string Type { get; set; }
     }
 }

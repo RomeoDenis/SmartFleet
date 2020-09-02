@@ -98,7 +98,8 @@ namespace SmartFleet.Core.Protocols.Teltonika
                             (byte) Convert.ToInt32(receiveBytes.Skip(currentCursor + 1 + io1 * 2).Take(1).ToList()[0]);
                         var ioElement_1B =
                             (byte) Convert.ToInt32(receiveBytes.Skip(currentCursor + 2 + io1 * 2).Take(1).ToList()[0]);
-                        gpsData.IoElements_1B.Add(parameterId, ioElement_1B);
+                       if(!gpsData.IoElements_1B.ContainsKey(parameterId)) 
+                           gpsData.IoElements_1B.Add(parameterId, ioElement_1B);
                     }
                     currentCursor += ioElements_1BQuantity * 2 + 1;
 
@@ -114,7 +115,8 @@ namespace SmartFleet.Core.Protocols.Teltonika
                             value += String.Format("{0:X2}", b);
                         });
                         var ioElement_2B = Convert.ToInt16(value, 16);
-                        gpsData.IoElements_2B.Add(parameterId, ioElement_2B);
+                        if (!gpsData.IoElements_2B.ContainsKey(parameterId))
+                            gpsData.IoElements_2B.Add(parameterId, ioElement_2B);
                     }
                     currentCursor += ioElements_2BQuantity * 3 + 1;
 
@@ -130,7 +132,8 @@ namespace SmartFleet.Core.Protocols.Teltonika
                             value += String.Format("{0:X2}", b);
                         });
                         var ioElement_4B = Convert.ToInt32(value, 16);
-                        gpsData.IoElements_4B.Add(parameterId, ioElement_4B);
+                        if (!gpsData.IoElements_4B.ContainsKey(parameterId))
+                            gpsData.IoElements_4B.Add(parameterId, ioElement_4B);
                     }
                     currentCursor += ioElements_4BQuantity * 5 + 1;
 
@@ -146,7 +149,8 @@ namespace SmartFleet.Core.Protocols.Teltonika
                             value += String.Format("{0:X2}", b);
                         });
                         var ioElement_8B = Convert.ToInt64(value, 16);
-                        gpsData.IoElements_8B.Add(parameterId, ioElement_8B);
+                        if (!gpsData.IoElements_8B.ContainsKey(parameterId))
+                            gpsData.IoElements_8B.Add(parameterId, ioElement_8B);
                     }
 
                     tokenAddress += 30 + ioElements_1BQuantity * 2 +

@@ -70,6 +70,8 @@
   <ItemGroup>
     <Compile Include="Common\MobileUnitDomainMapping.cs" />
     <Compile Include="MobileUnitDependencyRegistrar.cs" />
+    <Compile Include="MobileUnit\Commands\CreateMobileUnitCommand.cs" />
+    <Compile Include="MobileUnit\Commands\MobileUnitCommandsHandler.cs" />
     <Compile Include="MobileUnit\Dtos\MobileUnitDto.cs" />
     <Compile Include="MobileUnit\Dtos\MobileUnitSelectListDto.cs" />
     <Compile Include="MobileUnit\Handlers\MobileUnitQueriesHandler.cs" />
@@ -80,9 +82,7 @@
     <Compile Include="MobileUnit\Queries\GetMobileUnitByImeiQuery.cs" />
     <Compile Include="MobileUnit\Queries\GetMobileUnitsWithoutVehicleIdQuery.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MobileUnit\Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />

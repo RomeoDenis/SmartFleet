@@ -16,5 +16,6 @@ namespace SmartFleet.Core.Contracts.Commands
         public string Status { get; set; }
         public string Imei { get; set; }
         public string Address { get; set; }
+        public bool? Ignition { get; set; }
     }
 }

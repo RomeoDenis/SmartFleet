@@ -20,6 +20,7 @@ namespace SmartFleet.Core.ReverseGeoCoding
         private  string _locationiqUrl = ConfigurationManager.AppSettings["locationiqUrl"];
         private string _nominatimUrl = ConfigurationManager.AppSettings["nominatimUrl"];
         private int count = 0;
+        private SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1);
         private readonly string[] _userAgents = { "Mozilla/4.0 (Mozilla/4.0; MSIE 7.0; Windows NT 5.1; FDM; SV1)"
             , "Mozilla/4.0 (Mozilla/4.0; MSIE 7.0; Windows NT 5.1; FDM; SV1; .NET CLR 3.0.04506.30)",
             "Mozilla/4.0 (Windows; MSIE 7.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)",
@@ -131,7 +132,9 @@ namespace SmartFleet.Core.ReverseGeoCoding
 
                 try
                 {
+                    await _semaphoreSlim.WaitAsync(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
                     var r = await ExecuteQueryAsync(lat, log).ConfigureAwait(false);
+                    _semaphoreSlim.Release();
                     if (r?.display_name != null && !string.IsNullOrEmpty(r.display_name))
                     {
                         Thread.Sleep(1000);
@@ -141,6 +144,7 @@ namespace SmartFleet.Core.ReverseGeoCoding
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
+                    _semaphoreSlim.Release();
                     Thread.Sleep(1000);
                 }
                 

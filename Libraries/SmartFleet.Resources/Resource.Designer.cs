@@ -70,6 +70,15 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add new customer.
+        /// </summary>
+        public static string AddCustomer {
+            get {
+                return ResourceManager.GetString("AddCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Average fuel consumption.
         /// </summary>
         public static string AvgFuelConsumption {
@@ -84,6 +93,24 @@ namespace SmartFleet.Resources {
         public static string AvgSpeed {
             get {
                 return ResourceManager.GetString("AvgSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à City.
+        /// </summary>
+        public static string City {
+            get {
+                return ResourceManager.GetString("City", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Country.
+        /// </summary>
+        public static string Country {
+            get {
+                return ResourceManager.GetString("Country", resourceCulture);
             }
         }
         
@@ -169,6 +196,15 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Name.
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Not assigned.
         /// </summary>
         public static string NotAssigned {
@@ -183,6 +219,15 @@ namespace SmartFleet.Resources {
         public static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Phone number.
+        /// </summary>
+        public static string Phone {
+            get {
+                return ResourceManager.GetString("Phone", resourceCulture);
             }
         }
         
@@ -282,6 +327,14 @@ namespace SmartFleet.Resources {
         public static string Zones {
             get {
                 return ResourceManager.GetString("Zones", resourceCulture);
+            }
+        }
+
+        public static string AddMobileUnit
+        {
+            get
+            {
+                return ResourceManager.GetString("MobileUnit", resourceCulture);
             }
         }
     }

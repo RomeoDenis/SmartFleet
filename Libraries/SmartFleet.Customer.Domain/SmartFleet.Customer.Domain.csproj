@@ -87,6 +87,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Commands\Areas\" />
     <Folder Include="Commands\Cutomers\" />
   </ItemGroup>
   <ItemGroup>

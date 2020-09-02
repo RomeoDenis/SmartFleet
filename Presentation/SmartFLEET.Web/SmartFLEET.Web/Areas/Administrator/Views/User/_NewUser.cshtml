@@ -3,6 +3,15 @@
     <form name="userForm" class="form-horizontal">
         <fieldset>
             <div class="form-group">
+                <label class="col-md-4 control-label" for="Cutomer_Id">Client</label>
+                <div class="col-md-5">
+                    <select id="CustomerId" ng-required="true" name="CustomerId" ng-model="user.CustomerId" class="form-control">
+                        <option ng-repeat="option in user.Customers" value="{{option.Id}}">{{option.Name}}</option>
+
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-md-4 control-label" for="Name">UserName</label>
                 <div class="col-md-5">
                     <input id="Name" ng-model="user.UserName" ng-required="true" name="Name" type="text" placeholder="" class="form-control input-md">
@@ -23,7 +32,7 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="Email">Email</label>
                 <div class="col-md-5">
-                    <input id="Email" type='email' validate-email ng-model="user.Email" ng-required="true" name="Email"  placeholder="" class="form-control input-md">
+                    <input id="Email" type='email' validate-email ng-model="user.Email" ng-required="true" name="Email" placeholder="" class="form-control input-md">
 
                 </div>
             </div>
@@ -39,12 +48,12 @@
                 </div>
             </div>
 
-         
+
             <!-- Textarea -->
             <div class="form-group">
                 <label class="col-md-4 control-label " for="Street">PhoneNumber</label>
                 <div class="col-md-5">
-                    <input  class="form-control" ng-model="user.PhoneNumber" id="Street" name="Street"/>
+                    <input class="form-control" ng-model="user.PhoneNumber" id="Street" name="Street"/>
                 </div>
             </div>
             <div class="form-group">
@@ -53,11 +62,11 @@
                 <label class="radio-inline"><input type="radio" value="Customer" ng-model="user.role" name="optradio">Owner</label>
                 <label class="radio-inline"><input type="radio" value="User" ng-model="user.role" name="optradio">User</label>
             </div>
-                
 
-                <!-- Default checked -->
-                
-</fieldset>
+
+            <!-- Default checked -->
+
+        </fieldset>
        
     </form>
 
