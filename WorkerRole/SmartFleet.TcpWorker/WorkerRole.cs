@@ -1,11 +1,8 @@
-using System;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Serilog;
 using Serilog.Core;
-using TeltonikaListner;
 
 namespace SmartFleet.TcpWorker
 {
@@ -15,13 +12,17 @@ namespace SmartFleet.TcpWorker
         private readonly ManualResetEvent _runCompleteEvent = new ManualResetEvent(false);
         private static Logger _log;
 
+        public WorkerRole()
+        {
+            InitLog();
+        }
         /// <summary>
         /// 
         /// </summary>
         // ReSharper disable once MethodNameNotMeaningful
         public override void Run()
         {
-            InitLog();
+            
             // init teltonika server 
             DependencyRegistrar.ResolveDependencies();
             var listener = DependencyRegistrar.StartListener();
@@ -45,18 +46,18 @@ namespace SmartFleet.TcpWorker
             // consultez la rubrique MSDN à l'adresse https://go.microsoft.com/fwlink/?LinkId=166357.
             bool result = base.OnStart();
            
-            Trace.TraceInformation("SmartFleet.TcpWorker has been started");
+           _log.Information("SmartFleet.TcpWorker has been started");
 
             return result;
         }
 
         public override void OnStop()
         {
-            Trace.TraceInformation("SmartFleet.TcpWorker is stopping");
+            _log.Information("SmartFleet.TcpWorker is stopping");
             _cancellationTokenSource.Cancel();
             _runCompleteEvent.WaitOne();
             base.OnStop();
-            Trace.TraceInformation("SmartFleet.TcpWorker has stopped");
+            _log.Information("SmartFleet.TcpWorker  stopped");
         }
 
       

@@ -589,6 +589,80 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:SmartFLEET.Web.Controllers.BaseController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SmartFLEET.Web.Controllers.BaseController.ObjectContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SmartFLEET.Web.Controllers.BaseController.Mediator">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SmartFLEET.Web.Controllers.BaseController.Mapper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartFLEET.Web.Controllers.BaseController.#ctor(SmartFleet.Data.SmartFleetObjectContext)">
+            <summary>
+            
+            </summary>
+            <param name="objectContext"></param>
+        </member>
+        <member name="M:SmartFLEET.Web.Controllers.BaseController.#ctor(SmartFleet.Data.SmartFleetObjectContext,MediatR.IMediator)">
+            <summary>
+            
+            </summary>
+            <param name="objectContext"></param>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:SmartFLEET.Web.Controllers.BaseController.#ctor(SmartFleet.Data.SmartFleetObjectContext,AutoMapper.IMapper)">
+            <summary>
+            
+            </summary>
+            <param name="objectContext"></param>
+            <param name="mapper"></param>
+        </member>
+        <member name="M:SmartFLEET.Web.Controllers.BaseController.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            
+            </summary>
+            <param name="mediator"></param>
+            <param name="mapper"></param>
+        </member>
+        <member name="M:SmartFLEET.Web.Controllers.BaseController.#ctor(AutoMapper.IMapper)">
+            <summary>
+            
+            </summary>
+            <param name="mapper"></param>
+        </member>
+        <member name="M:SmartFLEET.Web.Controllers.BaseController.ValidationViewModel">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartFLEET.Web.Controllers.BaseController.ValidationViewModel(FluentValidation.Results.ValidationResult)">
+            <summary>
+            
+            </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartFLEET.Web.Controllers.BaseController.SendAsync``1(MediatR.IRequest{``0})">
+            <summary>
+            
+            </summary>
+            <param name="request"></param>
+            <typeparam name="TResponse"></typeparam>
+            <returns></returns>
+        </member>
         <member name="T:SmartFLEET.Web.Controllers.HomeController">
             <summary>
             

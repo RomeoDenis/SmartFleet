@@ -89,11 +89,14 @@ namespace TeltonicaService.Handlers
                     var gpsDataEvent = _mappe.Map<TLGpsDataEvent>(source);
                     gpsDataEvent.BoxId = box.Id;
                     Trace.WriteLine(
-                        gpsDataEvent.DateTimeUtc + " lat:" + gpsDataEvent.Lat + " long:" + gpsDataEvent.Long);
-                    gpsDataEvents.Add(gpsDataEvent);
-
-                    if (box.Vehicle == null) continue;
+                        gpsDataEvent.DateTimeUtc + " lat:" + gpsDataEvent.Lat + " long:" + gpsDataEvent.Long); if (box.Vehicle == null) break;
+                    if(box.Vehicle == null)
+                        break;
                     InitAllIoElements(source);
+                    if (source.AllIoElements.ContainsKey(TNIoProperty.Ignition))
+                        gpsDataEvent.Ignition = Convert.ToUInt32(source.AllIoElements[TNIoProperty.Ignition]) == 1;
+                    gpsDataEvents.Add(gpsDataEvent);
+                   
                     var canInfo = ecoDrive.ProceedTNCANFilters();
                     identifierEvents = cardService.ProceedDriverCardDetection(source, box.Vehicle.CustomerId.Value);
 

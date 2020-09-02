@@ -1470,6 +1470,9 @@
     <Content Include="Areas\Administrator\Views\web.config" />
     <Content Include="Areas\Administrator\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Administrator\Views\Admin\Index.cshtml" />
+    <Content Include="Scripts\app\mobileUnit\addMobileUnitController.js" />
+    <Content Include="Scripts\app\mobileUnit\mobileUnitService.js" />
+    <Content Include="Scripts\app\mobileUnit\mobileUnitController.js" />
     <Content Include="Scripts\app\position\positionController.js" />
     <Content Include="Scripts\app\position\positionService.js" />
     <Content Include="Scripts\app\report\dailyReportController.js" />
@@ -2222,6 +2225,7 @@
     <Content Include="Content\fonts\icofont.woff" />
     <Content Include="Content\fonts\icofont.woff2" />
     <Content Include="package.json" />
+    <Content Include="Areas\Administrator\Views\GpsDevice\Create.cshtml" />
     <None Include="packages.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />

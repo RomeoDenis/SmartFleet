@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddCustomer" xml:space="preserve">
+    <value>Créer un nouveau client</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Adress</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Ville</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Pays</value>
+  </data>
   <data name="CreateAccount" xml:space="preserve">
     <value>Créer nouveau compte</value>
   </data>
@@ -126,8 +138,14 @@
   <data name="Drivers" xml:space="preserve">
     <value>Conducteurs</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de pass</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>N° Tél</value>
   </data>
   <data name="RememberMe" xml:space="preserve">
     <value>Souviens de moi</value>

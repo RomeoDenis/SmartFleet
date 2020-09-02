@@ -16,6 +16,13 @@ app.config([
                 {
                     url: 'gpsDevices',
                     templateUrl: '../Administrator/GpsDevice/Index'
+                   
+                    })
+                .state("AddMobileUnit",
+                {
+                    url: 'addMobileUnit',
+                    templateUrl: '../Administrator/GpsDevice/Create',
+                    controller: "addMobileUnitController"
                 }).state("vehicles",
                 {
                     url: 'vehicles',

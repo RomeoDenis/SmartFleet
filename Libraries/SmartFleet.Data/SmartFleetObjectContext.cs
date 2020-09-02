@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.AspNet.Identity.EntityFramework;
 using SmartFleet.Core;
 using SmartFleet.Core.Domain.Customers;
+using SmartFleet.Core.Domain.DriverCards;
 using SmartFleet.Core.Domain.Gpsdevices;
 using SmartFleet.Core.Domain.Movement;
 using SmartFleet.Core.Domain.Users;
@@ -35,7 +36,7 @@ namespace SmartFleet.Data
         public DbSet<InterestArea> InterestAreas { get; set; }
         public DbSet<VehicleAlert> VehicleAlerts { get; set; }
         public DbSet<FuelConsumption> FuelConsumptions { get; set; }
-       
+        public DbSet<Identifier> Identifiers { get; set; }
         protected virtual TEntity AttachEntityToContext<TEntity>(TEntity entity) where TEntity : BaseEntity, new()
         {
             //little hack here until Entity Framework really supports stored procedures
