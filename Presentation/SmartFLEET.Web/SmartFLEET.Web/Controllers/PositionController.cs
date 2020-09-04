@@ -40,8 +40,8 @@ namespace SmartFLEET.Web.Controllers
         {
             var id = Guid.Parse(vehicleId);
             //var start = 
-            var endPeriod = DateTime.Now;
-            var startPeriod = DateTime.Now.Date;
+            var endPeriod = DateTime.Now.ToUniversalTime();
+            var startPeriod = DateTime.Now.Date.ToUniversalTime();
             var vehicle = await _vehicleService.GetVehicleByIdAsync(id).ConfigureAwait(false);
             var positions = await _positionService.GetVehiclePositionsByPeriodAsync(id, startPeriod, endPeriod).ConfigureAwait(false);
             if (!positions.Any())
@@ -56,8 +56,8 @@ namespace SmartFLEET.Web.Controllers
         {
             var id = Guid.Parse(vehicleId);
            // var endPeriod = DateTime.Now;
-           var startPeriod = start.ParseToDate();
-            var endPeriod =startPeriod.Date.AddDays(1).AddTicks(-1);
+           var startPeriod = start.ParseToDate().ToUniversalTime();
+            var endPeriod =startPeriod.Date.AddDays(1).AddTicks(-1).ToUniversalTime();
             var vehicle = await ObjectContext.Vehicles.FindAsync(id).ConfigureAwait(false);
             var positions = await _positionService.GetVehiclePositionsByPeriodAsync(id, startPeriod.ToUniversalTime(), endPeriod.ToUniversalTime()).ConfigureAwait(false);
             if (!positions.Any()) return Json(new List<TargetViewModel>(), JsonRequestBehavior.AllowGet);

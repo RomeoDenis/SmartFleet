@@ -379,6 +379,7 @@
     <Compile Include="Helpers\CultureFilter.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
+    <Compile Include="Helpers\ResourcesHelper.cs" />
     <Compile Include="HtmlHelpers\HtmlExtensions.cs" />
     <Compile Include="Hubs\ErrorHandlingPipelineModule.cs" />
     <Compile Include="Hubs\SignalRHandler.cs" />
@@ -401,6 +402,10 @@
     <Content Include="assets\carte_45x45.png" />
     <Content Include="assets\download.jpg" />
     <Content Include="assets\exit_45x45.png" />
+    <Content Include="assets\flag-icon.min.css" />
+    <Content Include="assets\flags\es.svg" />
+    <Content Include="assets\flags\fr.svg" />
+    <Content Include="assets\flags\gb-eng.svg" />
     <Content Include="assets\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="assets\gps-logo.png" />
