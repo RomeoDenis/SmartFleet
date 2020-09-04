@@ -1,4 +1,5 @@
-﻿
+﻿@using SmartFleet.Resources
+
 <style>
     .stop-flag {
         color: red
@@ -11,28 +12,28 @@
     <thead>
     <tr>
         <th field="MotionStatus">
-            Etat de .Cond
+            @Resource.MotionState
         
         </th>
 
         <th  field="StartPeriod1">
-            Tmp. Départ
+            @Resource.DepartureTime
         </th>
         <th field="EndPeriod1">
-            Tmp. Arrivée
+            @Resource.ArrivalTime
         </th>
         <th field="Distance">
-            Distance (Km)
+            @Resource.Distance (Km)
         </th>
      
         <th field="StartAddres">
-            Adresse départ
+           @Resource.DepartureAddress
         </th>
         <th field="ArrivalAddres">
-            Adresse Arrivée
+            @Resource.ArrivalAddress
         </th>
         <th field="Duration">
-            Durrée
+            @Resource.Duration
         </th>
     </tr>
     </thead>

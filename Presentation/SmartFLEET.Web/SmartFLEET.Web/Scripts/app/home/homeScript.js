@@ -19,9 +19,11 @@ var downloadFullReport = false;
 var getPossition = false;
 var layout;
 var currentLang = "";
+
 $(document).ready(function () {
 
     currentLang = getCookie("culture");
+    
     //layout.close("west");
     initJstree();
     loadData(0.33);
@@ -136,7 +138,7 @@ function initCalender() {
 
             if (downloadFullReport) {
                 if (anchorId === "" || anchorId.indexOf('00000000-0000-0000-0000-000000000000') !== -1) {
-                    alert("il faut choisir une date de début et un véhicule");
+                    alert(localization.EmptyTreeGuid);
                     return;
                 }
                 $("#chronogram").window('close');
@@ -235,12 +237,12 @@ function onRecieveData(gpsStatement) {
     removeMarker(gpsStatement);
     thisIcon.options.iconUrl = gpsStatement.ImageUri;
    
-    var template = "<div><h4><b> <b>Véhicule</b>: " +
+    var template = "<div><h4><b> <b>"+localization.Vehicle+"</b>: " +
         gpsStatement.VehicleName +
-        "</b></h4> <b>Adresse</b>: " +
+        "</b></h4> <b>" +localization.Address+"</b>: " +
         gpsStatement.Address +
         "" +
-        "<p> <b>Vitesse</b>: " +
+        "<p> <b>" + localization.Speed+"</b>: " +
         gpsStatement.Speed +
         "Km/H</p>" +
         "</h5>" +
@@ -287,12 +289,12 @@ function onGetAllVehiclesSuccess(result) {
     for (var i = 0; i < result.length; i++) {
         var item = result[i];
         var icon = new L.Icon();
-        var template = "<div><h4><b> <b>Véhicule</b>: " +
+        var template = "<div><h4><b> <b>" + localization.Vehicle+"</b>: " +
             item.VehicleName +
-            "</b></h4> <b>Adresse</b>: " +
+            "</b></h4> <b>" + localization.Address+"</b>: " +
             item.Address +
             "" +
-            "<p> <b>Vitesse</b>: " +
+            "<p> <b>" + localization.Speed+"</b>: " +
             item.Speed +
             "Km/H</p>" +
             "</h5>" +
@@ -494,7 +496,7 @@ function initGpsData(periods, gpsCollection, divName) {
             switch (v.MotionStatus) {
                 case "Stopped":
                     {
-                        activity = "Arrêt";
+                        activity = localization.Stopped;
                         style =
                             "background-color:#DC143C;height:9px; border-radius:0;margin-top: 20px;border-color:transparent!important;border-width:0!important;";
 
@@ -502,14 +504,14 @@ function initGpsData(periods, gpsCollection, divName) {
                     break;
                 case "Moving":
                     {
-                        activity = "Conduite";
+                        activity = localization.Moving;
                         style =
                             "background-color:#048b9a;height:30px;border-color:transparent!important; border-radius:0;margin-top: 20px;border-width:0!important;";
                     }
                     break;
                 default:
                     {
-                        activity = "Ralenti";
+                        activity = localization.Slowing;
                         style =
                             "background-color:#dab30a;height:30px;border-color:transparent!important; border-radius:0;margin-top: 20px;border-width:0!important;";
                     }
@@ -524,26 +526,26 @@ function initGpsData(periods, gpsCollection, divName) {
             var duration = "";
             if (v.Duration !== "")
                 duration = secondsToHms(v.Duration);
-            var template = '' + activity + ' de ' + startTime + ' à ' + endTime;
+            var template = '' + activity + ' ' + startTime + ' - ' + endTime;
             if (duration !== "") {
-                template = template + ' (Durée : ' + duration + ')';
+                template = template + ' (' + localization.Duration+': ' + duration + ')';
             }
             // console.log(v.DurationInSeconds);
             template = template + '\r';
             if (v.MotionStatus !== 'Stopped') {
-                template = template + "Départ : " + v.StartAddres + '\r';
+                template = template + localization.DepartureAddress+": " + v.StartAddres + '\r';
 
-                template = template + "Arrivée : " + v.ArrivalAddres + '\r';
+                template = template + localization.ArrivalAddress+ ": " + v.ArrivalAddres + '\r';
 
-                template = template + "Vitesse moyenne : " + v.AvgSpeed + ' km/h\r';
+                template = template + localization.AvgSpeed+": " + v.AvgSpeed + ' km/h\r';
             } else if (v.MotionStatus === 'Stopped' && v.StartAddres != null) {
-                template = template + "Lieu : " + v.StartAddres + '\r';
+                template = template + localization.Location+": " + v.StartAddres + '\r';
 
             } else {
-                template = template + "Lieu : " + v.ArrivalAddres + '\r';
+                template = template + localization.Location + ": " + v.ArrivalAddres + '\r';
 
             }
-            if (v.MotionStatus !== 'Stopped') template = template + "Distance : " + v.Distance + " km." + '\r';
+            if (v.MotionStatus !== 'Stopped') template = template + localization.Distance +": " + v.Distance + " km." + '\r';
 
             data.push({
                 id: i,
@@ -567,8 +569,8 @@ function secondsToHms(seconds) {
     var m = Math.floor(d % 3600 / 60);
     var s = Math.floor(d % 3600 % 60);
 
-    var hDisplay = h > 0 ? h + (h == 1 ? " heure, " : " heures, ") : "";
-    var mDisplay = m > 0 ? m + (m == 1 ? " minute " : " minutes ") : "";
+    var hDisplay = h > 0 ? h + (h == 1 ? " " +localization.Hour + ", " : localization.Hours+", ") : "";
+    var mDisplay = m > 0 ? m + (m == 1 ? " " + localization.Minute : " " + localization.Minutes) : "";
     //  var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
     if (hDisplay !== "" || mDisplay !== "")
         return hDisplay + mDisplay;

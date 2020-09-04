@@ -1,17 +1,23 @@
-﻿<style>
+﻿@using System.Globalization
+@using System.Threading
+@using SmartFleet.Resources
+@using SmartFLEET.Web.Helpers
+<style>
     .jbox-t {
         margin-top: -23px !important;
         margin-left: -10px !important;
     }
+
     #TabPanelPosition {
         position: absolute;
         z-index: 1000;
         margin-top: -180px;
     }
+
     .leaflet-marker-icon {
         margin-top: -16px
-
     }
+
     .leaflet-pane .leaflet-popup-pane {
         margin-top: -16px
     }
@@ -29,12 +35,17 @@
     Html.RenderPartial("_leftPanel");
 }
 
-
-
+@{
+    CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+    var JSONResx = ResourcesHelper.GenerateResxJSON<Resource>(); ;
    
 
-  
-   
+}
+
+
+
+
+
 
 
 @section scripts
@@ -46,6 +57,13 @@
     <script src="~/Scripts/app/position/positionService.js"></script>
     <script src="~/Scripts/app/position/positionController.js"></script>
     <script src="~/Scripts/app/home/homeScript.js"></script>
-<script src="~/Scripts/app/settings/addzoneController.js"></script>
+    <script src="~/Scripts/app/settings/addzoneController.js"></script>
+    <script>
+        var localization;
+        $(document).ready(function() {
+            localization =@Html.Raw(JSONResx);
+            console.log(localization);
+        });
+    </script>
 }
 

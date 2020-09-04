@@ -118,144 +118,144 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Activities" xml:space="preserve">
-    <value>Activities</value>
+    <value>Ocupaciones</value>
   </data>
   <data name="AddCustomer" xml:space="preserve">
-    <value>Add new customer</value>
+    <value>Agregar nuevo cliente</value>
   </data>
   <data name="Address" xml:space="preserve">
-    <value>Address</value>
+    <value>La alocución</value>
   </data>
   <data name="ArrivalAddress" xml:space="preserve">
-    <value>Arrival Address</value>
+    <value>Dirección de llegada</value>
   </data>
   <data name="ArrivalTime" xml:space="preserve">
-    <value>Arrival</value>
+    <value>Hora de llegada</value>
   </data>
   <data name="AvgFuelConsumption" xml:space="preserve">
-    <value>Average fuel consumption</value>
+    <value>Consumo medio de combustible</value>
   </data>
   <data name="AvgSpeed" xml:space="preserve">
-    <value>Average speed</value>
+    <value>Velocidad media</value>
   </data>
   <data name="City" xml:space="preserve">
-    <value>City</value>
+    <value>Ciudad</value>
   </data>
   <data name="Country" xml:space="preserve">
-    <value>Country</value>
+    <value>País</value>
   </data>
   <data name="CreateAccount" xml:space="preserve">
-    <value>Create an account</value>
+    <value>Crea una cuenta</value>
   </data>
   <data name="DailyReport" xml:space="preserve">
-    <value>Daily report</value>
+    <value>Reporte diario</value>
   </data>
   <data name="DepartureAddress" xml:space="preserve">
-    <value>Departure address</value>
+    <value>Dirección de salida</value>
   </data>
   <data name="DepartureTime" xml:space="preserve">
-    <value>Departure</value>
+    <value>Hora de salida</value>
   </data>
   <data name="Distance" xml:space="preserve">
-    <value>Distance</value>
+    <value>Distancia</value>
   </data>
   <data name="Driver" xml:space="preserve">
-    <value>Driver</value>
+    <value>Conductora</value>
   </data>
   <data name="Drivers" xml:space="preserve">
-    <value>Drivers</value>
+    <value>Conductoras</value>
   </data>
   <data name="Duration" xml:space="preserve">
-    <value>Duration</value>
+    <value>Duración</value>
   </data>
   <data name="EmptyTreeGuid" xml:space="preserve">
-    <value>il faut choisir une date de début et un véhicule</value>
+    <value>tienes que elegir una fecha de inicio y un vehículo</value>
   </data>
   <data name="EndService" xml:space="preserve">
-    <value>End of service</value>
+    <value>Fin del servicio</value>
   </data>
   <data name="FuelConsumption" xml:space="preserve">
-    <value>Fuel consumption</value>
+    <value>El consumo de combustible</value>
   </data>
   <data name="Hour" xml:space="preserve">
-    <value>Hour</value>
+    <value>hora</value>
   </data>
   <data name="Hours" xml:space="preserve">
-    <value>Hours</value>
+    <value>Horas</value>
   </data>
   <data name="Identifiers" xml:space="preserve">
-    <value>Identifiers</value>
+    <value>Identificadores</value>
   </data>
   <data name="Indentifier" xml:space="preserve">
-    <value>Indentifier</value>
+    <value>Identificador</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
   <data name="Location" xml:space="preserve">
-    <value>Location</value>
+    <value>Ubicación</value>
   </data>
   <data name="Minute" xml:space="preserve">
-    <value>Minute</value>
+    <value>minuto</value>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Minutes</value>
+    <value>minutos</value>
   </data>
   <data name="MotionState" xml:space="preserve">
-    <value>Motion state</value>
+    <value>Estado  movimiento</value>
   </data>
   <data name="Moving" xml:space="preserve">
-    <value>Moving</value>
+    <value>Moviente</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Nombre</value>
   </data>
   <data name="NotAssigned" xml:space="preserve">
-    <value>Not assigned</value>
+    <value>No asignado</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Contraseña</value>
   </data>
   <data name="Phone" xml:space="preserve">
-    <value>Phone number</value>
+    <value>Número de teléfono</value>
   </data>
   <data name="RememberMe" xml:space="preserve">
-    <value>Remember me</value>
+    <value>Recuérdame</value>
   </data>
   <data name="Signin" xml:space="preserve">
-    <value>Sign in</value>
+    <value>Registrarse</value>
   </data>
   <data name="Slowing" xml:space="preserve">
-    <value>Slowing</value>
+    <value>Disminuyendo</value>
   </data>
   <data name="Speed" xml:space="preserve">
-    <value>Speed</value>
+    <value>Velocidad</value>
   </data>
   <data name="SpeedMax" xml:space="preserve">
-    <value>Max speed</value>
+    <value>máxima velocidad</value>
   </data>
   <data name="StartService" xml:space="preserve">
-    <value>Begin of service</value>
+    <value>Inicio del servicio</value>
   </data>
   <data name="Stopped" xml:space="preserve">
-    <value>Stopped</value>
+    <value>Detenido</value>
   </data>
   <data name="Synthesis" xml:space="preserve">
-    <value>Synthesis</value>
+    <value>Síntesis</value>
   </data>
   <data name="UserName" xml:space="preserve">
-    <value>User name</value>
+    <value>Nombre de usuario</value>
   </data>
   <data name="Vehicle" xml:space="preserve">
-    <value>Vehicle</value>
+    <value>Vehículo</value>
   </data>
   <data name="Vehicles" xml:space="preserve">
-    <value>Vehicles</value>
+    <value>Vehículos</value>
   </data>
   <data name="Zone" xml:space="preserve">
-    <value>Zone</value>
+    <value>Zona</value>
   </data>
   <data name="Zones" xml:space="preserve">
-    <value>Zones</value>
+    <value>Zonas</value>
   </data>
 </root>
