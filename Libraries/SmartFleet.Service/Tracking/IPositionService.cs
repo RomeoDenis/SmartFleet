@@ -11,6 +11,6 @@ namespace SmartFleet.Service.Tracking
         Task<List<PositionViewModel>> GetLastVehiclePositionAsync(string userName);
 
         Task<List<Position>> GetVehiclePositionsByPeriodAsync(Guid vehicleId, DateTime startPeriod,
-            DateTime endPeriod);
+            DateTime endPeriod,string timeZoneInfo  = null);
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
+using SmartFleet.Core.Domain.Users;
 
 namespace SmartFleet.Service.Authentication
 {
@@ -72,6 +72,12 @@ namespace SmartFleet.Service.Authentication
             }
             AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = remember }, identity);
         }
+
+        public Task<IdentityUser> GetUserByNameAsync(string name)
+        {
+            return _userManager.FindByNameAsync(name);
+        }
+
         /// <summary>
         /// 
         /// </summary>

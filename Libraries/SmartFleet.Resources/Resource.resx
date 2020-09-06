@@ -123,6 +123,9 @@
   <data name="AddCustomer" xml:space="preserve">
     <value>Add new customer</value>
   </data>
+  <data name="AddMobileUnit" xml:space="preserve">
+    <value>Add new mobbile unit</value>
+  </data>
   <data name="Address" xml:space="preserve">
     <value>Address</value>
   </data>
@@ -147,8 +150,14 @@
   <data name="CreateAccount" xml:space="preserve">
     <value>Create an account</value>
   </data>
+  <data name="CurrentDate" xml:space="preserve">
+    <value>Today</value>
+  </data>
   <data name="DailyReport" xml:space="preserve">
     <value>Daily report</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
   </data>
   <data name="DepartureAddress" xml:space="preserve">
     <value>Departure address</value>
@@ -158,6 +167,9 @@
   </data>
   <data name="Distance" xml:space="preserve">
     <value>Distance</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
   </data>
   <data name="Driver" xml:space="preserve">
     <value>Driver</value>
@@ -169,7 +181,7 @@
     <value>Duration</value>
   </data>
   <data name="EmptyTreeGuid" xml:space="preserve">
-    <value>il faut choisir une date de début et un véhicule</value>
+    <value>You should select  a vehicle before.</value>
   </data>
   <data name="EndService" xml:space="preserve">
     <value>End of service</value>
@@ -216,11 +228,23 @@
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="Period" xml:space="preserve">
+    <value>Period</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone number</value>
   </data>
   <data name="RememberMe" xml:space="preserve">
     <value>Remember me</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SelectPeriod" xml:space="preserve">
+    <value>Please select period</value>
   </data>
   <data name="Signin" xml:space="preserve">
     <value>Sign in</value>
@@ -251,6 +275,9 @@
   </data>
   <data name="Vehicles" xml:space="preserve">
     <value>Vehicles</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>Yesterday</value>
   </data>
   <data name="Zone" xml:space="preserve">
     <value>Zone</value>

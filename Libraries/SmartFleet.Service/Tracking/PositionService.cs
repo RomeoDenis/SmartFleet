@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmartFleet.Core.Data;
 using SmartFleet.Core.Domain.Movement;
+using SmartFleet.Core.Helpers;
 using SmartFleet.Core.ReverseGeoCoding;
 using SmartFleet.Data;
 using SmartFleet.Service.Models;
@@ -59,7 +60,7 @@ namespace SmartFleet.Service.Tracking
             }
         }
 
-        public async Task<List<Position>> GetVehiclePositionsByPeriodAsync(Guid vehicleId, DateTime startPeriod,DateTime endPeriod)
+        public async Task<List<Position>> GetVehiclePositionsByPeriodAsync(Guid vehicleId, DateTime startPeriod,DateTime endPeriod , string timeZoneInfo  = null)
         {
             using (var contextFScope = _dbContextScopeFactory.Create())
             {
@@ -81,6 +82,10 @@ namespace SmartFleet.Service.Tracking
                         .Where(p => p.Box_Id == box.Id && p.Timestamp >= startPeriod && p.Timestamp <= endPeriod)
                         .ToListAsync()
                         .ConfigureAwait(false);
+               if(!string.IsNullOrEmpty(timeZoneInfo))
+                   foreach (var position in positions)
+                       position.Timestamp = position.Timestamp.ConvertToCurrentTimeZone(timeZoneInfo);
+
                 return positions;
             }
         }

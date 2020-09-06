@@ -17,7 +17,7 @@ namespace SmartFLEET.Web
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                 "~/Scripts/jq-1.10.2.js",
                 "~/Scripts/angular.min.js",
-                "~/Scripts/angular-route.min.js",
+               "~/Scripts/angular-route.min.js",
                 "~/Scripts/angular-ui-router.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -30,6 +30,7 @@ namespace SmartFLEET.Web
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Scripts/bootstrap3.min.js",
+                "~/Scripts/moment-js/moment.js",
                 "~/Scripts/jq-layout.js",
                 "~/Scripts/leafjs/leaflet.js",
                 "~/Scripts/jstree/jstree.min.js",
@@ -37,8 +38,7 @@ namespace SmartFLEET.Web
                 "~/Scripts/datatables/js/jquery.dataTables.js",
                 "~/Scripts/datatables/js/dataTables.bootstrap.js",
                 "~/Scripts/bootstrap-growl.js",
-                   "~/dist/plugins/datepicker/bootstrap-datepicker.js",
-                "~/dist/plugins/datepicker/locales/bootstrap-datepicker.fr.js",
+                "~/Scripts/timepicker/jquery.datetimepicker.full.min.js",
                 "~/dist/plugins/select2/select2.full.min.js",
                 "~/dist/plugins/loadie/js/jquery.loadie.min.js",
                 "~/Scripts/jstree/jstree.min.js",
@@ -69,6 +69,7 @@ namespace SmartFLEET.Web
                 "~/Content/validationEngine.jquery.css",
                 "~/Content/font-awesome.css",
                 "~/Scripts/datatables/css/dataTables.bootstrap.css",
+                "~/Scripts/timepicker/jquery.datetimepicker.css",
                 "~/dist/plugins/loadie/css/loadie.css",
                 "~/Content/jquery-ui.min.css",
                 "~/font-awesome/css/font-awesome.min.css",

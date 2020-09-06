@@ -9,7 +9,7 @@ namespace SmartFleet.Core.Helpers
         {
             try
             {
-                var array = date.Split('-');
+                var array = date.Split('/');
                 return new DateTime(Convert.ToInt32(array[0]) , Convert.ToInt32(array[1]), Convert.ToInt32(array.Last().Split(':')[0])/100);
             }
             catch (Exception e)

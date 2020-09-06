@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
-using SmartFleet.Core.Helpers;
 using SmartFleet.Data;
+using SmartFleet.Service.Authentication;
 using SmartFleet.Service.Models;
 using SmartFleet.Service.Report;
 using SmartFleet.Service.Tracking;
@@ -20,6 +21,7 @@ namespace SmartFLEET.Web.Controllers
     {
         private readonly IPositionService _positionService;
         private readonly IVehicleService _vehicleService;
+        private readonly IAuthenticationService _authentication;
 
         // GET: Position
         public ActionResult Index()
@@ -52,22 +54,31 @@ namespace SmartFLEET.Web.Controllers
             return Json(new { Periods = positionReport.BuildDailyReport(positions, startPeriod, vehicle.VehicleName), GpsCollection = gpsCollection }, JsonRequestBehavior.AllowGet);
 
         }
-        public async Task<JsonResult> GetPositionByDate(string vehicleId, string start)
+
+        public async Task<JsonResult> GetPositionByDate(string  vehicleId, DateTime start,  DateTime? end )
         {
             var id = Guid.Parse(vehicleId);
-           // var endPeriod = DateTime.Now;
-           var startPeriod = start.ParseToDate().ToUniversalTime();
-            var endPeriod =startPeriod.Date.AddDays(1).AddTicks(-1).ToUniversalTime();
+            // var endPeriod = DateTime.Now;
+             var endPeriod = ( end == null)? start.Date.AddDays(1).AddTicks(-1).ToUniversalTime() : end.Value.ToUniversalTime();
             var vehicle = await ObjectContext.Vehicles.FindAsync(id).ConfigureAwait(false);
-            var positions = await _positionService.GetVehiclePositionsByPeriodAsync(id, startPeriod.ToUniversalTime(), endPeriod.ToUniversalTime()).ConfigureAwait(false);
+            var user = await ObjectContext.UserAccounts
+                .FirstOrDefaultAsync(x=>x.UserName == User.Identity.Name).ConfigureAwait(false);
+            var positions = await _positionService
+                .GetVehiclePositionsByPeriodAsync(id, start.ToUniversalTime(), endPeriod, user?.TimeZoneInfo)
+                .ConfigureAwait(false);
             if (!positions.Any()) return Json(new List<TargetViewModel>(), JsonRequestBehavior.AllowGet);
-            var gpsCollection = positions.OrderBy(x=>x.Timestamp)
-                .Select(x =>new { Latitude = x.Lat, Longitude = x.Long, GpsStatement = x.Timestamp.ToString("O") });
+            var gpsCollection = positions.OrderBy(x => x.Timestamp)
+                .Select(x => new {Latitude = x.Lat, Longitude = x.Long, GpsStatement = x.Timestamp.ToString("O")});
             var positionReport = new ActivitiesReport();
-            var result = positionReport.BuildDailyReport(positions.OrderBy(x=>x.Timestamp).ToList(), startPeriod, vehicle.VehicleName) ;
+            var result = positionReport.BuildDailyReport(positions.OrderBy(x => x.Timestamp).ToList(), start,
+                vehicle.VehicleName);
             var distance = result.Where(x => x.MotionStatus == "Moving").Sum(x => x.Distance);
-            return Json(new {Vehiclename = vehicle?.VehicleName, Distance = Math.Round(distance,2), Periods = result,GpsCollection = gpsCollection.Distinct()}, JsonRequestBehavior.AllowGet);
-
+            return Json(
+                new
+                {
+                    Vehiclename = vehicle?.VehicleName, Distance = Math.Round(distance, 2), Periods = result,
+                    GpsCollection = gpsCollection.Distinct()
+                }, JsonRequestBehavior.AllowGet);
         }
 
         public PositionController(SmartFleetObjectContext objectContext, IVehicleService vehicleService) : base(objectContext)
@@ -75,10 +86,11 @@ namespace SmartFLEET.Web.Controllers
             _vehicleService = vehicleService;
         }
 
-        public PositionController(SmartFleetObjectContext objectContext, IMapper mapper, IPositionService positionService, IVehicleService vehicleService) : base(objectContext, mapper)
+        public PositionController(SmartFleetObjectContext objectContext, IMapper mapper, IPositionService positionService, IVehicleService vehicleService, IAuthenticationService authentication) : base(objectContext, mapper)
         {
             _positionService = positionService;
             _vehicleService = vehicleService;
+            _authentication = authentication;
         }
     }
 }
