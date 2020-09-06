@@ -33,7 +33,7 @@ function addCustomerController($scope, customerService, userService,$state, $roo
     }
     userService.getTimeZones().then(function (res) {
        
-        $scope.user.TimeZoneInfos = timeZoneInfos = res.data.map(z => z.DisplayName);
+        $scope.user.TimeZoneInfos = timeZoneInfos = res.data.map(z => z.Id);
         
     });
     $scope.loadUser = function() {

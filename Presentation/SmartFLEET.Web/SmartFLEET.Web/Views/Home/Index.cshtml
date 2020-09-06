@@ -36,9 +36,9 @@
 }
 
 @{
-    CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+
     var JSONResx = ResourcesHelper.GenerateResxJSON<Resource>(); ;
-   
+
 
 }
 
@@ -57,13 +57,14 @@
     <script src="~/Scripts/app/position/positionService.js"></script>
     <script src="~/Scripts/app/position/positionController.js"></script>
     <script src="~/Scripts/app/home/homeScript.js"></script>
+    <script src="~/Scripts/app/home/leftPannel.js"></script>
+    <script src="~/Scripts/app/home/gpsTimeLine.js"></script>
     <script src="~/Scripts/app/settings/addzoneController.js"></script>
     <script>
         var localization;
         $(document).ready(function() {
             localization =@Html.Raw(JSONResx);
-            console.log(localization);
         });
+       
     </script>
 }
-

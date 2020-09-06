@@ -79,6 +79,15 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Add new mobbile unit.
+        /// </summary>
+        public static string AddMobileUnit {
+            get {
+                return ResourceManager.GetString("AddMobileUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Address.
         /// </summary>
         public static string Address {
@@ -151,11 +160,29 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Today.
+        /// </summary>
+        public static string CurrentDate {
+            get {
+                return ResourceManager.GetString("CurrentDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Daily report.
         /// </summary>
         public static string DailyReport {
             get {
                 return ResourceManager.GetString("DailyReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Date.
+        /// </summary>
+        public static string Date {
+            get {
+                return ResourceManager.GetString("Date", resourceCulture);
             }
         }
         
@@ -187,6 +214,15 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Download.
+        /// </summary>
+        public static string Download {
+            get {
+                return ResourceManager.GetString("Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Driver.
         /// </summary>
         public static string Driver {
@@ -214,7 +250,7 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à il faut choisir une date de début et un véhicule.
+        ///   Recherche une chaîne localisée semblable à You should select  a vehicle before..
         /// </summary>
         public static string EmptyTreeGuid {
             get {
@@ -358,6 +394,15 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Period.
+        /// </summary>
+        public static string Period {
+            get {
+                return ResourceManager.GetString("Period", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Phone number.
         /// </summary>
         public static string Phone {
@@ -372,6 +417,33 @@ namespace SmartFleet.Resources {
         public static string RememberMe {
             get {
                 return ResourceManager.GetString("RememberMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Report.
+        /// </summary>
+        public static string Report {
+            get {
+                return ResourceManager.GetString("Report", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Search.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Please select period.
+        /// </summary>
+        public static string SelectPeriod {
+            get {
+                return ResourceManager.GetString("SelectPeriod", resourceCulture);
             }
         }
         
@@ -462,6 +534,15 @@ namespace SmartFleet.Resources {
         public static string Vehicles {
             get {
                 return ResourceManager.GetString("Vehicles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Yesterday.
+        /// </summary>
+        public static string Yesterday {
+            get {
+                return ResourceManager.GetString("Yesterday", resourceCulture);
             }
         }
         

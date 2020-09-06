@@ -4,14 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - SMART FLEET</title>
-
+    <title>@ViewBag.Title SMART FLEET</title>
+    <link rel="Shortcut Icon" href="../../images.ico" type="image/x-icon" />
     @Styles.Render("~/Content/css")
     <link href="~/assets/flag-icon.min.css" rel="stylesheet" />
     @Scripts.Render("~/bundles/modernizr")
 </head>
 
-<body ng-app="smart-fleet"  class="hold-transition skin-blue-light  sidebar-mini">
+<body ng-app="smart-fleet"  class="hold-transition skin-green-light  ">
     @*@RenderPage("_menu.cshtml")*@
 
     @RenderBody()
@@ -30,14 +30,15 @@
 <link href="~/Scripts/easyui/themes/color.css" rel="stylesheet" />
     <link href="~/Scripts/easyui/themes/icon.css" rel="stylesheet" />
     <script src="~/Scripts/charts/chartjs/Chart.min.js"></script>
-    <link href="~/Scripts/charts/chartjs/Chart.min.css" rel="stylesheet" />
+<link href="~/Scripts/charts/chartjs/Chart.min.css" rel="stylesheet" />
+<link href="~/assets/css/flag-icon.min.css" rel="stylesheet" />
     @RenderSection("scripts", required: false)
 
 <script>
    
     $(document).ready(function () {
 
-        layout  = $('body').layout({
+         layout  = $('body').layout({
             applyDemoStyles: true,
             onresize: function () {
             }

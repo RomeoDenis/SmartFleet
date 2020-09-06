@@ -4,6 +4,7 @@ positionController.$inject = ['$scope', 'positionService', 'reportService'];
 function positionController($scope, positionService,  reportService) {
     $scope.vehicleId = "";
     $scope.startPeriod = "";
+   
     reportService.getVehicles().then(function (resp) {
         //   console.log(resp.data);
         $scope.vehicles = resp.data;
@@ -53,7 +54,7 @@ function positionController($scope, positionService,  reportService) {
             }
         });
 
-    $scope.Download= function (date)
+    $scope.Download = function (start,end)
     {
         if ($scope.vehicleId !== "") {
             $("#gps-activity").html("");
@@ -69,7 +70,7 @@ function positionController($scope, positionService,  reportService) {
 
             initWait();
 
-            positionService.getPosition($scope.vehicleId, date).then(function (resp) {
+            positionService.getPosition($scope.vehicleId, start, end).then(function (resp) {
 
                 console.log(resp.data);
                 if (resp.data === null || resp.data === undefined) {

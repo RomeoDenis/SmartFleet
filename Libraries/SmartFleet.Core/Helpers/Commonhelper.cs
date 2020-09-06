@@ -4,6 +4,13 @@ namespace SmartFleet.Core.Helpers
 {
     public static class Commonhelper
     {
+
+        public static DateTime ConvertToCurrentTimeZone(this DateTime date, string tz)
+        {
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById(tz);
+            DateTime userTime = TimeZoneInfo.ConvertTimeFromUtc(date, timeZone);
+            return userTime;
+        }
         public static bool IsValidImei(string imei)
         {
             try
