@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using MediatR;
 using SmartFleet.Data;
 using SmartFleet.MobileUnit.Domain.MobileUnit.Commands;
+using SmartFleet.MobileUnit.Domain.MobileUnit.Queries;
 using SmartFLEET.Web.Controllers;
 
 namespace SmartFLEET.Web.Areas.Administrator.Controllers
@@ -12,9 +13,13 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
     public class GpsDeviceController : BaseController
     {
         // GET
-        public ActionResult Index()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> Index()
         {
-            return View(ObjectContext.Boxes.ToList());
+            return View(await SendAsync(new GetMobileUnitsListQuery()).ConfigureAwait(false));
         }
 
         public ActionResult Create()
@@ -22,6 +27,11 @@ namespace SmartFLEET.Web.Areas.Administrator.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
         public async Task<ActionResult> AddMobileUnit(CreateMobileUnitCommand command)
         {
             try

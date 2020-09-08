@@ -2,15 +2,7 @@
  
     <form name="userForm" class="form-horizontal">
         <fieldset>
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="Cutomer_Id">Client</label>
-                <div class="col-md-5">
-                    <select id="CustomerId" ng-required="true" name="CustomerId" ng-model="user.CustomerId" class="form-control">
-                        <option ng-repeat="option in user.Customers" value="{{option.Id}}">{{option.Name}}</option>
-
-                    </select>
-                </div>
-            </div>
+            
             <div class="form-group">
                 <label class="col-md-4 control-label" for="Name">UserName</label>
                 <div class="col-md-5">

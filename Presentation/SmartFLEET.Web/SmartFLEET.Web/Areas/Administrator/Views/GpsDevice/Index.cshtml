@@ -1,6 +1,6 @@
-﻿@model IEnumerable<SmartFleet.Core.Domain.Gpsdevices.Box>
+﻿@model IEnumerable<SmartFleet.MobileUnit.Domain.MobileUnit.Dtos.MobileUnitDto>
 
-<div class="box" style="width: 97%; padding:10px" ng-controller="mobileUnitController">
+<div class="box" style=" padding:10px" ng-controller="mobileUnitController">
     <h3>Liste des boitiers</h3>
 
     <p>
@@ -22,56 +22,65 @@
     </p>
     <table id="box-list" class="table table-bordered table-hover table-striped table-responsive">
         <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.SerialNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Imei)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Vehicle.VehicleName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreationDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Type)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PhoneNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastGpsInfoTime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Brand)
-                </th>
-                <th></th>
-            </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Imei)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SerialNumber)
+            </th>
+
+            <th>
+                Vehicle
+            </th>
+
+            <th>
+               Customer
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.LastGpsInfoTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+               State
+            </th>
+            <th></th>
+        </tr>
         </thead>
 
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SerialNumber)
-                </td>
+            var creationDate = item.CreationDate.HasValue ? item.CreationDate.Value.ToShortDateString() : "";
+           <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Imei)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Vehicle.VehicleName)
+                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreationDate)
+                    @Html.DisplayFor(modelItem => item.CustomerName)
+                </td>
+                <td>
+                    @creationDate
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
+               
                 <td>
                     @Html.DisplayFor(modelItem => item.LastGpsInfoTime)
                 </td>
@@ -79,10 +88,11 @@
                     @Html.DisplayFor(modelItem => item.Brand)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.DisplayFor(modelItem => item.BoxStatus)
                 </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new {id = item.Id}) 
+                 </td>
             </tr>
         }
 
