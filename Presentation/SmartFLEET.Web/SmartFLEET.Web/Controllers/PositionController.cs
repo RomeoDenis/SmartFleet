@@ -59,7 +59,7 @@ namespace SmartFLEET.Web.Controllers
         {
             var id = Guid.Parse(vehicleId);
             // var endPeriod = DateTime.Now;
-             var endPeriod = ( end == null)? start.Date.AddDays(1).AddTicks(-1).ToUniversalTime() : end.Value.ToUniversalTime();
+             var endPeriod = end?.ToUniversalTime() ?? start.Date.AddDays(1).AddTicks(-1).ToUniversalTime();
             var vehicle = await ObjectContext.Vehicles.FindAsync(id).ConfigureAwait(false);
             var user = await ObjectContext.UserAccounts
                 .FirstOrDefaultAsync(x=>x.UserName == User.Identity.Name).ConfigureAwait(false);

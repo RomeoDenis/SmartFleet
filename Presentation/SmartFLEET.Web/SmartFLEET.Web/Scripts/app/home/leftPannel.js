@@ -78,7 +78,7 @@ function downloadReport() {
     if (isPeriod) {
         end = $('#end-period').datetimepicker('getValue') + ':00';
         if (new Date(end) < new Date(date))
-            alert("End date time should be greater than start date time;");
+            alert(localization.EndGraterThanStart);
         return;
     }
     

@@ -37,6 +37,19 @@
             </summary>
             <param name="config"></param>
         </member>
+        <member name="M:SmartFLEET.Web.Areas.Administrator.Controllers.GpsDeviceController.Index">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartFLEET.Web.Areas.Administrator.Controllers.GpsDeviceController.AddMobileUnit(SmartFleet.MobileUnit.Domain.MobileUnit.Commands.CreateMobileUnitCommand)">
+            <summary>
+            
+            </summary>
+            <param name="command"></param>
+            <returns></returns>
+        </member>
         <member name="P:SmartFLEET.Web.Areas.Administrator.Models.AddVehicleViewModel.Brands">
             <summary>
             

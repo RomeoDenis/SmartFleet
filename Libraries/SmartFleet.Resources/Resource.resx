@@ -183,6 +183,9 @@
   <data name="EmptyTreeGuid" xml:space="preserve">
     <value>You should select  a vehicle before.</value>
   </data>
+  <data name="EndGraterThanStart" xml:space="preserve">
+    <value>La hora de la fecha de finalización debe ser mayor que la hora de la fecha de inicio</value>
+  </data>
   <data name="EndService" xml:space="preserve">
     <value>End of service</value>
   </data>

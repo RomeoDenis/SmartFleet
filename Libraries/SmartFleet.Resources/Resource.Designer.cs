@@ -259,6 +259,15 @@ namespace SmartFleet.Resources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à La hora de la fecha de finalización debe ser mayor que la hora de la fecha de inicio.
+        /// </summary>
+        public static string EndGraterThanStart {
+            get {
+                return ResourceManager.GetString("EndGraterThanStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à End of service.
         /// </summary>
         public static string EndService {
